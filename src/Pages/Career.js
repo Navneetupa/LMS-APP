@@ -4,7 +4,7 @@ import PopularCourses from "../Careercomponents/PopularCourses";
 import PopularCompanies from '../Careercomponents/PopularCompanies';
 import CareerPath from '../Careercomponents/CareerPath';
 import Footer from '../CourseDetailsComponent/Footer';
-import Navbar from '../CourseDetailsComponent/Header'
+import Navbar from '../CourseDetailsComponent/Header';
 
 const companies = [
   { name: 'Slack', logo: 'slack.png' },
@@ -25,16 +25,16 @@ export default function Career() {
 
   return (
     <>
-    <Navbar />
+      <Navbar />
       <div className={`${modalOpen ? 'blur-sm pointer-events-none select-none' : ''} min-h-screen pt-12 bg-white text-gray-800 font-sans transition-filter duration-300`}>
         {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-12 items-center relative">
           {/* Text Area */}
-          <div className="relative z-20">
+          <div className="relative z-20 px-6 md:px-12"> {/* Added horizontal padding here */}
             <h1 className="text-4xl md:text-5xl font-bold leading-tight">
               Find the job of your <span className="text-cyan-500">Dreams</span>
             </h1>
-            <p className="mt-4 text-gray-600">
+            <p className="mt-4 text-gray-600 max-w-xl">
               Find Your New Job Today! Browse thousands of openings and apply in seconds.
             </p>
 
@@ -76,32 +76,7 @@ export default function Career() {
             </div>
           </div>
 
-          {/* SVG Line */}
-          <svg
-            className="hidden md:block absolute top-0 left-[45%] h-full w-48 z-10 pointer-events-none"
-            viewBox="0 0 200 300"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient id="curvedLineGradient" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#06b6d4" />
-                <stop offset="100%" stopColor="#3b82f6" />
-              </linearGradient>
-              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#06b6d4" floodOpacity="0.6" />
-              </filter>
-            </defs>
-            <path
-              d="M0 10 Q100 150 0 290"
-              stroke="url(#curvedLineGradient)"
-              strokeWidth="4"
-              fill="transparent"
-              strokeLinecap="round"
-              filter="url(#glow)"
-              className="animate-drawLine"
-            />
-          </svg>
+          {/* Removed the middle SVG line section */}
 
           {/* Circular SVG Design */}
           <div className="hidden md:block absolute top-0 right-0 h-full w-48 z-0 pointer-events-none flex justify-center items-center">
