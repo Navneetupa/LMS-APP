@@ -1,7 +1,7 @@
 import React from 'react';
 import ContactInfo from '../Careercomponents/ContactInfo';
 import ContactForm from '../Careercomponents/ContactForm';
-import Navbar from '../CourseDetailsComponent/Header';
+import Navbar from '../components/StickyNavbar';
 
 
 import Footer from '../CourseDetailsComponent/Footer';

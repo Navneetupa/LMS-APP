@@ -4,7 +4,7 @@ import PreparingStudents from "../Careercomponents/PreparingStudents";
 import InstructorCourse from "../Careercomponents/InstructorCourse";
 import WhyItWorks from "../Careercomponents/WhyItWorks";
 import LMSFeatures from "../Careercomponents/LMSFeatures";
-import Navbar from "../CourseDetailsComponent/Header";
+import Navbar from "../components/StickyNavbar";
 import Footer from "../CourseDetailsComponent/Footer";
 
 const AboutUs = () => {

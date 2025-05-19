@@ -4,7 +4,7 @@ const features = [
   {
     title: "Interactive Lessons",
     description: "Engage students with videos, quizzes, and real-time feedback.",
-    image: "https://img.icons8.com/color/96/online-learning.png",
+    image: "https://cdn-icons-png.flaticon.com/512/3652/3652314.png",
   },
   {
     title: "Progress Tracking",
@@ -14,7 +14,7 @@ const features = [
   {
     title: "Assignments & Grading",
     description: "Create, assign, and grade work efficiently and clearly.",
-    image: "https://img.icons8.com/color/96/assign.png",
+    image: "https://cdn-icons-png.flaticon.com/512/11725/11725632.png",
   },
   {
     title: "Live Classes",

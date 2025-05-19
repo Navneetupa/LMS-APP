@@ -4,7 +4,7 @@ import PopularCourses from "../Careercomponents/PopularCourses";
 import PopularCompanies from '../Careercomponents/PopularCompanies';
 import CareerPath from '../Careercomponents/CareerPath';
 import Footer from '../CourseDetailsComponent/Footer';
-import Navbar from '../CourseDetailsComponent/Header';
+import Navbar from '../components/StickyNavbar';
 
 const companies = [
   { name: 'Slack', logo: 'slack.png' },
@@ -18,11 +18,6 @@ export default function Career() {
   const [modalOpen, setModalOpen] = useState(false);
   const [filterTerm, setFilterTerm] = useState('');
 
-  const handleSearch = () => {
-    setFilterTerm(searchTerm.trim());
-    setModalOpen(true);
-  };
-
   return (
     <>
       <Navbar />
@@ -30,7 +25,7 @@ export default function Career() {
         {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-12 items-center relative">
           {/* Text Area */}
-          <div className="relative z-20 px-6 md:px-12"> {/* Added horizontal padding here */}
+          <div className="relative z-20 px-6 md:px-12">
             <h1 className="text-4xl md:text-5xl font-bold leading-tight">
               Find the job of your <span className="text-cyan-500">Dreams</span>
             </h1>
@@ -50,33 +45,20 @@ export default function Career() {
               </div>
             </div>
 
-            {/* Search Area */}
-            <div className="mt-6 flex flex-wrap items-center gap-4">
-              <div className="flex items-center border border-gray-300 px-4 py-2 rounded-full w-full md:w-72 transition-all duration-300 hover:ring-2 hover:ring-cyan-300 hover:shadow-md">
-                <FaSearch className="text-gray-500 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Search Course"
-                  className="outline-none flex-grow"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSearch();
-                    }
-                  }}
-                />
+            {/* New Attractive Cards Section */}
+            <div className="mt-10 flex flex-col sm:flex-row justify-center gap-6 max-w-4xl mx-auto px-4">
+              <div className="bg-cyan-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex-1 flex items-center justify-center">
+                <p className="text-lg text-cyan-900 font-semibold text-center">
+                  Start your journey with the best courses tailored to your career.
+                </p>
               </div>
-              <button
-                className="bg-cyan-500 text-white px-6 py-2 rounded-full hover:bg-cyan-600 transition-all duration-300 hover:scale-105"
-                onClick={handleSearch}
-              >
-                Search
-              </button>
+              <div className="bg-cyan-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex-1 flex items-center justify-center">
+                <p className="text-lg text-cyan-900 font-semibold text-center">
+                  Discover opportunities that match your skills and passions.
+                </p>
+              </div>
             </div>
           </div>
-
-          {/* Removed the middle SVG line section */}
 
           {/* Circular SVG Design */}
           <div className="hidden md:block absolute top-0 right-0 h-full w-48 z-0 pointer-events-none flex justify-center items-center">
@@ -103,7 +85,6 @@ export default function Career() {
 
           {/* Illustration */}
           <div className="relative flex justify-center items-center z-20">
-            {/* Updated Circle with bold color */}
             <div className="absolute w-[22rem] h-[22rem] bg-[#059FA3] rounded-full z-0 top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-lg" />
             <img
               src="CareerPage.png"
