@@ -10,12 +10,12 @@ import Login from "./Pages/Login.jsx";
 
 function App() {
   return (
-    <Router>
+   <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/LandingPage" element={<LandingPage/>} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login/>} />
         <Route path="/courses" element={<CoursesPage />} />
-        <Route path="/courses/:id" element={<CourseDetails />} /> 
+        <Route path="/courses/:courseId" element={<CourseDetails />} /> 
         <Route path="/career" element={<Career />} />
         <Route path="/aboutus" element={<About />} />
         <Route path="/contact" element={<Contact />} />

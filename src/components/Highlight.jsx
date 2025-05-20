@@ -27,26 +27,18 @@ const FeatureHighlight = () => {
           Our Learning Management System enables you to access resources,
           submit assignments, and engage with instructors in real-time.
         </p>
-
-        <a
-          href="https://your-link-here.com"
-          className="text-sm sm:text-base text-blue-500 font-semibold hover:underline transition-all duration-200"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn more
-        </a>
       </motion.div>
 
       {/* Image Block */}
-      <motion.img
-        src={Feature}
-        alt="Feature highlight"
-        className="w-full md:w-1/2 rounded-xl shadow-lg"
-        initial={{ opacity: 0, x: 50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      />
+    <motion.img
+  src={Feature}
+  alt="Feature highlight"
+  className="w-full md:max-w-md rounded-xl shadow-lg"
+  initial={{ opacity: 0, x: 50 }}
+  whileInView={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.6, delay: 0.2 }}
+/>
+
     </motion.div>
   );
 };

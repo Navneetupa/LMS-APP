@@ -29,7 +29,7 @@ const FixedNavbar = () => {
         </div>
 
         {/* Nav Links */}
-        <Link to="#" className="text-white font-semibold hover:text-[#00A78E]">
+        <Link to="/" className="text-white font-semibold hover:text-[#00A78E]">
           Home
         </Link>
         <Link to="/Courses" className="text-white font-semibold hover:text-[#00A78E]">
@@ -48,12 +48,12 @@ const FixedNavbar = () => {
 
       {/* Desktop Buttons */}
       <div className="hidden md:flex items-center space-x-3 mt-4 md:mt-0">
-        <button className="text-sm px-4 py-0.5 rounded-full text-[#49BBBD] bg-white font-medium transition-all duration-300 hover:text-white hover:bg-[#49BBBD]">
+        <Link to="/login" className="text-sm px-4 py-0.5 rounded-full text-[#49BBBD] bg-white font-medium transition-all duration-300 hover:text-white hover:bg-[#49BBBD]">
           Login
-        </button>
-        <button className="text-sm px-4 py-0.5 rounded-full text-white bg-[#7ddedf] font-medium transition-all duration-300 hover:bg-[#59c1c3]">
+        </Link>
+        <Link to="/login" className="text-sm px-4 py-0.5 rounded-full text-white bg-[#7ddedf] font-medium transition-all duration-300 hover:bg-[#59c1c3]">
           Sign Up
-        </button>
+        </Link>
       </div>
 
       {/* Hamburger Icon */}

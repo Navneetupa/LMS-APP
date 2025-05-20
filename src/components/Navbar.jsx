@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import heroImage from "../assets/hero-girl.png";
-import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import logo from "../assets/logo.png";
+
 import edit from "../assets/edit.png";
 import edit1 from "../assets/edit1.png";
 import edit2 from "../assets/edit2.png";
@@ -32,7 +31,7 @@ const HeroWithNavbar = () => {
 
       {/* Filter Dropdowns */}
       <div className="flex flex-wrap justify-center gap-4 mt-6 px-4" data-aos="fade-up">
-        {["Course Category", "Difficulty Level", "Language", "Course Type"].map((label) => (
+        {["Course Category", "Language", "Course Type"].map((label) => (
           <select key={label} className="text-sm border px-2 py-2 rounded w-full sm:w-40">
             <option>{label}</option>
           </select>

@@ -29,7 +29,7 @@ const LearnGrow = () => {
         </h2>
         <p className="text-gray-600 mt-2 text-sm sm:text-base">Everything You Need to Learn & Grow</p>
       </div>
-
+ 
       {/* Content Grid */}
       <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
         {/* Left - Video Preview & Actions */}
