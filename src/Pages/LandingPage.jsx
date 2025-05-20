@@ -32,7 +32,7 @@ const LandingPage = () => {
       <LearnGrow />
       <LearningSection />
       <SimplifyLearning />
-      <CategorySelect />
+      {/* <CategorySelect /> */}
       <TestimonialNewsSection />
       <NewsSection />
       <Footer />

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-import Header from '../Course Components/Header/Header.jsx';
+import Header from '../components/StickyNavbar.jsx';
 import CategorySelector from '../Course Components/CategorySelector/CategorySelector.jsx';
 import Hero from '../Course Components/Hero/Hero.jsx';
 import RecommendedCourses from '../Course Components/RecommendedCourses/RecommendedCourses.jsx';

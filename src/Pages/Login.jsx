@@ -76,7 +76,7 @@ const AuthComponent = () => {
                 </a>
                 
               </div>
-              <Link to={"/LandingPage"}> <button className="w-full py-3 mb-5 bg-teal-500 text-white rounded-md hover:bg-teal-600">
+              <Link to={"/"}> <button className="w-full py-3 mb-5 bg-teal-500 text-white rounded-md hover:bg-teal-600">
                 Login
               </button>
               </Link>

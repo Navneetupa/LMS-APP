@@ -4,7 +4,7 @@ import CourseRatings from "../CourseDetailsComponent/CourseRatings";
 import MarketingArticles from "../CourseDetailsComponent/MarketingArticles";
 import FeatureHighlight from "../CourseDetailsComponent/FeatureHighlight";
 import TopInstructors from "../CourseDetailsComponent/TopInstructors";
-import Header from "../CourseDetailsComponent/Header";
+import Header from "../components/StickyNavbar";
 import Footer from "../CourseDetailsComponent/Footer";
 
 function CourseDetails() {
@@ -16,6 +16,7 @@ function CourseDetails() {
 
       <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10 py-6">
         <CourseRatings />
+       
         <MarketingArticles />
         <FeatureHighlight />
         <TopInstructors />
