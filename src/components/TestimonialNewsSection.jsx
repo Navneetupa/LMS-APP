@@ -1,8 +1,35 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Testimonial from "../assets/testimonial.png";
 
+const testimonials = [
+  {
+    text: "Thank you so much for your help. It’s exactly what I’ve been looking for. LMS is exactly what our business has been lacking.",
+    name: "Divya Sharma",
+    reviews: "12",
+  },
+  {
+    text: "The platform made learning so interactive and fun. I highly recommend it to everyone!",
+    name: "Rohit Verma",
+    reviews: "8",
+  },
+  {
+    text: "Excellent support and well-structured content. It saved me a lot of time.",
+    name: "Anita Singh",
+    reviews: "15",
+  },
+];
+
 export default function TestimonialSection() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % testimonials.length);
+    }, 4000); // Change testimonial every 4 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 items-center gap-10">
       {/* Left Text Content */}
@@ -55,32 +82,51 @@ export default function TestimonialSection() {
           />
         </div>
 
-      
-
-        {/* Testimonial Card */}
-      <motion.div
-  className="absolute bottom-0 right-4 sm:right-20 bg-white shadow-xl rounded-xl p-4 sm:p-5 w-[250px] sm:w-[280px] md:w-[300px] translate-y-1/2"
-  initial={{ opacity: 0, y: 50 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true }}
-  transition={{ duration: 0.8, delay: 0.2 }}
->
-  <p className="text-sm text-gray-700">
-    “Thank you so much for your help. It’s exactly what I’ve been looking for. You won’t regret it. It really saves me time and effort. LMS is exactly what our business has been lacking.”
-  </p>
-  <div className="mt-4">
-    <p className="font-semibold text-gray-900 text-sm sm:text-base">Divya Sharma</p>
-    <div className="flex items-center gap-1 text-yellow-400 mt-1">
-      {Array(5).fill(0).map((_, i) => (
-        <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-          <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
-        </svg>
-      ))}
-    </div>
-    <p className="text-xs text-gray-400 mt-1">12 reviews at Yelp</p>
-  </div>
-</motion.div>
-
+        {/* Sliding Testimonial Card */}
+        <div
+          className="
+            absolute bottom-10 right-4 sm:right-20
+            md:left-1/2 md:right-auto
+            md:translate-x-[-50%]
+            w-[190px] sm:w-[210px] md:w-[230px]
+          "
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={index}
+              className="bg-white shadow-xl rounded-xl p-2 sm:p-3"
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -40 }}
+              transition={{ duration: 0.6 }}
+            >
+              <p className="text-[11px] text-gray-700 leading-snug">
+                “{testimonials[index].text}”
+              </p>
+              <div className="mt-2">
+                <p className="font-semibold text-gray-900 text-xs">
+                  {testimonials[index].name}
+                </p>
+                <div className="flex items-center gap-1 text-yellow-400 mt-1">
+                  {Array(5)
+                    .fill(0)
+                    .map((_, i) => (
+                      <svg
+                        key={i}
+                        className="w-3 h-3 fill-current"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
+                      </svg>
+                    ))}
+                </div>
+                <p className="text-[9px] text-gray-400 mt-1">
+                  {testimonials[index].reviews} reviews at Yelp
+                </p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </motion.div>
     </section>
   );

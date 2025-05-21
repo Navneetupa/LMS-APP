@@ -12,7 +12,6 @@ import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 
 const CourseRatings = () => {
-  // Extract courseId from URL using useParams
   const { courseId } = useParams();
 
   // Review states
@@ -24,23 +23,21 @@ const CourseRatings = () => {
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(null);
 
-  // Course pricing state
+  // Course states
   const [price, setPrice] = useState(null);
   const [discountPrice, setDiscountPrice] = useState(null);
-  const [currency, setCurrency] = useState('INR'); // Default to INR (rupees)
+  const [currency, setCurrency] = useState('INR');
+  const [courseName, setCourseName] = useState(''); // State for course name
   const [courseError, setCourseError] = useState(null);
   const [courseLoading, setCourseLoading] = useState(false);
 
-  // Currency symbol mapping
   const currencySymbols = {
     INR: '₹',
     USD: '$',
     EUR: '€',
     GBP: '£',
-    // Add more currencies as needed
   };
 
-  // API URLs
   const courseApiUrl = courseId
     ? `https://lms-backend-flwq.onrender.com/api/v1/courses/${courseId}`
     : null;
@@ -48,12 +45,11 @@ const CourseRatings = () => {
     ? `https://lms-backend-flwq.onrender.com/api/v1/courses/${courseId}/reviews`
     : null;
 
-  // Debug courseId
   useEffect(() => {
     console.log('Received courseId:', courseId);
   }, [courseId]);
 
-  // Fetch course pricing and currency
+  // Fetch course details including name
   useEffect(() => {
     const fetchCourse = async () => {
       if (!courseId || !courseApiUrl) {
@@ -68,7 +64,7 @@ const CourseRatings = () => {
           throw new Error(`HTTP error! Status: ${res.status}`);
         }
         const data = await res.json();
-        console.log('Course API Response:', data); // Debug log
+        console.log('Course API Response:', data);
         if (data.success) {
           if (!data.data) {
             throw new Error('No data field in response');
@@ -76,6 +72,7 @@ const CourseRatings = () => {
           setPrice(data.data.price || null);
           setDiscountPrice(data.data.discountPrice || null);
           setCurrency(data.data.currency || 'INR');
+          setCourseName(data.data.title || 'Unknown Course'); // Set course name (using 'title' field)
           if (!data.data.price || !data.data.discountPrice) {
             setCourseError('Missing price or discountPrice in response');
           }
@@ -108,7 +105,7 @@ const CourseRatings = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Reviews API Response:', data); // Debug log
+        console.log('Reviews API Response:', data);
         if (data.success) {
           const mappedReviews = data.data.map((review) => ({
             name: `${review.user?.firstName || 'Unknown'} ${review.user?.lastName || ''}`,
@@ -165,7 +162,7 @@ const CourseRatings = () => {
         });
 
         const data = await response.json();
-        console.log('Add Comment Response:', data); // Debug log
+        console.log('Add Comment Response:', data);
         if (data.success) {
           const newReview = {
             name: commentName,
@@ -205,9 +202,10 @@ const CourseRatings = () => {
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
       >
-        <h2 className="w-full max-w-[180px] h-[45px] text-sm sm:text-lg font-semibold text-white bg-[#49BBBD] flex items-center justify-center mb-4 rounded cursor-pointer hover:bg-[#3ea1a3] transition">
-          OverViews
+        <h2 className="w-full max-w-[400px] h-[50px] text-lg sm:text-xl font-bold text-white bg-[#49BBBD] flex items-center justify-center mb-4 rounded cursor-pointer hover:bg-[#3ea1a3] transition">
+          {courseLoading ? 'Loading...' : `Course Overview - ${courseName || 'Unknown Course'}`}
         </h2>
+        {courseError && <p className="text-sm text-red-500 mb-4">{courseError}</p>}
 
         <input
           type="text"
@@ -313,7 +311,6 @@ const CourseRatings = () => {
           </button>
         </div>
       </motion.div>
-      {/* Sidebar or Course Info */}
       <motion.div
         className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full lg:w-[350px]"
         initial={{ opacity: 0, x: -100 }}

@@ -111,11 +111,13 @@ export default function SimplifyLearning() {
       {/* Call-to-Action Button */}
       <ScrollFadeSection>
         <div className="flex justify-center mt-12">
-          <button
-            className="w-[260px] h-[60px] rounded-full border border-[#49BBBD] text-[#49BBBD] text-lg font-semibold hover:bg-[#49BBBD]/10 transition"
-          >
-            Start Learning Now
-          </button>
+         <a
+  href="/courses"
+  className="w-[260px] h-[60px] rounded-full border border-[#49BBBD] text-[#49BBBD] text-lg font-semibold flex items-center justify-center hover:bg-[#49BBBD]/10 transition"
+>
+  Start Learning Now
+</a>
+
         </div>
       </ScrollFadeSection>
     </motion.div>

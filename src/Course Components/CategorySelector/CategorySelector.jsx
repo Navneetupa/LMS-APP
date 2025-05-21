@@ -76,7 +76,7 @@ const CategorySelector = () => {
       {/* First Container */}
       <section>
         <h2 className="text-3xl font-bold mb-8 text-center" data-aos="fade-right">
-          <span className="text-[#0b0b0b]">Perfect</span>{' '}
+          <span className="text-[#0b0b0b]">Categories </span>{' '}
           <span className="text-[#49BBBD]">Courses</span>
           <span> For You</span>
         </h2>

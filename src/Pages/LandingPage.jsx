@@ -11,7 +11,6 @@ import FeatureHighlight from "../components/Highlight";
 import LearnGrow from "../components/LearnGrow";
 import SimplifyLearning from "../components/SimplifyLearning";
 import LearningSection from "../components/LearningSection";
-import CategorySelect from "../components/CategorySelect";
 import TestimonialNewsSection from "../components/TestimonialNewsSection";
 import NewsSection from "../components/NewsSection";
 import Footer from "../components/Footer";
@@ -32,7 +31,7 @@ const LandingPage = () => {
       <LearnGrow />
       <LearningSection />
       <SimplifyLearning />
-      {/* <CategorySelect /> */}
+    
       <TestimonialNewsSection />
       <NewsSection />
       <Footer />

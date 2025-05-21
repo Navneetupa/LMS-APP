@@ -33,9 +33,13 @@ const LMSInfo = () => {
             <h3 className="text-white text-lg sm:text-xl md:text-2xl font-semibold">
               FOR INSTRUCTORS
             </h3>
-            <button className="border-2 border-white text-white px-5 py-2 rounded-full text-sm sm:text-base hover:bg-white hover:text-black transition">
-              Create & Share Your Courses
-            </button>
+          <a
+  href="/login"
+  className="border-2 border-white text-white px-5 py-2 rounded-full text-sm sm:text-base hover:bg-white hover:text-black transition inline-block text-center"
+>
+  Create & Share Your Courses
+</a>
+
           </div>
         </div>
 
@@ -49,9 +53,9 @@ const LMSInfo = () => {
             <h3 className="text-white text-lg sm:text-xl md:text-2xl font-semibold">
               FOR STUDENTS
             </h3>
-            <button className="bg-[#23BDEEE5] text-white px-8 sm:px-10 py-2 sm:py-3 rounded-full text-sm sm:text-base hover:bg-[#3ca2a4] transition">
-              Explore Now
-            </button>
+           <a href="/courses"className="bg-[#23BDEEE5] text-white px-8 sm:px-10 py-2 sm:py-3 rounded-full text-sm sm:text-base hover:bg-[#3ca2a4] transition inline-block text-center">
+  Explore Now</a>
+
           </div>
         </div>
       </div>
