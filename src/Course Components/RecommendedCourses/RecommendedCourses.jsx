@@ -1,34 +1,51 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
-const CourseCard = ({ course, index }) => {
+const isAuthenticated = () => {
+  return Boolean(localStorage.getItem("authToken"));
+};
+
+const CourseCard = ({ course, index, onUnauthenticatedClick }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (isAuthenticated()) {
+      navigate(`/courses/${course._id}`);
+    } else {
+      onUnauthenticatedClick(`/courses/${course._id}`);
+    }
+  };
+
   return (
-    <Link to={`/courses/${course._id}`}>
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 50 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.4, delay: index * 0.1 }}
-        className="bg-gradient-to-br from-cyan-50 to-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col items-center text-center cursor-pointer"
-      >
-        <img
-          src={course.thumbnail || "https://img.icons8.com/color/96/code.png"}
-          alt={course.title}
-          className="w-16 h-16 mb-3 object-cover"
-          loading="lazy"
-        />
-        <h4 className="text-lg font-semibold mb-1 text-cyan-900">{course.title}</h4>
-        <p className="text-sm text-gray-600 mb-2">{course.subtitle}</p>
-        <p className="text-cyan-600 font-semibold">{course.totalStudents} enrolled</p>
-      </motion.div>
-    </Link>
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.4, delay: index * 0.1 }}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === "Enter") handleClick(); }}
+      className="bg-gradient-to-br from-cyan-50 to-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col items-center text-center cursor-pointer"
+      aria-label={`View ${course.title} course`}
+    >
+      <img
+        src={course.thumbnail || "https://img.icons8.com/color/96/code.png"}
+        alt={course.title}
+        className="w-16 h-16 mb-3 object-cover"
+        loading="lazy"
+      />
+      <h4 className="text-lg font-semibold mb-1 text-cyan-900">{course.title}</h4>
+      <p className="text-sm text-gray-600 mb-2">{course.subtitle}</p>
+      <p className="text-cyan-600 font-semibold">{course.totalStudents} enrolled</p>
+    </motion.div>
   );
 };
 
@@ -38,6 +55,12 @@ const RecommendedCourses = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Popup state for unauthenticated user
+  const [authPopupOpen, setAuthPopupOpen] = useState(false);
+  const [redirectPath, setRedirectPath] = useState(null);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -46,14 +69,12 @@ const RecommendedCourses = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Recommended courses data:", data); // Debug log
         if (data.success) {
           setCourses(data.data);
         } else {
           throw new Error(data.message || "Failed to fetch courses");
         }
       } catch (err) {
-        console.error("Fetch courses error:", err.message); // Debug log
         setError(err.message);
       } finally {
         setLoading(false);
@@ -61,6 +82,17 @@ const RecommendedCourses = () => {
     };
     fetchCourses();
   }, []);
+
+  const handleUnauthenticatedClick = (path) => {
+    setRedirectPath(path);
+    setAuthPopupOpen(true);
+  };
+
+  const handleSignupRedirect = () => {
+    setAuthPopupOpen(false);
+    localStorage.setItem("redirectAfterLogin", redirectPath); // optional: to redirect user after signup/login
+    navigate("/signup");
+  };
 
   if (loading) {
     return <div className="text-center py-20">Loading...</div>;
@@ -74,7 +106,7 @@ const RecommendedCourses = () => {
 
   return (
     <section className="py-20 bg-white px-6 md:px-16 relative">
-      <div className={modalOpen ? "filter blur-sm pointer-events-none" : ""}>
+      <div className={modalOpen || authPopupOpen ? "filter blur-sm pointer-events-none" : ""}>
         <h2 className="text-4xl font-extrabold text-center text-black mb-6 tracking-wide">
           Recommended <span className="text-cyan-500">Courses</span> <span>for You</span>
         </h2>
@@ -84,19 +116,12 @@ const RecommendedCourses = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 max-w-7xl mx-auto">
           {previewCourses.map((course, index) => (
-            <Link to={`/courses/${course._id}`} key={course._id}>
-              <div className="h-[320px] bg-gradient-to-br from-cyan-50 to-white p-6 rounded-3xl shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col items-center text-center">
-                <img
-                  src={course.thumbnail || "https://img.icons8.com/color/96/code.png"}
-                  alt={course.title}
-                  className="w-20 h-20 mb-4 object-cover"
-                  loading="lazy"
-                />
-                <h3 className="text-lg font-semibold mb-2 text-cyan-900">{course.title}</h3>
-                <p className="text-sm text-gray-600 mb-3">{course.subtitle}</p>
-                <p className="text-cyan-600 font-semibold">{course.totalStudents} enrolled</p>
-              </div>
-            </Link>
+            <CourseCard
+              key={course._id}
+              course={course}
+              index={index}
+              onUnauthenticatedClick={handleUnauthenticatedClick}
+            />
           ))}
         </div>
 
@@ -127,7 +152,6 @@ const RecommendedCourses = () => {
               className="sticky top-4 right-4 text-cyan-500 text-2xl font-bold hover:text-cyan-700 bg-white rounded-full px-3 py-1 shadow-lg z-50"
               onClick={() => setModalOpen(false)}
               aria-label="Close modal"
-              style={{ float: "right" }}
             >
               ×
             </button>
@@ -136,9 +160,47 @@ const RecommendedCourses = () => {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {courses.map((course, index) => (
-                <CourseCard key={course._id} course={course} index={index} />
+                <CourseCard
+                  key={course._id}
+                  course={course}
+                  index={index}
+                  onUnauthenticatedClick={handleUnauthenticatedClick}
+                />
               ))}
             </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Auth popup modal */}
+      {authPopupOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-60 p-4"
+          onClick={() => setAuthPopupOpen(false)}
+        >
+          <motion.div
+            className="bg-white rounded-xl max-w-md w-full p-8 text-center relative"
+            onClick={(e) => e.stopPropagation()}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <h2 className="text-2xl font-semibold mb-4 text-cyan-900">You have not signed in</h2>
+            <p className="mb-6 text-gray-700">Please sign up to access this course.</p>
+            <button
+              onClick={handleSignupRedirect}
+              className="px-6 py-3 bg-cyan-500 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
+            >
+              Sign Up
+            </button>
+            <button
+              onClick={() => setAuthPopupOpen(false)}
+              className="absolute top-3 right-3 text-cyan-500 hover:text-cyan-700 font-bold text-xl"
+              aria-label="Close popup"
+            >
+              ×
+            </button>
           </motion.div>
         </div>
       )}

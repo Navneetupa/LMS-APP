@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Placeholder images (replace with actual paths or URLs)
 import developmentImage from '../../assets/developmentImage.png';
@@ -30,6 +30,9 @@ const CategorySelector = () => {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+
+  const navigate = useNavigate();
 
   // Fetch courses from API
   useEffect(() => {
@@ -55,14 +58,33 @@ const CategorySelector = () => {
 
   const handleCategoryClick = (categoryTitle) => {
     setSelectedCategory(categoryTitle);
+    setShowLoginPrompt(false); // Reset login popup on new category select
   };
 
   const closeModal = () => {
     setSelectedCategory(null);
+    setShowLoginPrompt(false);
   };
 
   const loadMore = () => {
     setPage((prev) => prev + 1);
+  };
+
+  const handleCourseClick = (courseId) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.token) {
+      // User logged in, go directly to course detail page
+      navigate(`/courses/${courseId}`);
+    } else {
+      // User not logged in, show login popup
+      setShowLoginPrompt(true);
+    }
+  };
+
+  const goToSignIn = () => {
+    setShowLoginPrompt(false);
+    setSelectedCategory(null);
+    navigate('/login');
   };
 
   const filteredCourses = selectedCategory
@@ -76,7 +98,7 @@ const CategorySelector = () => {
       {/* First Container */}
       <section>
         <h2 className="text-3xl font-bold mb-8 text-center" data-aos="fade-right">
-          <span className="text-[#0b0b0b]">Categories </span>{' '}
+          <span className="text-[#0b0b0b]">Component</span>{' '}
           <span className="text-[#49BBBD]">Courses</span>
           <span> For You</span>
         </h2>
@@ -125,9 +147,33 @@ const CategorySelector = () => {
         </div>
       </section>
 
+      {/* Show Login Prompt Popup above filtered courses */}
+      {showLoginPrompt && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-8 max-w-md w-full shadow-2xl relative text-center">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">
+              You are not logged in. Please login first.
+            </h3>
+            <button
+              onClick={goToSignIn}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition"
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => setShowLoginPrompt(false)}
+              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-2xl font-bold"
+              aria-label="Close login prompt"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Modal for Courses */}
       {selectedCategory && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 p-4">
           <div className="bg-white rounded-xl p-8 max-w-5xl w-full max-h-[85vh] overflow-y-auto shadow-2xl relative">
             <div className="modal-header">
               <button
@@ -151,11 +197,13 @@ const CategorySelector = () => {
             {!loading && !error && filteredCourses.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredCourses.map((course) => (
-                  <Link to={`/courses/${course._id}`} key={course._id} className="w-full">
-                    <div
-                      className="bg-gray-100 hover:bg-blue-100 transition p-6 rounded-xl flex flex-col items-center text-center shadow-md"
-                      data-aos="zoom-in"
-                    >
+                  <div
+                    key={course._id}
+                    className="w-full cursor-pointer"
+                    onClick={() => handleCourseClick(course._id)}
+                    data-aos="zoom-in"
+                  >
+                    <div className="bg-gray-100 hover:bg-blue-100 transition p-6 rounded-xl flex flex-col items-center text-center shadow-md">
                       <img
                         src={course.thumbnail || 'https://via.placeholder.com/150'}
                         alt={course.title}
@@ -173,7 +221,7 @@ const CategorySelector = () => {
                         Rating: {course.rating} ({course.totalRatings} reviews)
                       </p>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             )}

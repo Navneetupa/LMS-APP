@@ -7,19 +7,23 @@ import Career from "./Pages/Career.js";
 import About from "./Pages/AboutUs.js";
 import Contact from "./Pages/ContactUs.js";
 import Login from "./Pages/Login.jsx";
+import FixedNavbar from "./components/StickyNavbar.jsx"; // Make sure path is correct
 
 function App() {
   return (
-   <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login/>} />
-        <Route path="/courses" element={<CoursesPage />} />
-        <Route path="/courses/:courseId" element={<CourseDetails />} /> 
-        <Route path="/career" element={<Career />} />
-        <Route path="/aboutus" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
+    <Router>
+      <FixedNavbar />
+      <div > 
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/courses/:courseId" element={<CourseDetails />} /> 
+          <Route path="/career" element={<Career />} />
+          <Route path="/aboutus" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
