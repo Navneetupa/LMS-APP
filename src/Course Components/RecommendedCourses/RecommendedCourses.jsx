@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-
-const isAuthenticated = () => {
-  return Boolean(localStorage.getItem("authToken"));
-};
+import axios from "axios";
 
 const CourseCard = ({ course, index, onUnauthenticatedClick }) => {
   const [ref, inView] = useInView({
@@ -15,11 +12,14 @@ const CourseCard = ({ course, index, onUnauthenticatedClick }) => {
 
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    if (isAuthenticated()) {
-      navigate(`/courses/${course._id}`);
+  const handleCourseClick = (courseId) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // User logged in, go to enrollment page
+      navigate(`/courses/${courseId}`);
     } else {
-      onUnauthenticatedClick(`/courses/${course._id}`);
+      // User not logged in, trigger auth popup
+      onUnauthenticatedClick(`/courses/${courseId}/enroll`);
     }
   };
 
@@ -29,10 +29,10 @@ const CourseCard = ({ course, index, onUnauthenticatedClick }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.4, delay: index * 0.1 }}
-      onClick={handleClick}
+      onClick={() => handleCourseClick(course._id)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => { if (e.key === "Enter") handleClick(); }}
+      onKeyDown={(e) => { if (e.key === "Enter") handleCourseClick(course._id); }}
       className="bg-gradient-to-br from-cyan-50 to-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col items-center text-center cursor-pointer"
       aria-label={`View ${course.title} course`}
     >
@@ -64,18 +64,14 @@ const RecommendedCourses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("https://lms-backend-flwq.onrender.com/api/v1/courses/recommended");
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data.success) {
-          setCourses(data.data);
+        const response = await axios.get("https://lms-backend-flwq.onrender.com/api/v1/courses/recommended");
+        if (response.data.success) {
+          setCourses(response.data.data);
         } else {
-          throw new Error(data.message || "Failed to fetch courses");
+          throw new Error(response.data.message || "Failed to fetch courses");
         }
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || err.message || "Error fetching courses");
       } finally {
         setLoading(false);
       }
@@ -88,10 +84,12 @@ const RecommendedCourses = () => {
     setAuthPopupOpen(true);
   };
 
-  const handleSignupRedirect = () => {
+  const handleLoginRedirect = () => {
     setAuthPopupOpen(false);
-    localStorage.setItem("redirectAfterLogin", redirectPath); // optional: to redirect user after signup/login
-    navigate("/signup");
+    if (redirectPath) {
+      localStorage.setItem("redirectAfterLogin", redirectPath); // Store for post-login redirect
+    }
+    navigate("/login");
   };
 
   if (loading) {
@@ -186,13 +184,13 @@ const RecommendedCourses = () => {
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.25 }}
           >
-            <h2 className="text-2xl font-semibold mb-4 text-cyan-900">You have not signed in</h2>
-            <p className="mb-6 text-gray-700">Please sign up to access this course.</p>
+            <h2 className="text-2xl font-semibold mb-4 text-cyan-900">Please Log In</h2>
+            <p className="mb-6 text-gray-700">Please log in to enroll in this course.</p>
             <button
-              onClick={handleSignupRedirect}
+              onClick={handleLoginRedirect}
               className="px-6 py-3 bg-cyan-500 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
             >
-              Sign Up
+              Log In
             </button>
             <button
               onClick={() => setAuthPopupOpen(false)}

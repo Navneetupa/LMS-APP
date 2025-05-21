@@ -71,9 +71,9 @@ const CategorySelector = () => {
   };
 
   const handleCourseClick = (courseId) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.token) {
-      // User logged in, go directly to course detail page
+    const token = localStorage.getItem('token');
+    if (token) {
+      // User logged in, go to enrollment page
       navigate(`/courses/${courseId}`);
     } else {
       // User not logged in, show login popup
@@ -148,29 +148,27 @@ const CategorySelector = () => {
       </section>
 
       {/* Show Login Prompt Popup above filtered courses */}
-      {showLoginPrompt && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-8 max-w-md w-full shadow-2xl relative text-center">
-            <h3 className="text-xl font-semibold mb-4 text-gray-800">
-              You are not logged in. Please login first.
-            </h3>
-            <button
-              onClick={goToSignIn}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => setShowLoginPrompt(false)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-2xl font-bold"
-              aria-label="Close login prompt"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-      )}
-
+     {showLoginPrompt && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl relative text-center">
+      <button
+        onClick={() => setShowLoginPrompt(false)}
+        className="absolute top-4 right-4 text-[#00B4CC] text-xl font-bold hover:text-[#0098aa] transition"
+        aria-label="Close login prompt"
+      >
+        ×
+      </button>
+      <h3 className="text-2xl font-semibold text-[#023047] mb-2">You have not signed in</h3>
+      <p className="text-gray-600 mb-6">Please sign up to access this course.</p>
+      <button
+        onClick={goToSignIn}
+        className="bg-[#00B4CC] hover:bg-[#0098aa] text-white px-6 py-2 rounded-full text-lg font-semibold transition duration-300"
+      >
+       Log In
+      </button>
+    </div>
+  </div>
+)}
       {/* Modal for Courses */}
       {selectedCategory && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 p-4">

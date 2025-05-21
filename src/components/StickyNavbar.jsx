@@ -1,30 +1,69 @@
-import React, { useState, useEffect } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import React, { useState, useEffect, useRef } from "react";
+import { FaBars, FaTimes, FaUserCircle, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png"; // path adjust karo
+import axios from "axios";
+import logo from "../assets/logo.png"; // Adjust path as needed
 
 const FixedNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(null);
+  const dropdownRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = localStorage.getItem("user") || localStorage.getItem("authToken");
-    setIsLoggedIn(!!user);
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+
+    if (token) {
+      const fetchProfile = async () => {
+        try {
+          const response = await axios.get("https://lms-backend-flwq.onrender.com/api/v1/students/profile", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (response.data.success) {
+            const avatarPath = response.data.data.avatar || 'default_avatar.jpg';
+            setAvatarUrl(`https://lms-backend-flwq.onrender.com/uploads/${avatarPath}`);
+          }
+        } catch (error) {
+          console.error("Error fetching profile:", error.response?.data || error.message);
+          // Use default avatar on failure (from login response)
+          setAvatarUrl('https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg');
+        }
+      };
+      fetchProfile();
+    } else {
+      setAvatarUrl('https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg');
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("token");
     setIsLoggedIn(false);
+    setIsDropdownOpen(false);
+    setIsMenuOpen(false);
+    setAvatarUrl(null);
     navigate("/login");
   };
 
-  // Yahan hum check kar rahe hain ki agar path '/login' ya '/signup' ho to navbar render na ho
   if (location.pathname === "/login" || location.pathname === "/signup") {
-    return null; // Navbar render hi nahi hoga in pages pe
+    return null;
   }
 
   return (
@@ -60,16 +99,19 @@ const FixedNavbar = () => {
           </div>
         ) : (
           <div className="md:hidden w-full text-white font-medium mb-4">
-            <Link to="/profile" onClick={() => setIsMenuOpen(false)}>
-              👤 My Profile
+            <Link
+              to="/profile"
+              className="flex items-center gap-2 py-1"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <FaUser />
+              My Profile
             </Link>
             <button
-              onClick={() => {
-                handleLogout();
-                setIsMenuOpen(false);
-              }}
-              className="block mt-2 text-sm bg-red-500 px-4 py-1 rounded hover:bg-red-600"
+              onClick={handleLogout}
+              className="flex items-center gap-2 py-1 text-sm bg-red-500 px-4 rounded hover:bg-red-600"
             >
+              <FaSignOutAlt />
               Logout
             </button>
           </div>
@@ -113,8 +155,8 @@ const FixedNavbar = () => {
         </Link>
       </div>
 
-      {/* Desktop Buttons or Profile */}
-      <div className="hidden md:flex items-center space-x-3 mt-4 md:mt-0">
+      {/* Desktop Buttons or Avatar */}
+      <div className="hidden md:flex items-center space-x-3 mt-4 md:mt-0" ref={dropdownRef}>
         {!isLoggedIn ? (
           <>
             <Link
@@ -131,20 +173,42 @@ const FixedNavbar = () => {
             </Link>
           </>
         ) : (
-          <>
-            <Link
-              to="/profile"
-              className="text-sm px-4 py-0.5 rounded-full text-white bg-[#00A78E] font-medium transition-all duration-300 hover:bg-[#008f76]"
-            >
-              👤 Profile
-            </Link>
+          <div className="relative">
             <button
-              onClick={handleLogout}
-              className="text-sm px-4 py-0.5 rounded-full text-white bg-red-500 font-medium transition-all duration-300 hover:bg-red-600"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="text-white text-2xl focus:outline-none"
             >
-              Logout
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="User Avatar"
+                  className="w-8 h-8 rounded-full border-2 object-cover"
+                  onError={(e) => (e.target.src = 'https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg')}
+                />
+              ) : (
+                <FaUserCircle />
+              )}
             </button>
-          </>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+                <Link
+                  to="/student-dashboard"
+                  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[#49BBBD] hover:text-white"
+                  onClick={() => setIsDropdownOpen(false)}
+                >
+                  <FaUser />
+                  Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-red-500 hover:text-white w-full text-left"
+                >
+                  <FaSignOutAlt />
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
 

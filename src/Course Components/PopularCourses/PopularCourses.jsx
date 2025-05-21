@@ -5,7 +5,7 @@ import { useInView } from "react-intersection-observer";
 
 // Simple auth check (customize to your auth logic)
 const isAuthenticated = () => {
-  return Boolean(localStorage.getItem("authToken"));
+  return Boolean(localStorage.getItem("token"));
 };
 
 const CourseCard = ({ course, index, isPreview = false, onUnauthenticatedClick }) => {
@@ -207,7 +207,7 @@ const PopularCourses = () => {
               onClick={handleSignupRedirect}
               className="px-6 py-3 bg-cyan-500 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
             >
-              Sign Up
+            Log In
             </button>
             <button
               onClick={() => setAuthPopupOpen(false)}

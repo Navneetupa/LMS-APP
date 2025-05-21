@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const AuthComponent = () => {
   const [isLogin, setIsLogin] = useState(true);
-
   const [registerData, setRegisterData] = useState({
     firstName: '',
     lastName: '',
@@ -12,24 +11,25 @@ const AuthComponent = () => {
     phone: '',
     password: '',
   });
-
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
   });
-
   const [showOtpPopup, setShowOtpPopup] = useState(false);
   const [otp, setOtp] = useState('');
   const [registeredEmail, setRegisteredEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const navigate = useNavigate();
 
   const handleRegisterChange = (e) => {
     setRegisterData({ ...registerData, [e.target.name]: e.target.value });
+    setErrorMessage('');
   };
 
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
+    setErrorMessage('');
   };
 
   const handleRegister = async (e) => {
@@ -39,11 +39,12 @@ const AuthComponent = () => {
         ...registerData,
         role: 'student',
       });
-      alert('Registration successful! Please check your email for the OTP.');
       setRegisteredEmail(registerData.email);
-      setShowOtpPopup(true); // Show OTP popup
+      setShowOtpPopup(true);
+      setErrorMessage('');
+      alert('Registration successful! Please check your email for the OTP.');
     } catch (err) {
-      alert('Registration failed: ' + (err.response?.data?.message || err.message));
+      setErrorMessage('Registration failed: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -54,11 +55,13 @@ const AuthComponent = () => {
         otp,
       });
       alert('Email verified successfully!');
-      setIsLogin(true); // Switch to login
-      setShowOtpPopup(false); // Hide popup
+      setIsLogin(true);
+      setShowOtpPopup(false);
       setRegisterData({ firstName: '', lastName: '', email: '', phone: '', password: '' });
+      setOtp('');
+      setErrorMessage('');
     } catch (err) {
-      alert('OTP verification failed: ' + (err.response?.data?.message || err.message));
+      setErrorMessage('OTP verification failed: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -66,13 +69,15 @@ const AuthComponent = () => {
     e.preventDefault();
     try {
       const res = await axios.post('https://lms-backend-flwq.onrender.com/api/v1/auth/login', loginData);
-      localStorage.setItem('authToken', res.data.token);
-      alert('Login successful!');
+      console.log('Login response:', res.data); // Debug login response
+      localStorage.setItem('token', res.data.data.token);
+      setErrorMessage('');
       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
       localStorage.removeItem('redirectAfterLogin');
-      navigate("/");
+      navigate(redirectPath);
     } catch (err) {
-      alert('Login failed: ' + (err.response?.data?.message || err.message));
+      console.error('Login error:', err.response?.data || err.message);
+      setErrorMessage('Login failed: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -91,6 +96,8 @@ const AuthComponent = () => {
 
       <div className="w-full sm:w-1/2 flex flex-col justify-center items-center bg-gray-100 p-6 sm:p-10">
         <h2 className="text-2xl font-semibold mb-2 text-center">Welcome back to LMS!</h2>
+
+        {errorMessage && <p className="text-red-500 mb-4 text-center">{errorMessage}</p>}
 
         <div className="flex mb-6">
           <button
@@ -187,6 +194,7 @@ const AuthComponent = () => {
               className="w-full mb-4 p-2 border border-gray-300 rounded-md"
               placeholder="Enter OTP"
             />
+            {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
             <div className="flex justify-center gap-4">
               <button
                 onClick={handleVerifyOtp}
@@ -195,7 +203,10 @@ const AuthComponent = () => {
                 Verify
               </button>
               <button
-                onClick={() => setShowOtpPopup(false)}
+                onClick={() => {
+                  setShowOtpPopup(false);
+                  setErrorMessage('');
+                }}
                 className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
               >
                 Cancel

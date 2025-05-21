@@ -32,7 +32,6 @@ const CourseHeader = () => {
         if (course && course.thumbnail) {
           setThumbnail(course.thumbnail);
           // Log the thumbnail URL for debugging
-          console.log('Thumbnail URL:', course.thumbnail);
         } else {
           throw new Error('No thumbnail found for this course');
         }

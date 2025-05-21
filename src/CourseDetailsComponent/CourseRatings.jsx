@@ -46,7 +46,6 @@ const CourseRatings = () => {
     : null;
 
   useEffect(() => {
-    console.log('Received courseId:', courseId);
   }, [courseId]);
 
   // Fetch course details including name
@@ -64,7 +63,6 @@ const CourseRatings = () => {
           throw new Error(`HTTP error! Status: ${res.status}`);
         }
         const data = await res.json();
-        console.log('Course API Response:', data);
         if (data.success) {
           if (!data.data) {
             throw new Error('No data field in response');
@@ -105,7 +103,6 @@ const CourseRatings = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Reviews API Response:', data);
         if (data.success) {
           const mappedReviews = data.data.map((review) => ({
             name: `${review.user?.firstName || 'Unknown'} ${review.user?.lastName || ''}`,
@@ -162,7 +159,6 @@ const CourseRatings = () => {
         });
 
         const data = await response.json();
-        console.log('Add Comment Response:', data);
         if (data.success) {
           const newReview = {
             name: commentName,

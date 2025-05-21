@@ -8,6 +8,8 @@ import About from "./Pages/AboutUs.js";
 import Contact from "./Pages/ContactUs.js";
 import Login from "./Pages/Login.jsx";
 import FixedNavbar from "./components/StickyNavbar.jsx"; // Make sure path is correct
+import StudentDashboard from './Pages/Profiledashboard/parentLayout.jsx'
+import CoursePlayer from "./Pages/CoursePlayer.jsx";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/career" element={<Career />} />
           <Route path="/aboutus" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/student-dashboard" element={<StudentDashboard />} />
+          <Route path="/course-player/:courseId" element={<CoursePlayer />} />
         </Routes>
       </div>
     </Router>
