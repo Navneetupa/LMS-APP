@@ -3,7 +3,6 @@ import heroImage from "../assets/hero-girl.png";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Link, useNavigate } from "react-router-dom";
-
 import edit from "../assets/edit.png";
 import edit1 from "../assets/edit1.png";
 import edit2 from "../assets/edit2.png";
@@ -16,6 +15,9 @@ const HeroWithNavbar = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(""); // State for search input
+  const [modalOpen, setModalOpen] = useState(false); // State for search results modal
+  const [searchResults, setSearchResults] = useState([]); // State for search results
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,10 +58,12 @@ const HeroWithNavbar = () => {
     if (token) {
       // User logged in, go to course page
       setShowPopup(false); // Close filtered courses popup
+      setModalOpen(false); // Close search results modal
       navigate(`/courses/${courseId}`);
     } else {
       // User not logged in, show login popup
       setShowPopup(false); // Close filtered courses popup
+      setModalOpen(false); // Close search results modal
       setShowLoginPrompt(true);
     }
   };
@@ -82,6 +86,52 @@ const HeroWithNavbar = () => {
     navigate("/login");
   };
 
+  // Search handler
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) {
+      setError("Please enter a search term");
+      setModalOpen(true);
+      return;
+    }
+
+    setError(null); // Clear previous errors
+    try {
+      const queryParams = new URLSearchParams();
+      queryParams.append("search", searchTerm.trim().toLowerCase()); // Normalize search term
+
+      const url = `https://lms-backend-flwq.onrender.com/api/v1/courses/search/filters?${queryParams.toString()}`;
+      console.log("API URL:", url); // Debug: Log the exact URL
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      console.log("API Response:", data); // Debug: Log the full response
+
+      if (data.success) {
+        // Client-side filtering to ensure only matching courses are shown
+        const filteredResults = (data.data || []).filter(
+          (course) =>
+            course.title?.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+            course.description?.toLowerCase().includes(searchTerm.trim().toLowerCase())
+        );
+        setSearchResults(filteredResults);
+        if (filteredResults.length === 0) {
+          setError(`No courses found matching "${searchTerm}"`);
+        }
+        setModalOpen(true);
+      } else {
+        setSearchResults([]);
+        setError(data.message || `No courses found for "${searchTerm}"`);
+        setModalOpen(true);
+      }
+    } catch (err) {
+      console.error("Fetch Error:", err); // Debug: Log fetch errors
+      setSearchResults([]);
+      setError("An error occurred while fetching courses");
+      setModalOpen(true);
+    }
+  };
+
   return (
     <section className="relative bg-[#49BBBD] pb-20 pt-0 overflow-hidden text-gray-800 mt-14">
       {/* Search */}
@@ -92,11 +142,25 @@ const HeroWithNavbar = () => {
             type="text"
             autoComplete="none"
             placeholder="Search your favourite course..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
           />
-          <button className="bg-[#7ddedf] text-white px-4 py-2 rounded-md font-medium text-sm shadow hover:bg-[#59c1c3] transition-all duration-300">
+          <button
+            className="bg-[#7ddedf] text-white px-4 py-2 rounded-md font-medium text-sm shadow hover:bg-[#59c1c3] transition-all duration-300"
+            onClick={handleSearch}
+          >
             Search
           </button>
         </div>
+        {/* Display Error if Any */}
+        {error && !modalOpen && !showPopup && (
+          <p className="mt-4 text-red-500 text-center">{error}</p>
+        )}
       </div>
 
       {/* Filter Dropdowns */}
@@ -183,6 +247,54 @@ const HeroWithNavbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Search Results Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-lg w-full max-h-[70vh] overflow-y-auto relative">
+            <button
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-2xl font-bold"
+              onClick={() => setModalOpen(false)}
+            >
+              ×
+            </button>
+            <h2 className="text-2xl font-bold mb-4">Search Results for "{searchTerm}"</h2>
+            {error ? (
+              <p className="text-red-500 text-center">{error}</p>
+            ) : searchResults.length > 0 ? (
+              <ul className="grid grid-cols-1 gap-4">
+                {searchResults.map((course) => (
+                  <li key={course._id} className="py-2">
+                    <div
+                      onClick={() => handleCourseClick(course._id)}
+                      className="bg-gray-100 hover:bg-blue-100 transition p-4 rounded-lg flex flex-col items-center text-center shadow-md cursor-pointer"
+                    >
+                      <img
+                        src={course.thumbnail || "https://via.placeholder.com/150"}
+                        alt={course.title}
+                        className="w-20 h-20 mb-2 object-cover rounded-full"
+                        onError={(e) => (e.target.src = "https://via.placeholder.com/150")}
+                      />
+                      <span className="text-sm font-medium text-gray-800">{course.title}</span>
+                      <p className="text-xs mt-1 text-gray-600 line-clamp-2">{course.description}</p>
+                      <p className="text-xs mt-1 text-gray-500">
+                        By {course.instructor?.firstName} {course.instructor?.lastName}
+                      </p>
+                      <p className="text-xs mt-1 text-gray-500">{course.duration} hours</p>
+                      <p className="text-xs mt-1 text-gray-500">${course.price}</p>
+                      <p className="text-xs mt-1 text-gray-500">
+                        Rating: {course.rating} ({course.totalRatings || 0} reviews)
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-600 text-center">No courses found matching "{searchTerm}".</p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Filtered Courses Popup */}
       {showPopup && (
