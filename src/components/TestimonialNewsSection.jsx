@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Testimonial from "../assets/testimonial.png";
-
+import testimonial from "../assets/testimonial.png";
+import testimonialss from "../assets//testi.jpg";
+import testimonialsss from "../assets//testim.jpg";
 const testimonials = [
   {
     text: "Thank you so much for your help. It’s exactly what I’ve been looking for. LMS is exactly what our business has been lacking.",
     name: "Divya Sharma",
     reviews: "12",
+    image: testimonial,
   },
   {
     text: "The platform made learning so interactive and fun. I highly recommend it to everyone!",
-    name: "Rohit Verma",
+    name: "Shruti Verma",
     reviews: "8",
+    image: testimonialss,
   },
   {
     text: "Excellent support and well-structured content. It saved me a lot of time.",
     name: "Anita Singh",
     reviews: "15",
+    image: testimonialsss,
   },
 ];
 
@@ -26,7 +30,7 @@ export default function TestimonialSection() {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % testimonials.length);
-    }, 4000); // Change testimonial every 4 seconds
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -75,17 +79,24 @@ export default function TestimonialSection() {
         transition={{ duration: 0.8 }}
       >
         <div className="rounded-2xl overflow-hidden w-full sm:w-80 h-96 mx-auto">
-          <img
-            src={Testimonial}
-            alt="Student"
-            className="object-cover w-full h-full"
-          />
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={index}
+              src={testimonials[index].image}
+              alt={testimonials[index].name}
+              className="object-cover w-full h-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6 }}
+            />
+          </AnimatePresence>
         </div>
 
         {/* Sliding Testimonial Card */}
         <div
           className="
-            absolute bottom-10 right-4 sm:right-20
+            absolute bottom-1 right-4 sm:right-20
             md:left-1/2 md:right-auto
             md:translate-x-[-50%]
             w-[190px] sm:w-[210px] md:w-[230px]

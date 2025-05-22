@@ -28,14 +28,7 @@ const FeatureHighlight = () => {
           submit assignments, and engage with instructors in real-time.
         </p>
 
-        <a
-          href="https://your-link-here.com"
-          className="text-sm text-blue-500 font-semibold hover:underline transition-all duration-200"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn more
-        </a>
+ 
       </motion.div>
 
       {/* Image Block */}

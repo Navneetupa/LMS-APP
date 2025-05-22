@@ -33,7 +33,7 @@ const CourseHeader = () => {
           setThumbnail(course.thumbnail);
           // Log the thumbnail URL for debugging
         } else {
-          throw new Error('No thumbnail found for this course');
+          throw new Error('No thumbnail added');
         }
       } catch (err) {
         setError(err.message);

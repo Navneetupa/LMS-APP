@@ -26,18 +26,17 @@ const FixedNavbar = () => {
             },
           });
           if (response.data.success) {
-            const avatarPath = response.data.data.avatar || 'default_avatar.jpg';
+            const avatarPath = response.data.data.avatar || "default_avatar.jpg";
             setAvatarUrl(`https://lms-backend-flwq.onrender.com/uploads/${avatarPath}`);
           }
         } catch (error) {
           console.error("Error fetching profile:", error.response?.data || error.message);
-          // Use default avatar on failure (from login response)
-          setAvatarUrl('https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg');
+          setAvatarUrl("https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg");
         }
       };
       fetchProfile();
     } else {
-      setAvatarUrl('https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg');
+      setAvatarUrl("https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg");
     }
   }, []);
 
@@ -62,43 +61,40 @@ const FixedNavbar = () => {
     navigate("/login");
   };
 
-  if (location.pathname === "/login" || location.pathname === "/signup") {
-    return null;
-  }
+  if (location.pathname === "/login" || location.pathname === "/signup") return null;
 
   return (
-    <nav className="fixed top-0 left-0 w-full flex flex-wrap justify-between items-center py-2 px-4 sm:px-8 bg-[#49BBBD] z-50 shadow-md">
-      <div>
-        <Link to="/">
-          <img src={logo} alt="Your Logo" className="h-10" />
-        </Link>
-      </div>
+    <nav className="fixed top-0 left-0 w-full flex justify-between items-center px-4 sm:px-8 py-2 bg-[#49BBBD] z-50 shadow-md">
+      {/* Logo */}
+      <Link to="/">
+        <img src={logo} alt="Logo" className="h-10" />
+      </Link>
 
-      {/* Menu Items */}
+      {/* Nav Links */}
       <div
         className={`${
           isMenuOpen ? "flex" : "hidden"
-        } md:flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-10 mt-4 md:mt-0 font-medium bg-[#49BBBD] w-full md:w-auto absolute md:relative top-16 md:top-0 left-0 z-40 px-4 py-4 md:p-0 transition-all duration-300 ease-in-out`}
+        } md:flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-10 bg-[#49BBBD] w-full md:w-auto absolute md:static top-14 md:top-0 left-0 z-40 px-4 py-2 md:p-0 transition-all`}
       >
         {!isLoggedIn ? (
-          <div className="flex flex-col md:hidden w-full gap-3 mb-4">
+          <div className="flex flex-col md:hidden w-full gap-2">
             <Link
               to="/login"
-              className="text-sm px-4 py-1 rounded-full text-[#49BBBD] bg-white font-medium hover:text-white hover:bg-[#49BBBD] transition-all"
+              className="text-sm px-4 py-1 rounded-full text-[#49BBBD] bg-white font-medium text-center"
               onClick={() => setIsMenuOpen(false)}
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className="text-sm px-4 py-1 rounded-full text-white bg-[#7ddedf] font-medium hover:bg-[#59c1c3] transition-all"
+              className="text-sm px-4 py-1 rounded-full text-white bg-[#7ddedf] font-medium text-center"
               onClick={() => setIsMenuOpen(false)}
             >
               Sign Up
             </Link>
           </div>
         ) : (
-          <div className="md:hidden w-full text-white font-medium mb-4">
+          <div className="md:hidden w-full text-white font-medium">
             <Link
               to="/student-dashboard"
               className="flex items-center gap-2 py-1"
@@ -117,76 +113,57 @@ const FixedNavbar = () => {
           </div>
         )}
 
-        {/* Main Nav Links */}
-        <Link
-          to="/"
-          className="text-white font-semibold hover:text-[#00A78E]"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          Home
-        </Link>
-        <Link
-          to="/courses"
-          className="text-white font-semibold hover:text-[#00A78E]"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          Courses
-        </Link>
-        <Link
-          to="/career"
-          className="text-white font-semibold hover:text-[#00A78E]"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          Careers
-        </Link>
-        <Link
-          to="/aboutus"
-          className="text-white font-semibold hover:text-[#00A78E]"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          About
-        </Link>
-        <Link
-          to="/contact"
-          className="text-white font-semibold hover:text-[#00A78E]"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          Contact
-        </Link>
+        {/* Navigation Pages */}
+        {[
+          { path: "/", label: "Home" },
+          { path: "/courses", label: "Courses" },
+          { path: "/career", label: "Careers" },
+          { path: "/aboutus", label: "About" },
+          { path: "/contact", label: "Contact" },
+        ].map(({ path, label }) => (
+          <Link
+            key={path}
+            to={path}
+            className="text-white font-semibold hover:text-[#00A78E]"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            {label}
+          </Link>
+        ))}
       </div>
 
-      {/* Desktop Buttons or Avatar */}
-      <div className="hidden md:flex items-center space-x-3 mt-4 md:mt-0" ref={dropdownRef}>
+      {/* Profile / Auth Buttons Desktop */}
+      <div className="hidden md:flex items-center space-x-3" ref={dropdownRef}>
         {!isLoggedIn ? (
           <>
             <Link
               to="/login"
-              className="text-sm px-4 py-0.5 rounded-full text-[#49BBBD] bg-white font-medium transition-all duration-300 hover:text-white hover:bg-[#49BBBD]"
+              className="text-sm px-4 py-0.5 rounded-full text-[#49BBBD] bg-white font-medium hover:text-white hover:bg-[#49BBBD]"
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className="text-sm px-4 py-0.5 rounded-full text-white bg-[#7ddedf] font-medium transition-all duration-300 hover:bg-[#59c1c3]"
+              className="text-sm px-4 py-0.5 rounded-full text-white bg-[#7ddedf] font-medium hover:bg-[#59c1c3]"
             >
               Sign Up
             </Link>
           </>
         ) : (
           <div className="relative">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="text-white text-2xl focus:outline-none"
-            >
+            <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
                   alt="User Avatar"
                   className="w-8 h-8 rounded-full border-2 object-cover"
-                  onError={(e) => (e.target.src = 'https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg')}
+                  onError={(e) =>
+                    (e.target.src =
+                      "https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg")
+                  }
                 />
               ) : (
-                <FaUserCircle />
+                <FaUserCircle className="text-white text-2xl" />
               )}
             </button>
             {isDropdownOpen && (
@@ -212,8 +189,8 @@ const FixedNavbar = () => {
         )}
       </div>
 
-      {/* Hamburger Icon */}
-      <div className="md:hidden flex items-center ml-2">
+      {/* Hamburger Button */}
+      <div className="md:hidden">
         <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? (
             <FaTimes className="text-white text-2xl" />

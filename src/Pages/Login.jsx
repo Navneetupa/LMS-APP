@@ -109,69 +109,82 @@ const AuthComponent = () => {
       setSuccessMessage('');
     }
   };
+const handleResetPassword = async (e) => {
+  e.preventDefault();
 
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
-    // Validate token (must be non-empty and have JWT structure: three parts separated by dots)
-    if (!resetPasswordData.token || resetPasswordData.token.split('.').length !== 3) {
-      setErrorMessage('Please enter a valid JWT token (format: xxx.yyy.zzz)');
-      return;
+  // Validate token (must be non-empty and have JWT structure: three parts separated by dots)
+  if (!resetPasswordData.token || resetPasswordData.token.split('.').length !== 3) {
+    setErrorMessage('Please enter a valid JWT token (format: xxx.yyy.zzz)');
+    return;
+  }
+
+  if (!resetPasswordData.newPassword || resetPasswordData.newPassword.length < 6) {
+    setErrorMessage('New password must be at least 6 characters long');
+    return;
+  }
+
+  try {
+    // ✅ Primary endpoint with corrected 'password' field
+    const res = await axios.put('https://lms-backend-flwq.onrender.com/api/v1/auth/reset-password', {
+      email: forgotPasswordEmail,
+      token: resetPasswordData.token,
+      password: resetPasswordData.newPassword,
+    });
+
+    console.log('Reset password response:', res.data);
+
+    if (res.data.success && res.data.message === 'Password updated successfully') {
+      setSuccessMessage('Password updated successfully! You can now log in with your new password.');
+      setErrorMessage('');
+      setShowResetPasswordPopup(false);
+      setResetPasswordData({ token: '', newPassword: '' });
+      setForgotPasswordEmail('');
+      setIsLogin(true);
+    } else {
+      setErrorMessage('Unexpected response from server. Please try again.');
+      setSuccessMessage('');
     }
-    if (!resetPasswordData.newPassword || resetPasswordData.newPassword.length < 6) {
-      setErrorMessage('New password must be at least 6 characters long');
-      return;
-    }
-    try {
-      // Try primary endpoint with PUT
-      const res = await axios.put('https://lms-backend-flwq.onrender.com/api/v1/auth/reset-password', {
-        email: forgotPasswordEmail,
-        token: resetPasswordData.token,
-        newPassword: resetPasswordData.newPassword,
-      });
-      console.log('Reset password response:', res.data);
-      if (res.data.success && res.data.message === 'Password updated successfully') {
-        setSuccessMessage('Password updated successfully! You can now log in with your new password.');
-        setErrorMessage('');
-        setShowResetPasswordPopup(false);
-        setResetPasswordData({ token: '', newPassword: '' });
-        setForgotPasswordEmail('');
-        setIsLogin(true);
-      } else {
-        setErrorMessage('Unexpected response from server. Please try again.');
-        setSuccessMessage('');
-      }
-    } catch (err) {
-      console.error('Reset password error:', err.response?.data || err.message);
-      // Try fallback endpoint with PUT and token as query parameter
-      if (err.response?.status === 404) {
-        try {
-          const fallbackRes = await axios.put(
-            `https://lms-backend-flwq.onrender.com/reset-password?token=${encodeURIComponent(resetPasswordData.token)}`,
-            { email: forgotPasswordEmail, newPassword: resetPasswordData.newPassword }
-          );
-          console.log('Fallback reset password response:', fallbackRes.data);
-          if (fallbackRes.data.success && fallbackRes.data.message === 'Password updated successfully') {
-            setSuccessMessage('Password updated successfully! You can now log in with your new password.');
-            setErrorMessage('');
-            setShowResetPasswordPopup(false);
-            setResetPasswordData({ token: '', newPassword: '' });
-            setForgotPasswordEmail('');
-            setIsLogin(true);
-          } else {
-            setErrorMessage('Unexpected response from fallback endpoint. Please try again.');
-            setSuccessMessage('');
+
+  } catch (err) {
+    console.error('Reset password error:', err.response?.data || err.message);
+
+    // Try fallback endpoint with token in query
+    if (err.response?.status === 404) {
+      try {
+        const fallbackRes = await axios.put(
+          `https://lms-backend-flwq.onrender.com/reset-password?token=${encodeURIComponent(resetPasswordData.token)}`,
+          {
+            email: forgotPasswordEmail,
+            password: resetPasswordData.newPassword,
           }
-        } catch (fallbackErr) {
-          console.error('Fallback reset password error:', fallbackErr.response?.data || fallbackErr.message);
-          setErrorMessage('Password reset endpoint not found. Please check the API URL or contact support.');
+        );
+
+        console.log('Fallback reset password response:', fallbackRes.data);
+
+        if (fallbackRes.data.success && fallbackRes.data.message === 'Password updated successfully') {
+          setSuccessMessage('Password updated successfully! You can now log in with your new password.');
+          setErrorMessage('');
+          setShowResetPasswordPopup(false);
+          setResetPasswordData({ token: '', newPassword: '' });
+          setForgotPasswordEmail('');
+          setIsLogin(true);
+        } else {
+          setErrorMessage('Unexpected response from fallback endpoint. Please try again.');
           setSuccessMessage('');
         }
-      } else {
-        setErrorMessage('Password reset failed: ' + (err.response?.data?.message || err.message));
+
+      } catch (fallbackErr) {
+        console.error('Fallback reset password error:', fallbackErr.response?.data || fallbackErr.message);
+        setErrorMessage('Password reset endpoint not found. Please check the API URL or contact support.');
         setSuccessMessage('');
       }
+
+    } else {
+      setErrorMessage('Password reset failed: ' + (err.response?.data?.message || err.message));
+      setSuccessMessage('');
     }
-  };
+  }
+};
 
   const handleResendToken = async () => {
     try {
