@@ -1,4 +1,3 @@
-// components/Contact.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -66,13 +65,13 @@ const Contact = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow p-6 max-w-3xl mx-auto">
-      <h2 className="text-2xl font-semibold mb-4">Contact Support</h2>
+    <div className="bg-white rounded-xl shadow p-4 sm:p-6 max-w-3xl mx-auto mt-4 sm:mt-8 w-full">
+      <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-center">Contact Support</h2>
 
-      {successMsg && <p className="text-green-600 mb-3">{successMsg}</p>}
-      {errorMsg && <p className="text-red-600 mb-3">{errorMsg}</p>}
+      {successMsg && <p className="text-green-600 text-sm mb-3 text-center">{successMsg}</p>}
+      {errorMsg && <p className="text-red-600 text-sm mb-3 text-center">{errorMsg}</p>}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 text-sm sm:text-base">
         <div>
           <label className="block text-gray-700 mb-1">Name</label>
           <input
@@ -80,7 +79,7 @@ const Contact = () => {
             name="name"
             value={form.name}
             disabled
-            className="w-full border border-gray-300 rounded-md p-2 bg-gray-100 cursor-not-allowed"
+            className="w-full border border-gray-300 rounded-md p-2 bg-gray-100 cursor-not-allowed text-gray-600"
           />
         </div>
         <div>
@@ -122,7 +121,7 @@ const Contact = () => {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
         >
           {loading ? 'Submitting...' : 'Submit Ticket'}
         </button>
