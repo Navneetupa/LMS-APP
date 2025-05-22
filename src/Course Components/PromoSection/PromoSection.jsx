@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-
+import { Link } from 'react-router-dom';
 const PromoSection = () => {
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -25,13 +25,14 @@ const PromoSection = () => {
       >
         Empower your future — learn anytime, anywhere with our expert-led online courses.
       </p>
-      <button
-        className="bg-white text-[#2F365F] font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-md hover:bg-[#aff3f4] transition text-sm sm:text-base"
-        data-aos="fade-up"
-        data-aos-delay="400"
-      >
-        Explore Now
-      </button>
+     <Link
+  to="/login"
+  className="bg-white text-[#2F365F] font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-md hover:bg-[#aff3f4] transition text-sm sm:text-base inline-block"
+  data-aos="fade-up"
+  data-aos-delay="400"
+>
+  Explore Now
+</Link>
     </section>
   );
 };

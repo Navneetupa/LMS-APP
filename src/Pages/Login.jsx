@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import image from '../assets/signup.png'
 
 const AuthComponent = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -205,10 +206,9 @@ const handleResetPassword = async (e) => {
   return (
     <div className="flex min-h-screen font-sans">
       <div
-        className="hidden sm:flex w-full sm:w-1/2 bg-cover bg-center rounded-r-3xl text-white flex-col justify-center p-10"
+        className="hidden sm:flex w-full sm:w-1/2 bg-cover bg-center rounded-r-2xl text-white flex-col justify-center p-10"
         style={{
-          backgroundImage:
-            "url('https://cdn.pixabay.com/photo/2018/09/10/12/19/school-3666924_1280.jpg')",
+          backgroundImage:`url(${image})`,
         }}
       >
         <h1 className="text-4xl font-bold mb-4">Empower your learning journey</h1>

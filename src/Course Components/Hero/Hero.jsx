@@ -81,58 +81,59 @@ export default function Career() {
           modalOpen || showLoginPrompt ? 'blur-sm pointer-events-none select-none' : ''
         } min-h-screen pt-12 bg-white text-gray-800 font-sans transition-filter duration-300`}
       >
-        <section className="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-12 items-center relative">
-          <div className="relative z-20">
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight pl-14">
-              Grow your skills with Advanced <span className="text-orange-400">Courses</span>
-            </h1>
-            <p className="mt-6 text-gray-600 pl-14">
-              Start, switch, or advance your career with more than 5,000 courses. <br />
-              Unlock your potential — skill up with thousands of expert-led courses.
-            </p>
-            <div className="mt-10 flex flex-wrap items-center gap-8 pl-14">
-              <div className="flex items-center border border-gray-300 px-4 py-2 rounded-full w-full md:w-72 transition-all duration-300 hover:ring-2 hover:ring-cyan-300 hover:shadow-md">
-                <FaSearch className="text-gray-500 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Search Course (e.g., JavaScript)"
-                  className="outline-none flex-grow"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSearch();
-                    }
-                  }}
-                />
-              </div>
-              <button
-                className="bg-cyan-500 text-white px-6 py-2 rounded-full hover:bg-cyan-600 transition-all duration-300 hover:scale-105"
-                onClick={handleSearch}
-              >
-                Search
-              </button>
-            </div>
-            {error && !modalOpen && !showLoginPrompt && (
-              <p className="mt-4 text-red-500 pl-14">{error}</p>
-            )}
-          </div>
+      <section className="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-12 items-center relative">
+  <div className="relative z-20">
+    <h1 className="text-4xl md:text-5xl font-bold leading-tight pl-4">
+      Grow your skills with Advanced <span className="text-orange-400">Courses</span>
+    </h1>
+    <p className="mt-6 text-gray-600 pl-4">
+      Start, switch, or advance your career with more than 5,000 courses. <br />
+      Unlock your potential — skill up with thousands of expert-led courses.
+    </p>
+    <div className="mt-10 flex flex-wrap items-center gap-8 pl-4">
+      <div className="flex items-center border border-gray-300 px-4 py-2 rounded-full w-full md:w-72 transition-all duration-300 hover:ring-2 hover:ring-cyan-300 hover:shadow-md">
+        <FaSearch className="text-gray-500 mr-2" />
+        <input
+          type="text"
+          placeholder="Search Course (e.g., JavaScript)"
+          className="outline-none flex-grow"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch();
+            }
+          }}
+        />
+      </div>
+      <button
+        className="bg-cyan-500 text-white px-6 py-2 rounded-full hover:bg-cyan-600 transition-all duration-300 hover:scale-105"
+        onClick={handleSearch}
+      >
+        Search
+      </button>
+    </div>
+    {error && !modalOpen && !showLoginPrompt && (
+      <p className="mt-4 text-red-500 pl-4">{error}</p>
+    )}
+  </div>
 
-          <div className="relative flex justify-center items-center z-20">
-            <div className="absolute w-[22rem] h-[22rem] z-0 top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-lg" />
-            <img
-              src="hero.webp"
-              alt="Job Search Illustration"
-              className="w-full max-w-md relative z-10"
-            />
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-white shadow-md px-4 py-2 rounded-full flex items-center text-sm z-20">
-              <span className="text-cyan-500 font-semibold mr-1">10.5K</span> Happy Students
-            </div>
-            <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white shadow-md px-4 py-2 rounded-full text-sm z-20">
-              It only takes a few seconds
-            </div>
-          </div>
-        </section>
+  <div className="relative flex justify-center items-center z-20">
+    <div className="absolute w-[22rem] h-[22rem] z-0 top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-lg" />
+    <img
+      src="hero.webp"
+      alt="Job Search Illustration"
+      className="w-full max-w-md relative z-10"
+    />
+    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-white shadow-md px-4 py-2 rounded-full flex items-center text-sm z-20">
+      <span className="text-cyan-500 font-semibold mr-1">10.5K</span> Happy Students
+    </div>
+    <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white shadow-md px-4 py-2 rounded-full text-sm z-20">
+      It only takes a few seconds
+    </div>
+  </div>
+</section>
+
       </div>
 
       {/* Modal showing search results */}

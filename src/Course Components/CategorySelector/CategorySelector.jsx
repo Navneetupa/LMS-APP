@@ -58,7 +58,7 @@ const CategorySelector = () => {
 
   const handleCategoryClick = (categoryTitle) => {
     setSelectedCategory(categoryTitle);
-    setShowLoginPrompt(false); // Reset login popup on new category select
+    setShowLoginPrompt(false);
   };
 
   const closeModal = () => {
@@ -73,10 +73,8 @@ const CategorySelector = () => {
   const handleCourseClick = (courseId) => {
     const token = localStorage.getItem('token');
     if (token) {
-      // User logged in, go to enrollment page
       navigate(`/courses/${courseId}`);
     } else {
-      // User not logged in, show login popup
       setShowLoginPrompt(true);
     }
   };
@@ -103,7 +101,7 @@ const CategorySelector = () => {
           <span> For You</span>
         </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1  md:grid-cols-4 gap-6">
           {categories.slice(0, 4).map((cat) => (
             <div
               key={cat.id}
@@ -126,7 +124,7 @@ const CategorySelector = () => {
 
       {/* Second Container */}
       <section className="mt-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {categories.slice(4).map((cat) => (
             <div
               key={cat.id}
@@ -147,29 +145,30 @@ const CategorySelector = () => {
         </div>
       </section>
 
-      {/* Show Login Prompt Popup above filtered courses */}
-     {showLoginPrompt && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl relative text-center">
-      <button
-        onClick={() => setShowLoginPrompt(false)}
-        className="absolute top-4 right-4 text-[#00B4CC] text-xl font-bold hover:text-[#0098aa] transition"
-        aria-label="Close login prompt"
-      >
-        ×
-      </button>
-      <h3 className="text-2xl font-semibold text-[#023047] mb-2">You have not signed in</h3>
-      <p className="text-gray-600 mb-6">Please sign up to access this course.</p>
-      <button
-        onClick={goToSignIn}
-        className="bg-[#00B4CC] hover:bg-[#0098aa] text-white px-6 py-2 rounded-full text-lg font-semibold transition duration-300"
-      >
-       Log In
-      </button>
-    </div>
-  </div>
-)}
-      {/* Modal for Courses */}
+      {/* Show Login Prompt */}
+      {showLoginPrompt && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl relative text-center">
+            <button
+              onClick={() => setShowLoginPrompt(false)}
+              className="absolute top-4 right-4 text-[#00B4CC] text-xl font-bold hover:text-[#0098aa] transition"
+              aria-label="Close login prompt"
+            >
+              ×
+            </button>
+            <h3 className="text-2xl font-semibold text-[#023047] mb-2">You have not signed in</h3>
+            <p className="text-gray-600 mb-6">Please sign up to access this course.</p>
+            <button
+              onClick={goToSignIn}
+              className="bg-[#00B4CC] hover:bg-[#0098aa] text-white px-6 py-2 rounded-full text-lg font-semibold transition duration-300"
+            >
+              Log In
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Filtered Courses */}
       {selectedCategory && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 p-4">
           <div className="bg-white rounded-xl p-8 max-w-5xl w-full max-h-[85vh] overflow-y-auto shadow-2xl relative">

@@ -13,6 +13,7 @@ const FixedNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Fetch login status and user profile/avatar
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
@@ -40,6 +41,7 @@ const FixedNavbar = () => {
     }
   }, []);
 
+  // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -52,6 +54,20 @@ const FixedNavbar = () => {
     };
   }, []);
 
+  // Close hamburger menu on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsMenuOpen(false);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // Logout handler
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
@@ -61,6 +77,7 @@ const FixedNavbar = () => {
     navigate("/login");
   };
 
+  // Hide navbar on login and signup pages
   if (location.pathname === "/login" || location.pathname === "/signup") return null;
 
   return (
