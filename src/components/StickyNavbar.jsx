@@ -100,7 +100,7 @@ const FixedNavbar = () => {
         ) : (
           <div className="md:hidden w-full text-white font-medium mb-4">
             <Link
-              to="/profile"
+              to="/student-dashboard"
               className="flex items-center gap-2 py-1"
               onClick={() => setIsMenuOpen(false)}
             >
