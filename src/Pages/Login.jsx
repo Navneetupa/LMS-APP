@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import image from '../assets/signup.png';
 
 const AuthComponent = () => {
@@ -19,7 +20,7 @@ const AuthComponent = () => {
   const [showOtpPopup, setShowOtpPopup] = useState(false);
   const [showForgotPasswordPopup, setShowForgotPasswordPopup] = useState(false);
   const [showResetPasswordPopup, setShowResetPasswordPopup] = useState(false);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false); // New state for success popup
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [resetPasswordData, setResetPasswordData] = useState({
     token: '',
@@ -29,6 +30,9 @@ const AuthComponent = () => {
   const [registeredEmail, setRegisteredEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showResetPassword, setShowResetPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -115,7 +119,6 @@ const AuthComponent = () => {
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
-    // Validate token (must be non-empty and have JWT structure: three parts separated by dots)
     if (!resetPasswordData.token || resetPasswordData.token.split('.').length !== 3) {
       setErrorMessage('Please enter a valid JWT token (format: xxx.yyy.zzz)');
       return;
@@ -127,7 +130,6 @@ const AuthComponent = () => {
     }
 
     try {
-      // Primary endpoint with corrected 'password' field
       const res = await axios.put('https://lms-backend-flwq.onrender.com/api/v1/auth/reset-password', {
         email: forgotPasswordEmail,
         token: resetPasswordData.token,
@@ -137,7 +139,7 @@ const AuthComponent = () => {
       console.log('Reset password response:', res.data);
 
       if (res.data.success && res.data.message === 'Password updated successfully') {
-        setShowSuccessPopup(true); // Show success popup
+        setShowSuccessPopup(true);
         setShowResetPasswordPopup(false);
         setResetPasswordData({ token: '', newPassword: '' });
         setForgotPasswordEmail('');
@@ -150,7 +152,6 @@ const AuthComponent = () => {
     } catch (err) {
       console.error('Reset password error:', err.response?.data || err.message);
 
-      // Try fallback endpoint with token in query
       if (err.response?.status === 404) {
         try {
           const fallbackRes = await axios.put(
@@ -164,7 +165,7 @@ const AuthComponent = () => {
           console.log('Fallback reset password response:', fallbackRes.data);
 
           if (fallbackRes.data.success && fallbackRes.data.message === 'Password updated successfully') {
-            setShowSuccessPopup(true); // Show success popup
+            setShowSuccessPopup(true);
             setShowResetPasswordPopup(false);
             setResetPasswordData({ token: '', newPassword: '' });
             setForgotPasswordEmail('');
@@ -262,16 +263,23 @@ const AuthComponent = () => {
                   required
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-4 relative">
                 <label className="block text-gray-700 mb-2">Password</label>
                 <input
-                  type="password"
+                  type={showLoginPassword ? 'text' : 'password'}
                   name="password"
                   value={loginData.password}
                   onChange={handleLoginChange}
-                  className="w-full p-3 border border-teal-500 rounded-md"
+                  className="w-full p-3 border border-teal-500 rounded-md pr-10"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
+                  className="absolute right-3 top-12 text-gray-600 hover:text-gray-800"
+                >
+                  {showLoginPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                </button>
               </div>
               <div className="flex justify-between items-center mb-5">
                 <button
@@ -311,11 +319,11 @@ const AuthComponent = () => {
             </form>
           ) : (
             <form onSubmit={handleRegister}>
-              {['firstName', 'lastName', 'email', 'phone', 'password'].map((field, idx) => (
+              {['firstName', 'lastName', 'email', 'phone'].map((field, idx) => (
                 <div className="mb-4" key={idx}>
                   <label className="block text-gray-700 mb-2 capitalize">{field}</label>
                   <input
-                    type={field === 'email' ? 'email' : field === 'phone' ? 'tel' : field === 'password' ? 'password' : 'text'}
+                    type={field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text'}
                     name={field}
                     value={registerData[field]}
                     onChange={handleRegisterChange}
@@ -324,6 +332,24 @@ const AuthComponent = () => {
                   />
                 </div>
               ))}
+              <div className="mb-4 relative">
+                <label className="block text-gray-700 mb-2 capitalize">Password</label>
+                <input
+                  type={showRegisterPassword ? 'text' : 'password'}
+                  name="password"
+                  value={registerData.password}
+                  onChange={handleRegisterChange}
+                  className="w-full p-3 border border-teal-500 rounded-md pr-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                  className="absolute right-3 top-11 text-gray-600 hover:text-gray-800"
+                >
+                  {showRegisterPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                </button>
+              </div>
               <button type="submit" className="w-full py-3 bg-teal-500 text-white rounded-md hover:bg-teal-600">
                 Register
               </button>
@@ -445,17 +471,24 @@ const AuthComponent = () => {
                   required
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-4 relative">
                 <label className="block text-gray-700 mb-2">New Password</label>
                 <input
-                  type="password"
+                  type={showResetPassword ? 'text' : 'password'}
                   name="newPassword"
                   value={resetPasswordData.newPassword}
                   onChange={handleResetPasswordChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className="w-full p-2 border border-gray-300 rounded-md pr-10"
                   placeholder="Enter new password (min 6 characters)"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowResetPassword(!showResetPassword)}
+                  className="absolute right-3 top-11 text-gray-600 hover:text-gray-800"
+                >
+                  {showResetPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                </button>
               </div>
               {errorMessage && (
                 <p className="text-red-500 mb-4">
