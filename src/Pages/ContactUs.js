@@ -20,13 +20,13 @@ const ContactUs = () => {
         <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-6xl flex flex-col md:flex-row overflow-hidden border border-white/30 mb-10">
           <ContactInfo />
           <ContactForm />
+        
         </div>
       </div>
 
-      {/* Footer without background image, full width, fixed at bottom */}
-      <footer className="w-full bg-black text-white py-6">
-        <Footer />
-      </footer>
+       <Footer/>
+     
+     
     </div>
     </>
   );
