@@ -1,11 +1,9 @@
-// ContactForm.jsx
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     phone: '',
     message: '',
@@ -21,12 +19,19 @@ const ContactForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const subjectTypeMap = {
+      "General Query": "general",
+      "Technical Support": "technical",
+      "Billing Inquiry": "billing",
+      "Feedback": "feedback"
+    };
+
     const payload = {
-      name: `${formData.firstName} ${formData.lastName}`,
+      name: formData.name,
       email: formData.email,
       subject: formData.subject,
       query: formData.message,
-      type: formData.subject.toLowerCase().replace(/\s/g, '-'),
+      type: subjectTypeMap[formData.subject] || "general",
     };
 
     try {
@@ -39,8 +44,7 @@ const ContactForm = () => {
       if (response.ok) {
         setStatus('✅ Message sent successfully!');
         setFormData({
-          firstName: '',
-          lastName: '',
+          name: '',
           email: '',
           phone: '',
           message: '',
@@ -66,26 +70,15 @@ const ContactForm = () => {
       <p className="mb-6 text-gray-600">We’d love to hear from you. Let’s get in touch!</p>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="flex flex-col md:flex-row gap-4">
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-            className="w-full border border-gray-300 p-3 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-[#49BBBD]"
-            required
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-            className="w-full border border-gray-300 p-3 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-[#49BBBD]"
-            required
-          />
-        </div>
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full border border-gray-300 p-3 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-[#49BBBD]"
+          required
+        />
         <input
           type="email"
           name="email"

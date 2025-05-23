@@ -15,9 +15,9 @@ const HeroWithNavbar = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // State for search input
-  const [modalOpen, setModalOpen] = useState(false); // State for search results modal
-  const [searchResults, setSearchResults] = useState([]); // State for search results
+  const [searchTerm, setSearchTerm] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,45 +25,60 @@ const HeroWithNavbar = () => {
   }, []);
 
   useEffect(() => {
-    if (category && language && courseType) {
-      const fetchCourses = async () => {
-        try {
-          const response = await fetch(
-            `https://lms-backend-flwq.onrender.com/api/v1/courses/filter?category=${encodeURIComponent(
-              category
-            )}&level=${encodeURIComponent(courseType)}&minPrice=0&maxPrice=1000&rating=0`
-          );
-          const data = await response.json();
-          if (data.success) {
-            setCourses(data.data);
-            setShowPopup(true); // Show filtered courses popup
-            setError(null);
-          } else {
-            setError(data.message || "Failed to fetch courses");
-            setCourses([]);
+    // Fetch courses whenever any dropdown changes (category or courseType)
+    const fetchCourses = async () => {
+      try {
+        // Build query parameters dynamically, only including non-empty values
+        const queryParams = new URLSearchParams();
+        if (category) queryParams.append("category", encodeURIComponent(category));
+        if (courseType) queryParams.append("level", encodeURIComponent(courseType));
+        queryParams.append("minPrice", "0");
+        queryParams.append("maxPrice", "1000");
+        queryParams.append("rating", "0");
+
+        const url = `https://lms-backend-flwq.onrender.com/api/v1/courses/filter?${queryParams.toString()}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.success) {
+          setCourses(data.data);
+          // Add 3-second delay before showing the popup
+          setTimeout(() => {
             setShowPopup(true);
-          }
-        } catch (err) {
-          setError("An error occurred while fetching courses");
+            setError(null);
+          }, 3000);
+        } else {
+          setError(data.message || "Failed to fetch courses");
           setCourses([]);
-          setShowPopup(true);
+          // Add 3-second delay before showing the popup with error
+          setTimeout(() => {
+            setShowPopup(true);
+          }, 3000);
         }
-      };
+      } catch (err) {
+        setError("An error occurred while fetching courses");
+        setCourses([]);
+        // Add 3-second delay before showing the popup with error
+        setTimeout(() => {
+          setShowPopup(true);
+        }, 3000);
+      }
+    };
+
+    // Trigger fetch if at least one dropdown is selected
+    if (category || courseType) {
       fetchCourses();
     }
-  }, [category, language, courseType]);
+  }, [category, courseType]);
 
   const handleCourseClick = (courseId) => {
-    const token = localStorage.getItem("token"); // Use 'token' key
+    const token = localStorage.getItem("token");
     if (token) {
-      // User logged in, go to course page
-      setShowPopup(false); // Close filtered courses popup
-      setModalOpen(false); // Close search results modal
+      setShowPopup(false);
+      setModalOpen(false);
       navigate(`/courses/${courseId}`);
     } else {
-      // User not logged in, show login popup
-      setShowPopup(false); // Close filtered courses popup
-      setModalOpen(false); // Close search results modal
+      setShowPopup(false);
+      setModalOpen(false);
       setShowLoginPrompt(true);
     }
   };
@@ -80,13 +95,12 @@ const HeroWithNavbar = () => {
 
   const goToSignIn = () => {
     setShowLoginPrompt(false);
-    setCategory(""); // Clear filters
+    setCategory("");
     setLanguage("");
     setCourseType("");
     navigate("/login");
   };
 
-  // Search handler
   const handleSearch = async () => {
     if (!searchTerm.trim()) {
       setError("Please enter a search term");
@@ -94,21 +108,16 @@ const HeroWithNavbar = () => {
       return;
     }
 
-    setError(null); // Clear previous errors
+    setError(null);
     try {
       const queryParams = new URLSearchParams();
-      queryParams.append("search", searchTerm.trim().toLowerCase()); // Normalize search term
+      queryParams.append("search", searchTerm.trim().toLowerCase());
 
       const url = `https://lms-backend-flwq.onrender.com/api/v1/courses/search/filters?${queryParams.toString()}`;
-      console.log("API URL:", url); // Debug: Log the exact URL
-
       const response = await fetch(url);
       const data = await response.json();
 
-      console.log("API Response:", data); // Debug: Log the full response
-
       if (data.success) {
-        // Client-side filtering to ensure only matching courses are shown
         const filteredResults = (data.data || []).filter(
           (course) =>
             course.title?.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
@@ -125,7 +134,6 @@ const HeroWithNavbar = () => {
         setModalOpen(true);
       }
     } catch (err) {
-      console.error("Fetch Error:", err); // Debug: Log fetch errors
       setSearchResults([]);
       setError("An error occurred while fetching courses");
       setModalOpen(true);
@@ -134,7 +142,6 @@ const HeroWithNavbar = () => {
 
   return (
     <section className="relative bg-[#49BBBD] pb-20 pt-0 overflow-hidden text-gray-800 mt-14">
-      {/* Search */}
       <div className="max-w-4xl mx-auto px-4 mt-6">
         <div className="search-wrapper flex items-center gap-6">
           <input
@@ -157,13 +164,11 @@ const HeroWithNavbar = () => {
             Search
           </button>
         </div>
-        {/* Display Error if Any */}
         {error && !modalOpen && !showPopup && (
           <p className="mt-4 text-red-500 text-center">{error}</p>
         )}
       </div>
 
-      {/* Filter Dropdowns */}
       <div className="flex flex-wrap justify-center gap-4 mt-6 px-4" data-aos="fade-up">
         <select
           value={category}
@@ -197,7 +202,6 @@ const HeroWithNavbar = () => {
         </select>
       </div>
 
-      {/* Hero Section */}
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center px-4 sm:px-6 mt-10 md:mt-2">
         <div
           className="md:w-1/2 -mt-1 md:mt-0 mb-10 md:mb-0 text-center md:text-left ml-6 md:ml-10"
@@ -248,7 +252,6 @@ const HeroWithNavbar = () => {
         </div>
       </div>
 
-      {/* Search Results Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-lg w-full max-h-[70vh] overflow-y-auto relative">
@@ -296,7 +299,6 @@ const HeroWithNavbar = () => {
         </div>
       )}
 
-      {/* Filtered Courses Popup */}
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-lg w-full relative">
@@ -344,7 +346,6 @@ const HeroWithNavbar = () => {
         </div>
       )}
 
-      {/* Login Prompt Popup */}
       {showLoginPrompt && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl relative text-center">

@@ -182,37 +182,38 @@ const LatestCourses = () => {
         </div>
       )}
 
-      {authPopupOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-60 p-4"
-          onClick={() => setAuthPopupOpen(false)}
-        >
-          <motion.div
-            className="bg-white rounded-xl max-w-md w-full p-8 text-center relative"
-            onClick={(e) => e.stopPropagation()}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            <h2 className="text-2xl font-semibold mb-4 text-cyan-900">Please Log In</h2>
-            <p className="mb-6 text-gray-700">Please log in to enroll in this course.</p>
-            <button
-              onClick={handleLoginRedirect}
-              className="px-6 py-3 bg-cyan-500 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
-            >
-              Log In
-            </button>
-            <button
-              onClick={() => setAuthPopupOpen(false)}
-              className="absolute top-3 right-3 text-cyan-500 hover:text-cyan-700 font-bold text-xl"
-              aria-label="Close popup"
-            >
-              ×
-            </button>
-          </motion.div>
-        </div>
-      )}
+      {/* Auth popup modal */}
+{authPopupOpen && (
+  <div
+    className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100] p-4"
+    onClick={() => setAuthPopupOpen(false)}
+  >
+    <motion.div
+      className="bg-white rounded-xl max-w-md w-full p-8 text-center relative"
+      onClick={(e) => e.stopPropagation()}
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.8, opacity: 0 }}
+      transition={{ duration: 0.25 }}
+    >
+      <h2 className="text-2xl font-semibold mb-4 text-cyan-900">Please Log In</h2>
+      <p className="mb-6 text-gray-700">Please log in to enroll in this course.</p>
+      <button
+        onClick={handleLoginRedirect}
+        className="px-6 py-3 bg-cyan-500 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
+      >
+        Log In
+      </button>
+      <button
+        onClick={() => setAuthPopupOpen(false)}
+        className="absolute top-3 right-3 text-cyan-500 hover:text-cyan-700 font-bold text-xl"
+        aria-label="Close popup"
+      >
+        ×
+      </button>
+    </motion.div>
+  </div>
+)}
     </section>
   );
 };

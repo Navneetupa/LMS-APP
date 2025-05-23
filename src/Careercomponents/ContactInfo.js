@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
+import link from '../assets/contact.jpg'
 const ContactInfo = () => (
   <motion.div
     initial={{ x: -100, opacity: 0 }}
@@ -17,12 +17,12 @@ const ContactInfo = () => (
     {/* Background image with low opacity */}
     <div
       style={{
-        backgroundImage: 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80")',
+        backgroundImage: `url(${link})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         position: 'absolute',
         top: 0, left: 0, right: 0, bottom: 0,
-        opacity: 0.15,
+        opacity: 0.23,
         zIndex: 0,
         borderRadius: '1rem',
       }}

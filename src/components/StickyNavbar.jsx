@@ -1,45 +1,50 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { FaBars, FaTimes, FaUserCircle, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import logo from "../assets/logo.png"; // Adjust path as needed
+import logo from "../assets/logo.png";
+import defaultAvatar from "../assets/user-icon.jpg"; // Import the default image
 
 const FixedNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState(defaultAvatar); // Initialize with default image
   const dropdownRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Memoized fetch profile function
+  const fetchProfile = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const response = await axios.get("https://lms-backend-flwq.onrender.com/api/v1/students/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      
+      if (response.data.success && response.data.data.avatar) {
+        setAvatarUrl(`https://lms-backend-flwq.onrender.com/uploads/${response.data.data.avatar}`);
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error.response?.data || error.message);
+      // Keep the default avatar on error
+    }
+  }, []);
+
   // Fetch login status and user profile/avatar
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    const loggedIn = !!token;
+    setIsLoggedIn(loggedIn);
 
-    if (token) {
-      const fetchProfile = async () => {
-        try {
-          const response = await axios.get("https://lms-backend-flwq.onrender.com/api/v1/students/profile", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (response.data.success) {
-            const avatarPath = response.data.data.avatar || "default_avatar.jpg";
-            setAvatarUrl(`https://lms-backend-flwq.onrender.com/uploads/${avatarPath}`);
-          }
-        } catch (error) {
-          console.error("Error fetching profile:", error.response?.data || error.message);
-          setAvatarUrl("https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg");
-        }
-      };
+    if (loggedIn) {
       fetchProfile();
     } else {
-      setAvatarUrl("https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg");
+      setAvatarUrl(defaultAvatar);
     }
-  }, []);
+  }, [fetchProfile]);
 
   // Close dropdown if clicked outside
   useEffect(() => {
@@ -49,22 +54,14 @@ const FixedNavbar = () => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Close hamburger menu on scroll
   useEffect(() => {
-    const handleScroll = () => {
-      setIsMenuOpen(false);
-    };
-
+    const handleScroll = () => setIsMenuOpen(false);
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Logout handler
@@ -73,7 +70,7 @@ const FixedNavbar = () => {
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
     setIsMenuOpen(false);
-    setAvatarUrl(null);
+    setAvatarUrl(defaultAvatar);
     navigate("/login");
   };
 
@@ -169,19 +166,14 @@ const FixedNavbar = () => {
         ) : (
           <div className="relative">
             <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-              {avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt="User Avatar"
-                  className="w-8 h-8 rounded-full border-2 object-cover"
-                  onError={(e) =>
-                    (e.target.src =
-                      "https://lms-backend-flwq.onrender.com/uploads/default_avatar.jpg")
-                  }
-                />
-              ) : (
-                <FaUserCircle className="text-white text-2xl" />
-              )}
+              <img
+                src={avatarUrl}
+                alt="User Avatar"
+                className="w-8 h-8 rounded-full border-2 object-cover"
+                onError={(e) => {
+                  e.target.src = defaultAvatar;
+                }}
+              />
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
