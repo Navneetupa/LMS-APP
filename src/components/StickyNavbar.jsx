@@ -95,22 +95,20 @@ const FixedNavbar = () => {
       >
         {!isLoggedIn ? (
           <div className="flex flex-col md:hidden w-full gap-2">
-         <Link
-  to="/login"
-  className="text-sm px-4 py-1 rounded-full text-[#49BBBD] bg-white font-medium text-center"
-  onClick={() => setIsMenuOpen(false)}
->
-  Login
-</Link>
-
-<Link
-  to="/login"
-  className="text-sm px-4 py-1 rounded-full text-white bg-[#7ddedf] font-medium text-center"
-  onClick={() => setIsMenuOpen(false)}
->
-  Login
-</Link>
-
+            <Link
+              to="/login"
+              className="text-sm px-4 py-1 rounded-full text-[#49BBBD] bg-white font-medium text-center"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className="text-sm px-4 py-1 rounded-full text-white bg-[#7ddedf] font-medium text-center"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Sign Up
+            </Link>
           </div>
         ) : (
           <div className="md:hidden w-full text-white font-medium">
@@ -162,7 +160,7 @@ const FixedNavbar = () => {
               Login
             </Link>
             <Link
-              to="/login"
+              to="/signup"
               className="text-sm px-4 py-0.5 rounded-full text-white bg-[#7ddedf] font-medium hover:bg-[#59c1c3]"
             >
               Sign Up

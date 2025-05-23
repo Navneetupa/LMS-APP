@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaSearch, FaLaptopCode, FaServer, FaDatabase, FaPaintBrush, FaShieldAlt } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import PopularCourses from "../Careercomponents/PopularCourses";
 import PopularCompanies from '../Careercomponents/PopularCompanies';
 import CareerPath from '../Careercomponents/CareerPath';
@@ -45,22 +45,47 @@ export default function Career() {
               </div>
             </div>
 
-            {/* Updated Attractive Section with single image + colorful icons */}
-            <div className="mt-10 flex flex-col items-center gap-8 max-w-4xl mx-auto px-6">
-              {/* Combined image */}
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbvLziRRs0_9Z1urB7jWj0pr4X9v-y1NPN2w&s"  // Replace with your actual image URL
-                alt="Career Opportunities"
-                className="w-full max-w-3xl h-48 md:h-56 object-cover rounded-2xl shadow-lg"
-              />
+            {/* Updated Attractive Cards Section */}
+            <div className="mt-10 flex flex-col sm:flex-row justify-center gap-8 max-w-4xl mx-auto px-6">
+              <div className="bg-cyan-50 p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex items-center gap-4">
+                <svg
+                  className="w-8 h-8 text-gray-400 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="M12 20h9" />
+                  <path d="M12 4v16" />
+                  <path d="M3 12h9" />
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+                <p className="text-lg text-cyan-900 font-semibold text-center">
+                  Start your journey with the best courses tailored to your career.
+                </p>
+              </div>
 
-              {/* Colorful Icons Section */}
-              <div className="flex justify-center gap-10 text-4xl text-cyan-500">
-                <FaLaptopCode className="text-red-500 hover:text-red-600 cursor-pointer transition" title="Frontend Development" />
-                <FaServer className="text-green-500 hover:text-green-600 cursor-pointer transition" title="Backend Development" />
-                <FaDatabase className="text-yellow-500 hover:text-yellow-600 cursor-pointer transition" title="Database Management" />
-                <FaPaintBrush className="text-pink-500 hover:text-pink-600 cursor-pointer transition" title="UI/UX Design" />
-                <FaShieldAlt className="text-purple-500 hover:text-purple-600 cursor-pointer transition" title="Cybersecurity" />
+              <div className="bg-cyan-50 p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex items-center gap-4">
+                <svg
+                  className="w-8 h-8 text-gray-400 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+                <p className="text-lg text-cyan-900 font-semibold text-center">
+                  Discover opportunities that match your skills and passions.
+                </p>
               </div>
             </div>
           </div>

@@ -15,7 +15,7 @@ const ContactUs = () => {
       {/* Background image container for contact info + form */}
       <div
         className="flex flex-col items-center justify-center p-6 bg-cover bg-center flex-grow"
-        style={{ backgroundImage: 'url(https://lexilms.lexiconcpl.com/assets/img/contact.jpg)' }}
+        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1470&q=80)' }}
       >
         <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-6xl flex flex-col md:flex-row overflow-hidden border border-white/30 mb-10">
           <ContactInfo />
