@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import image from '../assets/signup.png'
+import image from '../assets/signup.png';
 
 const AuthComponent = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -19,6 +19,7 @@ const AuthComponent = () => {
   const [showOtpPopup, setShowOtpPopup] = useState(false);
   const [showForgotPasswordPopup, setShowForgotPasswordPopup] = useState(false);
   const [showResetPasswordPopup, setShowResetPasswordPopup] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false); // New state for success popup
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [resetPasswordData, setResetPasswordData] = useState({
     token: '',
@@ -110,82 +111,80 @@ const AuthComponent = () => {
       setSuccessMessage('');
     }
   };
-const handleResetPassword = async (e) => {
-  e.preventDefault();
 
-  // Validate token (must be non-empty and have JWT structure: three parts separated by dots)
-  if (!resetPasswordData.token || resetPasswordData.token.split('.').length !== 3) {
-    setErrorMessage('Please enter a valid JWT token (format: xxx.yyy.zzz)');
-    return;
-  }
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
 
-  if (!resetPasswordData.newPassword || resetPasswordData.newPassword.length < 6) {
-    setErrorMessage('New password must be at least 6 characters long');
-    return;
-  }
-
-  try {
-    // ✅ Primary endpoint with corrected 'password' field
-    const res = await axios.put('https://lms-backend-flwq.onrender.com/api/v1/auth/reset-password', {
-      email: forgotPasswordEmail,
-      token: resetPasswordData.token,
-      password: resetPasswordData.newPassword,
-    });
-
-    console.log('Reset password response:', res.data);
-
-    if (res.data.success && res.data.message === 'Password updated successfully') {
-      setSuccessMessage('Password updated successfully! You can now log in with your new password.');
-      setErrorMessage('');
-      setShowResetPasswordPopup(false);
-      setResetPasswordData({ token: '', newPassword: '' });
-      setForgotPasswordEmail('');
-      setIsLogin(true);
-    } else {
-      setErrorMessage('Unexpected response from server. Please try again.');
-      setSuccessMessage('');
+    // Validate token (must be non-empty and have JWT structure: three parts separated by dots)
+    if (!resetPasswordData.token || resetPasswordData.token.split('.').length !== 3) {
+      setErrorMessage('Please enter a valid JWT token (format: xxx.yyy.zzz)');
+      return;
     }
 
-  } catch (err) {
-    console.error('Reset password error:', err.response?.data || err.message);
+    if (!resetPasswordData.newPassword || resetPasswordData.newPassword.length < 6) {
+      setErrorMessage('New password must be at least 6 characters long');
+      return;
+    }
 
-    // Try fallback endpoint with token in query
-    if (err.response?.status === 404) {
-      try {
-        const fallbackRes = await axios.put(
-          `https://lms-backend-flwq.onrender.com/reset-password?token=${encodeURIComponent(resetPasswordData.token)}`,
-          {
-            email: forgotPasswordEmail,
-            password: resetPasswordData.newPassword,
-          }
-        );
+    try {
+      // Primary endpoint with corrected 'password' field
+      const res = await axios.put('https://lms-backend-flwq.onrender.com/api/v1/auth/reset-password', {
+        email: forgotPasswordEmail,
+        token: resetPasswordData.token,
+        password: resetPasswordData.newPassword,
+      });
 
-        console.log('Fallback reset password response:', fallbackRes.data);
+      console.log('Reset password response:', res.data);
 
-        if (fallbackRes.data.success && fallbackRes.data.message === 'Password updated successfully') {
-          setSuccessMessage('Password updated successfully! You can now log in with your new password.');
-          setErrorMessage('');
-          setShowResetPasswordPopup(false);
-          setResetPasswordData({ token: '', newPassword: '' });
-          setForgotPasswordEmail('');
-          setIsLogin(true);
-        } else {
-          setErrorMessage('Unexpected response from fallback endpoint. Please try again.');
-          setSuccessMessage('');
-        }
-
-      } catch (fallbackErr) {
-        console.error('Fallback reset password error:', fallbackErr.response?.data || fallbackErr.message);
-        setErrorMessage('Password reset endpoint not found. Please check the API URL or contact support.');
+      if (res.data.success && res.data.message === 'Password updated successfully') {
+        setShowSuccessPopup(true); // Show success popup
+        setShowResetPasswordPopup(false);
+        setResetPasswordData({ token: '', newPassword: '' });
+        setForgotPasswordEmail('');
+        setErrorMessage('');
+        setSuccessMessage('');
+      } else {
+        setErrorMessage('Unexpected response from server. Please try again.');
         setSuccessMessage('');
       }
+    } catch (err) {
+      console.error('Reset password error:', err.response?.data || err.message);
 
-    } else {
-      setErrorMessage('Password reset failed: ' + (err.response?.data?.message || err.message));
-      setSuccessMessage('');
+      // Try fallback endpoint with token in query
+      if (err.response?.status === 404) {
+        try {
+          const fallbackRes = await axios.put(
+            `https://lms-backend-flwq.onrender.com/reset-password?token=${encodeURIComponent(resetPasswordData.token)}`,
+            {
+              email: forgotPasswordEmail,
+              password: resetPasswordData.newPassword,
+            }
+          );
+
+          console.log('Fallback reset password response:', fallbackRes.data);
+
+          if (fallbackRes.data.success && fallbackRes.data.message === 'Password updated successfully') {
+            setShowSuccessPopup(true); // Show success popup
+            setShowResetPasswordPopup(false);
+            setResetPasswordData({ token: '', newPassword: '' });
+            setForgotPasswordEmail('');
+            setErrorMessage('');
+            setSuccessMessage('');
+          } else {
+            setErrorMessage('Unexpected response from fallback endpoint. Please try again.');
+            setSuccessMessage('');
+          }
+        } catch (fallbackErr) {
+          console.error('Fallback reset password error:', fallbackErr.response?.data || fallbackErr.message);
+          setErrorMessage('Password reset endpoint not found. Please check the API URL or contact support.');
+          setSuccessMessage('');
+        }
+      } else {
+        setErrorMessage('Password reset failed: ' + (err.response?.data?.message || err.message));
+        setSuccessMessage('');
+      }
     }
-  }
-};
+  };
 
   const handleResendToken = async () => {
     try {
@@ -208,7 +207,7 @@ const handleResetPassword = async (e) => {
       <div
         className="hidden sm:flex w-full sm:w-1/2 bg-cover bg-center rounded-r-2xl text-white flex-col justify-center p-10"
         style={{
-          backgroundImage:`url(${image})`,
+          backgroundImage: `url(${image})`,
         }}
       >
         <h1 className="text-4xl font-bold mb-4">Empower your learning journey</h1>
@@ -219,7 +218,7 @@ const handleResetPassword = async (e) => {
         <h2 className="text-2xl font-semibold mb-2 text-center">Welcome back to LMS!</h2>
 
         {errorMessage && <p className="text-red-500 mb-4 text-center">{errorMessage}</p>}
-        {successMessage && !showForgotPasswordPopup && !showResetPasswordPopup && (
+        {successMessage && !showForgotPasswordPopup && !showResetPasswordPopup && !showSuccessPopup && (
           <div className="text-center">
             <p className="text-green-500 mb-4">{successMessage}</p>
             <button
@@ -475,7 +474,6 @@ const handleResetPassword = async (e) => {
                   )}
                 </p>
               )}
-              {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
               <div className="flex justify-center gap-4">
                 <button
                   type="submit"
@@ -498,6 +496,26 @@ const handleResetPassword = async (e) => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showSuccessPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+            <h3 className="text-xl font-bold mb-4">Success</h3>
+            <p className="text-green-500 mb-4">Password updated successfully! You can now log in with your new password.</p>
+            <button
+              onClick={() => {
+                setShowSuccessPopup(false);
+                setIsLogin(true);
+                setErrorMessage('');
+                setSuccessMessage('');
+              }}
+              className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
+            >
+              Back to Login
+            </button>
           </div>
         </div>
       )}
