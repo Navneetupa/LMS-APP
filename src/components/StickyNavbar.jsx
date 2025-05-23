@@ -3,16 +3,21 @@ import { FaBars, FaTimes, FaUserCircle, FaUser, FaSignOutAlt } from "react-icons
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/logo.png";
-import defaultAvatar from "../assets/user-icon.jpg"; // Import the default image
+import defaultAvatar from "../assets/user-icon.jpg";
 
 const FixedNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState(defaultAvatar); // Initialize with default image
+  const [avatarUrl, setAvatarUrl] = useState(defaultAvatar);
   const dropdownRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   // Memoized fetch profile function
   const fetchProfile = useCallback(async () => {
@@ -29,7 +34,6 @@ const FixedNavbar = () => {
       }
     } catch (error) {
       console.error("Error fetching profile:", error.response?.data || error.message);
-      // Keep the default avatar on error
     }
   }, []);
 
@@ -71,11 +75,25 @@ const FixedNavbar = () => {
     setIsDropdownOpen(false);
     setIsMenuOpen(false);
     setAvatarUrl(defaultAvatar);
-    navigate("/login");
+    navigate("/");
   };
 
   // Hide navbar on login and signup pages
   if (location.pathname === "/login" || location.pathname === "/signup") return null;
+
+  // Nav links data
+  const navLinks = [
+    { path: "/", label: "Home" },
+    { path: "/courses", label: "Courses" },
+    { path: "/career", label: "Careers" },
+    { path: "/aboutus", label: "About" },
+    { path: "/contact", label: "Contact" },
+  ];
+
+  // Check if a link is active
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
 
   return (
     <nav className="fixed top-0 left-0 w-full flex justify-between items-center px-4 sm:px-8 py-2 bg-[#49BBBD] z-50 shadow-md">
@@ -108,10 +126,10 @@ const FixedNavbar = () => {
             </Link>
           </div>
         ) : (
-          <div className="md:hidden w-full text-white font-medium">
+          <div className="md:hidden w-full text-white font-medium space-y-2">
             <Link
               to="/student-dashboard"
-              className="flex items-center gap-2 py-1"
+              className="flex items-center gap-2 py-2 px-4 hover:bg-[#3aa9ab] rounded transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               <FaUser />
@@ -119,7 +137,7 @@ const FixedNavbar = () => {
             </Link>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 py-1 text-sm bg-red-500 px-4 rounded hover:bg-red-600"
+              className="flex items-center gap-2 py-2 px-4 text-sm text-white hover:bg-[#3aa9ab] rounded w-full transition-colors"
             >
               <FaSignOutAlt />
               Logout
@@ -127,21 +145,27 @@ const FixedNavbar = () => {
           </div>
         )}
 
-        {/* Navigation Pages */}
-        {[
-          { path: "/", label: "Home" },
-          { path: "/courses", label: "Courses" },
-          { path: "/career", label: "Careers" },
-          { path: "/aboutus", label: "About" },
-          { path: "/contact", label: "Contact" },
-        ].map(({ path, label }) => (
+        {/* Navigation Pages with enhanced active styling */}
+        {navLinks.map(({ path, label }) => (
           <Link
             key={path}
             to={path}
-            className="text-white font-semibold hover:text-[#00A78E]"
-            onClick={() => setIsMenuOpen(false)}
+            className={`
+              relative text-white font-semibold hover:text-[#00A78E] transition-colors
+              ${isActive(path) ? "text-[#00A78E] font-bold" : ""}
+              group
+            `}
+            onClick={() => {
+              setIsMenuOpen(false);
+              window.scrollTo(0, 0);
+            }}
           >
             {label}
+            {/* Animated underline for active link */}
+            <span className={`
+              absolute left-0 -bottom-1 w-0 h-0.5 bg-[#00A78E] transition-all duration-300
+              ${isActive(path) ? "w-full" : "group-hover:w-full"}
+            `}></span>
           </Link>
         ))}
       </div>
@@ -152,45 +176,52 @@ const FixedNavbar = () => {
           <>
             <Link
               to="/login"
-              className="text-sm px-4 py-0.5 rounded-full text-[#49BBBD] bg-white font-medium hover:text-white hover:bg-[#49BBBD]"
+              className="text-sm px-4 py-0.5 rounded-full text-[#49BBBD] bg-white font-medium hover:bg-gray-100 transition-colors"
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className="text-sm px-4 py-0.5 rounded-full text-white bg-[#7ddedf] font-medium hover:bg-[#59c1c3]"
+              className="text-sm px-4 py-0.5 rounded-full text-white bg-[#7ddedf] font-medium hover:bg-[#59c1c3] transition-colors"
             >
               Sign Up
             </Link>
           </>
         ) : (
           <div className="relative">
-            <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+            <button 
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="focus:outline-none"
+            >
               <img
                 src={avatarUrl}
                 alt="User Avatar"
-                className="w-8 h-8 rounded-full border-2 object-cover"
+                className="w-8 h-8 rounded-full border-2 border-white object-cover hover:border-[#00A78E] transition-colors"
                 onError={(e) => {
                   e.target.src = defaultAvatar;
                 }}
               />
             </button>
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 overflow-hidden">
                 <Link
                   to="/student-dashboard"
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[#49BBBD] hover:text-white"
-                  onClick={() => setIsDropdownOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    window.scrollTo(0, 0);
+                  }}
                 >
-                  <FaUser />
-                  Profile
+                  <FaUser className="text-[#49BBBD]" />
+                  <span>Profile</span>
                 </Link>
+                <div className="border-t border-gray-100"></div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-red-500 hover:text-white w-full text-left"
+                  className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 w-full text-left transition-colors"
                 >
-                  <FaSignOutAlt />
-                  Logout
+                  <FaSignOutAlt className="text-[#49BBBD]" />
+                  <span>Logout</span>
                 </button>
               </div>
             )}
@@ -200,7 +231,10 @@ const FixedNavbar = () => {
 
       {/* Hamburger Button */}
       <div className="md:hidden">
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="focus:outline-none"
+        >
           {isMenuOpen ? (
             <FaTimes className="text-white text-2xl" />
           ) : (

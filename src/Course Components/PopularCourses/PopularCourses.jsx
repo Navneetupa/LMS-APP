@@ -8,6 +8,20 @@ const isAuthenticated = () => {
   return Boolean(localStorage.getItem("token"));
 };
 
+// Loading Spinner Component
+const LoadingSpinner = () => {
+  return (
+    <div className="flex justify-center items-center py-20">
+      <div className="relative w-16 h-16">
+        <div className="absolute inset-0 border-4 border-t-cyan-500 border-cyan-200 rounded-full animate-spin"></div>
+        <div className="absolute inset-2 border-4 border-t-cyan-600 border-cyan-100 rounded-full animate-spin animation-delay-200"></div>
+        <div className="absolute inset-4 border-4 border-t-cyan-700 border-cyan-50 rounded-full animate-spin animation-delay-400"></div>
+      </div>
+      <p className="ml-4 text-lg text-cyan-600 font-semibold animate-pulse">Loading Courses...</p>
+    </div>
+  );
+};
+
 const CourseCard = ({ course, index, isPreview = false, onUnauthenticatedClick }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -104,12 +118,12 @@ const PopularCourses = () => {
 
   const handleSignupRedirect = () => {
     setAuthPopupOpen(false);
-    localStorage.setItem("redirectAfterLogin", redirectPath); // optional: store redirect path for after login
+    localStorage.setItem("redirectAfterLogin", redirectPath);
     navigate("/signup");
   };
 
   if (loading) {
-    return <div className="text-center py-20">Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -187,39 +201,38 @@ const PopularCourses = () => {
         </div>
       )}
 
-     
-  {/* Auth popup modal */}
-{authPopupOpen && (
-  <div
-    className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100] p-4"
-    onClick={() => setAuthPopupOpen(false)}
-  >
-    <motion.div
-      className="bg-white rounded-xl max-w-md w-full p-8 text-center relative"
-      onClick={(e) => e.stopPropagation()}
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0.8, opacity: 0 }}
-      transition={{ duration: 0.25 }}
-    >
-      <h2 className="text-2xl font-semibold mb-4 text-cyan-900">You have not signed in</h2>
-      <p className="mb-6 text-gray-700">Please sign up to access this course.</p>
-      <button
-        onClick={handleSignupRedirect}
-        className="px-6 py-3 bg-cyan-500 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
-      >
-        Log In
-      </button>
-      <button
-        onClick={() => setAuthPopupOpen(false)}
-        className="absolute top-3 right-3 text-cyan-500 hover:text-cyan-700 font-bold text-xl"
-        aria-label="Close popup"
-      >
-        ×
-      </button>
-    </motion.div>
-  </div>
-)}
+      {/* Auth popup modal */}
+      {authPopupOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100] p-4"
+          onClick={() => setAuthPopupOpen(false)}
+        >
+          <motion.div
+            className="bg-white rounded-xl max-w-md w-full p-8 text-center relative"
+            onClick={(e) => e.stopPropagation()}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <h2 className="text-2xl font-semibold mb-4 text-cyan-900">You have not signed in</h2>
+            <p className="mb-6 text-gray-700">Please sign up to access this course.</p>
+            <button
+              onClick={handleSignupRedirect}
+              className="px-6 py-3 bg-cyan-500 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
+            >
+              Log In
+            </button>
+            <button
+              onClick={() => setAuthPopupOpen(false)}
+              className="absolute top-3 right-3 text-cyan-500 hover:text-cyan-700 font-bold text-xl"
+              aria-label="Close popup"
+            >
+              ×
+            </button>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 };
