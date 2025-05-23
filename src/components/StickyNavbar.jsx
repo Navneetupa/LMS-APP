@@ -151,7 +151,7 @@ const FixedNavbar = () => {
             key={path}
             to={path}
             className={`
-              relative text-white font-semibold hover:text-[#00A78E] transition-colors
+              relative text-white font-semibold hover:text-[#467d74] transition-colors
               ${isActive(path) ? "text-[#00A78E] font-bold" : ""}
               group
             `}
@@ -163,7 +163,7 @@ const FixedNavbar = () => {
             {label}
             {/* Animated underline for active link */}
             <span className={`
-              absolute left-0 -bottom-1 w-0 h-0.5 bg-[#00A78E] transition-all duration-300
+              absolute left-0 -bottom-1 w-0 h-0.5 bg-[#45897d] transition-all duration-300
               ${isActive(path) ? "w-full" : "group-hover:w-full"}
             `}></span>
           </Link>

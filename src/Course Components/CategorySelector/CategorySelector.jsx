@@ -11,20 +11,21 @@ import businessImage from '../../assets/businessImage.png';
 import actingImage from '../../assets/actingImage.png';
 import webDevelopmentImage from '../../assets/webDevelopmentImage.png';
 
-// Category data (aligned with API categories)
-const categories = [
-  { id: 1, title: "Web Development", image: developmentImage, quote: "Build the future with code." },
-  { id: 2, title: "App Development", image: designImage, quote: "Design is not just what it looks like, it's how it works." },
-  { id: 3, title: "Data Science", image: marketingImage, quote: "Unlock insights with data." },
-  { id: 4, title: "Machine Learning & AI", image: languagesImage, quote: "Create intelligent systems." },
-  { id: 5, title: "Cybersecurity", image: photographyImage, quote: "Secure the digital world." },
-  { id: 6, title: "Cloud Computing", image: businessImage, quote: "Scale with the cloud." },
-  { id: 7, title: "DevOps", image: actingImage, quote: "Streamline development and operations." },
-  { id: 8, title: "Blockchain", image: webDevelopmentImage, quote: "Build decentralized solutions." },
-];
+// Metadata for categories (maps category names to images and quotes)
+const categoryMetadata = {
+  "web development": { image: developmentImage, quote: "Build the future with code." },
+  "app development": { image: designImage, quote: "Design is not just what it looks like, it's how it works." },
+  "data science": { image: marketingImage, quote: "Unlock insights with data." },
+  "machine learning": { image: languagesImage, quote: "Create intelligent systems." },
+  "cyber security": { image: photographyImage, quote: "Secure the digital world." },
+  "cloud computing": { image: businessImage, quote: "Scale with the cloud." },
+  "devops": { image: actingImage, quote: "Streamline development and operations." },
+  "blockchain": { image: webDevelopmentImage, quote: "Build decentralized solutions." },
+};
 
 const CategorySelector = () => {
   const [courses, setCourses] = useState([]);
+  const [availableCategories, setAvailableCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -34,7 +35,7 @@ const CategorySelector = () => {
 
   const navigate = useNavigate();
 
-  // Fetch courses from API
+  // Fetch courses from API and derive categories
   useEffect(() => {
     const fetchCourses = async (pageNum) => {
       setLoading(true);
@@ -44,6 +45,25 @@ const CategorySelector = () => {
         if (data.success) {
           setCourses((prev) => [...prev, ...data.data]);
           setHasMore(data.data.length === 10);
+
+          // Extract unique categories from courses
+          const courseCategories = [...new Set(data.data.map(course => course.category.toLowerCase()))];
+
+          // Create dynamic categories with metadata
+          const dynamicCategories = courseCategories.map((category, index) => {
+            const metadata = categoryMetadata[category.toLowerCase()] || {
+              image: 'https://via.placeholder.com/150', // Fallback image
+              quote: 'Learn and grow with this course.', // Fallback quote
+            };
+            return {
+              id: index + 1,
+              title: category.charAt(0).toUpperCase() + category.slice(1), // Capitalize title
+              image: metadata.image,
+              quote: metadata.quote,
+            };
+          });
+
+          setAvailableCategories(dynamicCategories);
         } else {
           setError('Failed to fetch courses');
         }
@@ -101,8 +121,8 @@ const CategorySelector = () => {
           <span> For You</span>
         </h2>
 
-        <div className="grid grid-cols-1  md:grid-cols-4 gap-6">
-          {categories.slice(0, 4).map((cat) => (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {availableCategories.slice(0, 4).map((cat) => (
             <div
               key={cat.id}
               className={`bg-gray-100 hover:bg-blue-100 transition p-6 rounded-xl flex flex-col items-center text-center shadow-md cursor-pointer ${selectedCategory === cat.title ? 'bg-blue-200' : ''}`}
@@ -123,27 +143,29 @@ const CategorySelector = () => {
       </section>
 
       {/* Second Container */}
-      <section className="mt-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {categories.slice(4).map((cat) => (
-            <div
-              key={cat.id}
-              className={`bg-gray-100 hover:bg-blue-100 transition p-6 rounded-xl flex flex-col items-center text-center shadow-md cursor-pointer ${selectedCategory === cat.title ? 'bg-blue-200' : ''}`}
-              data-aos="zoom-in"
-              onClick={() => handleCategoryClick(cat.title)}
-            >
-              <img
-                src={cat.image}
-                alt={cat.title}
-                className="w-24 h-24 mb-4 object-cover rounded-full"
-                onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
-              />
-              <span className="text-lg font-medium">{cat.title}</span>
-              <p className="text-sm mt-4 text-gray-500">{cat.quote}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {availableCategories.length > 4 && (
+        <section className="mt-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {availableCategories.slice(4).map((cat) => (
+              <div
+                key={cat.id}
+                className={`bg-gray-100 hover:bg-blue-100 transition p-6 rounded-xl flex flex-col items-center text-center shadow-md cursor-pointer ${selectedCategory === cat.title ? 'bg-blue-200' : ''}`}
+                data-aos="zoom-in"
+                onClick={() => handleCategoryClick(cat.title)}
+              >
+                <img
+                  src={cat.image}
+                  alt={cat.title}
+                  className="w-24 h-24 mb-4 object-cover rounded-full"
+                  onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
+                />
+                <span className="text-lg font-medium">{cat.title}</span>
+                <p className="text-sm mt-4 text-gray-500">{cat.quote}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Show Login Prompt */}
       {showLoginPrompt && (
@@ -225,9 +247,9 @@ const CategorySelector = () => {
             {hasMore && !loading && (
               <button
                 onClick={loadMore}
-                className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                className="mt-6 text-white px-4 py-2 rounded"
               >
-                Load More
+              
               </button>
             )}
           </div>

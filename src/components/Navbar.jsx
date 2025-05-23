@@ -177,8 +177,7 @@ const HeroWithNavbar = () => {
         >
           <option value="">Course Category</option>
           <option value="Web Development">Web Development</option>
-          <option value="Data Science">Data Science</option>
-          <option value="Design">Design</option>
+          
         </select>
         <select
           value={language}

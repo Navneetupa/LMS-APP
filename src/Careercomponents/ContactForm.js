@@ -64,7 +64,8 @@ const ContactForm = () => {
       initial={{ x: 100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="w-full md:w-1/2 p-10 bg-white"
+      className="w-full md:w-1/2 p-10 bg-transparent backdrop-blur rounded-2xl shadow-2xl"
+
     >
       <h2 className="text-3xl font-bold mb-3 text-[#49BBBD]">Contact Us</h2>
       <p className="mb-6 text-gray-600">We’d love to hear from you. Let’s get in touch!</p>
@@ -117,7 +118,7 @@ const ContactForm = () => {
         </select>
         <button
           type="submit"
-          className="bg-[#49BBBD] hover:bg-[#49b8b7] text-white px-6 py-3 rounded-xl font-semibold shadow-md transition-transform transform hover:scale-105"
+          className="bg-[#49BBBD] w-full hover:bg-[#49b8b7] text-white px-6 py-3 rounded-xl font-semibold shadow-md transition-transform transform hover:scale-105"
         >
           Send Message
         </button>
