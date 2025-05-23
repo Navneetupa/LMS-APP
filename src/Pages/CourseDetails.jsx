@@ -9,7 +9,7 @@ import Footer from "../CourseDetailsComponent/Footer";
 
 function CourseDetails() {
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen overflow-hidden">
       <Header />
 
       <CourseHeader />
