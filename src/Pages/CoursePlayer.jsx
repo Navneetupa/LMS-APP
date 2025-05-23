@@ -148,9 +148,7 @@ export default function CoursePlayer() {
             </p>
           </div>
         </div>
-        <button className="p-1 rounded-full hover:bg-gray-200 active:bg-gray-300 transition-colors">
-          <Settings className="text-gray-500 w-3 h-3" />
-        </button>
+       
       </motion.div>
 
       {/* Main Layout */}
@@ -266,7 +264,7 @@ export default function CoursePlayer() {
                 </motion.div>
               ))}
 
-              {/* Book Section */}
+             
             {/* Book Section */}
 <div className="p-2 sm:p-3 rounded-lg border bg-white shadow mt-3">
   <h2 className="font-bold text-sm sm:text-base mb-2">Explore more</h2>
