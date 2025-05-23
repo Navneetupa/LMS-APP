@@ -18,7 +18,8 @@ function App() {
       <div > 
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+
           <Route path="/courses" element={<CoursesPage />} />
           <Route path="/courses/:courseId" element={<CourseDetails />} /> 
           <Route path="/career" element={<Career />} />

@@ -55,19 +55,6 @@ export default function TestimonialSection() {
         </p>
         <p className="text-gray-600 mb-6">Are you too? Please give your assessment</p>
 
-        <button className="inline-flex items-center px-4 py-2 border border-teal-500 text-teal-600 rounded-full hover:bg-teal-50 transition">
-          Write your assessment
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="ml-2 h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </button>
       </motion.div>
 
       {/* Right Image and Card */}

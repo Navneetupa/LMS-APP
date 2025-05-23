@@ -211,7 +211,7 @@ const HeroWithNavbar = () => {
           <p className="mt-4 text-white text-sm sm:text-base">
             TOTC is an interesting platform that will teach you in a more interactive way.
           </p>
-          <Link to="/login">
+          <Link to="/courses">
             <button className="mt-4 bg-[#7ddedf] text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-[#59c1c3] transition-all duration-300">
               Join for free
             </button>

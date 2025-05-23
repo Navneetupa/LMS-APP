@@ -43,7 +43,7 @@ const Footer = () => {
         <div className="text-center mb-8">
           <div className="flex flex-col md:flex-row justify-center items-center">
             <a
-              href="/careers"
+              href="/career"
               className="text-white hover:text-blue-600 mx-4 text-lg transition duration-300 mb-2 md:mb-0"
             >
               Careers

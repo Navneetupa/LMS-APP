@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
-
+import defaultImage from '../assets/student.jpg'
 const CourseHeader = () => {
   const { courseId } = useParams(); // Get course ID from URL
   const [thumbnail, setThumbnail] = useState(null);
@@ -33,7 +33,7 @@ const CourseHeader = () => {
           setThumbnail(course.thumbnail);
           // Log the thumbnail URL for debugging
         } else {
-          throw new Error('No thumbnail added');
+         setThumbnail(defaultImage); 
         }
       } catch (err) {
         setError(err.message);

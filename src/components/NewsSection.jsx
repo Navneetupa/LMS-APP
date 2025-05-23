@@ -83,9 +83,7 @@ export default function NewsSection() {
             </span>
             <h3 className="text-lg font-semibold mb-2">{newsItems[0].title}</h3>
             <p className="text-sm text-gray-600 mb-2">{newsItems[0].description}</p>
-            <a href={newsItems[0].link} className="text-blue-600 text-sm font-medium hover:underline">
-              Read more
-            </a>
+           
           </div>
         </motion.div>
 
