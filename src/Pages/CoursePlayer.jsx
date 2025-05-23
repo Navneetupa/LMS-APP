@@ -8,6 +8,8 @@ import {
   ChevronDown,
   Lock,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
 import { motion } from 'framer-motion';
 import axios from 'axios';
 
@@ -265,24 +267,30 @@ export default function CoursePlayer() {
               ))}
 
               {/* Book Section */}
-              <div className="p-2 sm:p-3 rounded-lg border bg-white shadow mt-3">
-                <h2 className="font-bold text-sm sm:text-base mb-2">Explore more</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                  {courses.map((course, idx) => (
-                    <div key={idx} className="p-1 rounded-lg border bg-white shadow">
-                      <img
-                        src={course.thumbnail}
-                        className="rounded-lg mb-1 h-20 sm:h-24 object-cover w-full"
-                        alt={course.title}
-                      />
-                      <p className="text-xs font-semibold truncate">{course.title}</p>
-                      <p className="text-xs text-green-600">
-                        ₹{course.discountPrice || course.price}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            {/* Book Section */}
+<div className="p-2 sm:p-3 rounded-lg border bg-white shadow mt-3">
+  <h2 className="font-bold text-sm sm:text-base mb-2">Explore more</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+    {courses.map((course, idx) => (
+      <Link
+        to={`/courses/${course._id}`}
+        key={idx}
+        className="p-1 rounded-lg border bg-white shadow hover:shadow-md transition-shadow"
+      >
+        <img
+          src={course.thumbnail}
+          className="rounded-lg mb-1 h-20 sm:h-24 object-cover w-full"
+          alt={course.title}
+        />
+        <p className="text-xs font-semibold truncate">{course.title}</p>
+        <p className="text-xs text-green-600">
+          ₹{course.discountPrice || course.price}
+        </p>
+      </Link>
+    ))}
+  </div>
+</div>
+
             </div>
           </div>
         </motion.div>

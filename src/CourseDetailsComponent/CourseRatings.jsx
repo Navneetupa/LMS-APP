@@ -267,7 +267,7 @@ const CourseRatings = () => {
             </div>
           </>
         )}
-
+{/* 
         <div className="mt-6 border-t pt-4">
           <h3 className="text-sm font-semibold text-gray-700 mb-2">Add a Comment</h3>
           <input
@@ -305,7 +305,7 @@ const CourseRatings = () => {
           >
             {reviewLoading ? 'Submitting...' : 'Add Comment'}
           </button>
-        </div>
+        </div> */}
       </motion.div>
       <motion.div
         className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full lg:w-[350px]"
