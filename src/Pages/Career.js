@@ -46,50 +46,49 @@ export default function Career() {
             </div>
 
             {/* Updated Attractive Cards Section */}
-            <div className="mt-10 flex flex-col sm:flex-row justify-center gap-8 max-w-4xl mx-auto px-6">
-              <div className="bg-cyan-50 p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex items-center gap-4">
-                <svg
-                  className="w-8 h-8 text-gray-400 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path d="M12 20h9" />
-                  <path d="M12 4v16" />
-                  <path d="M3 12h9" />
-                  <circle cx="12" cy="12" r="10" />
-                </svg>
-                <p className="text-lg text-cyan-900 font-semibold text-center">
-                  Start your journey with the best courses tailored to your career.
-                </p>
-              </div>
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-8 max-w-4xl mx-auto px-6">
+  <div className="bg-cyan-50 p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex flex-col items-center gap-4">
+    <svg
+      className="w-6 h-6 text-gray-400 flex-shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="M12 20h9" />
+      <path d="M12 4v16" />
+      <path d="M3 12h9" />
+      <circle cx="12" cy="12" r="10" />
+    </svg>
+    <p className="text-lg text-cyan-900 font-semibold text-center">
+      Start your journey with the best courses tailored to your career.
+    </p>
+  </div>
 
-              <div className="bg-cyan-50 p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex items-center gap-4">
-                <svg
-                  className="w-8 h-8 text-gray-400 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                  <path d="M2 17l10 5 10-5" />
-                  <path d="M2 12l10 5 10-5" />
-                </svg>
-                <p className="text-lg text-cyan-900 font-semibold text-center">
-                  Discover opportunities that match your skills and passions.
-                </p>
-              </div>
-            </div>
-          </div>
-
+  <div className="bg-cyan-50 p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex flex-col items-center gap-4">
+    <svg
+      className="w-6 h-6 text-gray-400 flex-shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="M12 2L2 7l10 5 10-5-10-5z" />
+      <path d="M2 17l10 5 10-5" />
+      <path d="M2 12l10 5 10-5" />
+    </svg>
+    <p className="text-lg text-cyan-900 font-semibold text-center">
+      Discover opportunities that match your skills and passions.
+    </p>
+  </div>
+</div>
+</div>
           {/* Circular SVG Design */}
           <div className="hidden md:block absolute top-0 right-0 h-full w-48 z-0 pointer-events-none flex justify-center items-center">
             <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
