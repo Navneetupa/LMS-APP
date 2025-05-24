@@ -1,4 +1,3 @@
-// components/MyCourses.jsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -38,25 +37,25 @@ export default function MyCourses() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-sky-50 p-4 sm:px-6 md:p-8 overflow-auto">
+    <div className="min-h-screen w-full bg-sky-50 p-4 sm:px-4 pt-20 md:px-4 overflow-auto">
       <div className="flex justify-between items-start mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">My Courses</h1>
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">My Courses</h1>
       </div>
 
       {loading ? (
-        <p className="text-gray-600 text-sm">Loading courses...</p>
+        <p className="text-gray-600 text-sm text-center">Loading courses...</p>
       ) : courses.length === 0 ? (
-        <p className="text-gray-600 text-sm">No enrolled courses found.</p>
+        <p className="text-gray-600 text-sm text-center">No enrolled courses found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {courses.map((item) => (
             <div
               key={item._id}
-              className="bg-white p-3 sm:p-4 rounded-xl shadow-md transition-transform transform hover:scale-105 cursor-pointer"
+              className="bg-white p-3 sm:p-4 rounded-xl shadow-md transition-transform transform hover:scale-105 cursor-pointer relative"
               onClick={() => navigate(`/course-player/${item.course._id}`)}
             >
               {/* Thumbnail */}
-              <div className="relative w-full h-40 sm:h-32 bg-gray-200 rounded-md mb-3 overflow-hidden">
+              <div className="w-full h-36 sm:h-40 bg-gray-200 rounded-md mb-4 sm:mb-6 overflow-hidden">
                 {item.course.thumbnail && (
                   <img
                     src={item.course.thumbnail}
@@ -64,19 +63,21 @@ export default function MyCourses() {
                     className="w-full h-full object-cover rounded-md"
                   />
                 )}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePlay(item.course._id);
-                  }}
-                  className="absolute -bottom-4 right-2 bg-[#49BBBD] text-white p-3 rounded-full shadow-lg hover:scale-110 z-10"
-                  title="Play Course"
-                >
-                  <FaPlay className="text-sm" />
-                </button>
               </div>
 
-              <h3 className="text-sm sm:text-md md:text-lg font-semibold text-slate-800 mb-1 truncate">
+              {/* Play Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePlay(item.course._id);
+                }}
+                className="absolute top-[calc(36*0.25rem-.7rem)] sm:top-[calc(40*0.25rem-.7rem)] right-3 sm:right-4 bg-[#49BBBD] text-white p-2 sm:p-3 rounded-full shadow-lg hover:scale-110 z-50"
+                title="Play Course"
+              >
+                <FaPlay className="text-xs sm:text-sm" />
+              </button>
+
+              <h3 className="text-sm sm:text-base font-semibold text-slate-800 mb-1 truncate">
                 {item.course.title}
               </h3>
               <p className="text-xs sm:text-sm text-gray-600 mb-2 line-clamp-2">
@@ -94,7 +95,7 @@ export default function MyCourses() {
                 )}
               </div>
 
-              <div className="flex justify-between items-center mt-3 text-xs sm:text-sm">
+              <div className="flex justify-between items-center mt-2 sm:mt-3 text-xs sm:text-sm">
                 <span className="text-gray-700 truncate">
                   👨‍🏫 {item.course.instructor?.firstName} {item.course.instructor?.lastName}
                 </span>

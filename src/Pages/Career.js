@@ -27,7 +27,7 @@ export default function Career() {
           {/* Text Area */}
           <div className="relative z-20 px-6 md:px-12">
             <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-              Find the job of your <span className="text-cyan-500">Dreams</span>
+              Find the job of your <span className="text-orange-400">Dreams</span>
             </h1>
             <p className="mt-4 text-gray-600 max-w-xl">
               Find Your New Job Today! Browse thousands of openings and apply in seconds.
@@ -36,7 +36,7 @@ export default function Career() {
             {/* Trending Jobs */}
             <div className="mt-6">
               <span className="text-sm font-bold">Trending Keywords:</span>
-              <div className="mt-2 flex gap-4 text-cyan-500 font-medium flex-wrap">
+              <div className="mt-2 flex gap-4 text-[#49BBBD] font-medium flex-wrap">
                 {['Web Designer', 'UI/UX Designer', 'Frontend', 'Backend'].map((tag, index) => (
                   <span key={index} className="cursor-pointer hover:underline" onClick={() => setSearchTerm(tag)}>
                     {tag}
@@ -47,7 +47,7 @@ export default function Career() {
 
             {/* Updated Attractive Cards Section */}
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-8 max-w-4xl mx-auto px-6">
-  <div className="bg-cyan-50 p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex flex-col items-center gap-4">
+  <div className="bg-[#7ddedf] p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex flex-col items-center gap-4">
     <svg
       className="w-6 h-6 text-gray-400 flex-shrink-0"
       fill="none"
@@ -68,7 +68,7 @@ export default function Career() {
     </p>
   </div>
 
-  <div className="bg-cyan-50 p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex flex-col items-center gap-4">
+  <div className="bg-[#7ddedf]  p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex flex-col items-center gap-4">
     <svg
       className="w-6 h-6 text-gray-400 flex-shrink-0"
       fill="none"
@@ -132,7 +132,7 @@ export default function Career() {
         {/* Companies Section */}
         <section className="text-center mt-10 px-4">
           <p className="text-black text-xl font-semibold">
-            Join the Most Well-Known <span className="text-cyan-500">Companies</span> Around the World
+            Join the Most Well-Known <span className="text-[#49BBBD]">Companies</span> Around the World
           </p>
           <div className="mt-6 flex justify-center flex-wrap gap-10 sm:gap-12 md:gap-16 items-center">
             {companies.map((company) => (

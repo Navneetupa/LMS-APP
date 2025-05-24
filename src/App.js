@@ -10,6 +10,7 @@ import Login from "./Pages/Login.jsx";
 import FixedNavbar from "./components/StickyNavbar.jsx"; // Make sure path is correct
 import StudentDashboard from './Pages/Profiledashboard/parentLayout.jsx'
 import CoursePlayer from "./Pages/CoursePlayer.jsx";
+import StudentAssessment from './Pages/StudentAssessment.jsx'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/course-player/:courseId" element={<CoursePlayer />} />
+          <Route path="//courses/:courseId/assessments/:assessmentId" element={<StudentAssessment />} />
         </Routes>
       </div>
     </Router>

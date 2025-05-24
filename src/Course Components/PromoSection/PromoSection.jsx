@@ -9,7 +9,7 @@ const PromoSection = () => {
 
   return (
     <section
-      className="bg-[#aed2e6] text-black py-12 px-4 sm:px-6 md:px-16 text-center"
+      className="bg-[#7ddedf] text-black py-12 px-4 sm:px-6 md:px-16 text-center"
       data-aos="fade-up"
     >
       <h2

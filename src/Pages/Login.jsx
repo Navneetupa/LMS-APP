@@ -211,8 +211,8 @@ const AuthComponent = () => {
           backgroundImage: `url(${image})`,
         }}
       >
-        <h1 className="text-4xl font-bold mb-4">Empower your learning journey</h1>
-        <p className="text-lg">Unlock new skills, anytime, anywhere</p>
+        {/* <h1 className="text-4xl font-bold mb-4">Empower your learning journey</h1>
+        <p className="text-lg">Unlock new skills, anytime, anywhere</p> */}
       </div>
 
       <div className="w-full sm:w-1/2 flex flex-col justify-center items-center bg-gray-100 p-6 sm:p-10">

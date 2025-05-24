@@ -136,7 +136,7 @@ const PopularCourses = () => {
     <section className="py-20 bg-white px-6 md:px-16 relative">
       <div className={modalOpen || authPopupOpen ? "pointer-events-none filter blur-sm" : ""}>
         <h2 className="text-4xl font-extrabold text-center text-black mb-6 tracking-wide">
-          Popular <span className="text-cyan-500">Courses</span> <span>for You</span>
+          Popular <span className="text-[#49BBBD]">Courses</span> <span>for You</span>
         </h2>
         <p className="text-center text-cyan-700 max-w-3xl mx-auto mb-12 text-lg">
           Browse our top trending courses, handpicked to boost your career and skills.
@@ -157,7 +157,7 @@ const PopularCourses = () => {
         <div className="flex justify-center mt-12">
           <button
             onClick={() => setModalOpen(true)}
-            className="px-8 py-3 bg-cyan-500 text-white rounded-full font-semibold text-lg hover:bg-cyan-600 transition-colors duration-300 shadow-lg"
+             className="px-8 py-3 bg-[#59c1c3] text-white rounded-full font-semibold text-lg hover:bg-[#7dded] transition-colors duration-300 shadow-lg"
           >
             View All Courses
           </button>
@@ -185,7 +185,7 @@ const PopularCourses = () => {
               <span className="sr-only">Close</span> ×
             </button>
             <h3 className="text-3xl font-extrabold text-cyan-900 mb-8 text-center">
-              All <span className="text-cyan-500">Courses</span>
+              All <span className="text-[#49BBBD]">Courses</span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {courses.map((course, index) => (
@@ -217,12 +217,14 @@ const PopularCourses = () => {
           >
             <h2 className="text-2xl font-semibold mb-4 text-cyan-900">You have not signed in</h2>
             <p className="mb-6 text-gray-700">Please sign up to access this course.</p>
-            <button
-              onClick={handleSignupRedirect}
-              className="px-6 py-3 bg-cyan-500 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
-            >
-              Log In
-            </button>
+           <button
+  onClick={handleSignupRedirect}
+  style={{ backgroundColor: '#49BBBD' }}
+  className="px-6 py-3 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
+>
+  Log In
+</button>
+
             <button
               onClick={() => setAuthPopupOpen(false)}
               className="absolute top-3 right-3 text-cyan-500 hover:text-cyan-700 font-bold text-xl"

@@ -201,7 +201,7 @@ const HeroWithNavbar = () => {
         </select>
       </div>
 
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center px-4 sm:px-6 mt-10 md:mt-2">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center px-4 sm:px-6 mt-12 md:mt-2">
         <div
           className="md:w-1/2 -mt-1 md:mt-0 mb-10 md:mb-0 text-center md:text-left ml-6 md:ml-10"
           data-aos="fade-right"

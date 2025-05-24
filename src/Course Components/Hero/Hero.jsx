@@ -107,7 +107,7 @@ export default function Career() {
         />
       </div>
       <button
-        className="bg-cyan-500 text-white px-6 py-2 rounded-full hover:bg-cyan-600 transition-all duration-300 hover:scale-105"
+        className="bg-[#59c1c3] text-white px-6 py-2 rounded-full hover:bg-[#7dded] transition-all duration-300 hover:scale-105"
         onClick={handleSearch}
       >
         Search

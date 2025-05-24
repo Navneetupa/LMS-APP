@@ -58,10 +58,10 @@ const CareerPaths = () => {
   return (
     <section className="py-20 bg-white px-6 md:px-16 relative">
       <div className={modalOpen ? "filter blur-sm pointer-events-none" : ""}>
-        <h2 className="text-4xl font-extrabold text-center text-cyan-900 mb-6 tracking-wide">
-          Explore Your <span className="text-cyan-500">Career Paths</span>
+        <h2 className="text-4xl font-extrabold text-center text-black mb-6 tracking-wide">
+          Explore Your <span className="text-[#49BBBD]">Career Paths</span>
         </h2>
-        <p className="text-center text-cyan-700 max-w-3xl mx-auto mb-12 text-lg">
+        <p className="text-center text-black max-w-3xl mx-auto mb-12 text-lg">
           Choose a career track to build skills that employers value. Start with basics, then master your domain.
         </p>
 
@@ -87,7 +87,7 @@ const CareerPaths = () => {
         <div className="flex justify-center mt-12">
           <button
             onClick={() => setModalOpen(true)}
-            className="px-8 py-3 bg-cyan-500 text-white rounded-full font-semibold text-lg hover:bg-cyan-600 transition-colors duration-300 shadow-lg"
+            className="px-8 py-3 bg-[#59c1c3] text-white rounded-full font-semibold text-lg hover:bg-[#7ddedf] transition-colors duration-300 shadow-lg"
           >
             View All Career Paths
           </button>
@@ -112,8 +112,8 @@ const CareerPaths = () => {
             >
               &times;
             </button>
-            <h3 className="text-3xl font-extrabold text-cyan-900 mb-8 text-center">
-              All <span className="text-cyan-500">Career Paths</span>
+            <h3 className="text-3xl font-extrabold text-black mb-8 text-center">
+              All <span className="text-[#49BBBD]">Career Paths</span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {careerTracks.map((track, index) => (

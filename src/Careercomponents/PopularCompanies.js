@@ -52,10 +52,10 @@ const PopularCompanies = () => {
   return (
     <section className="py-20 bg-white px-6 md:px-16 relative">
       <div className={modalOpen ? "filter blur-sm pointer-events-none" : ""}>
-        <h2 className="text-4xl font-extrabold text-center text-indigo-900 mb-6 tracking-wide">
+        <h2 className="text-4xl font-extrabold text-center text-black mb-6 tracking-wide">
           Popular <span className="text-[#49BBBD]">Companies</span>
         </h2>
-        <p className="text-center text-indigo-700 max-w-3xl mx-auto mb-12 text-lg">
+        <p className="text-center text-black max-w-3xl mx-auto mb-12 text-lg">
           These top companies are actively hiring for multiple roles across India.
         </p>
 
@@ -103,7 +103,7 @@ const PopularCompanies = () => {
             >
               &times;
             </button>
-            <h3 className="text-3xl font-extrabold text-indigo-900 mb-8 text-center">
+            <h3 className="text-3xl font-extrabold text-black mb-8 text-center">
               All <span className="text-[#49BBBD]">Companies</span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
