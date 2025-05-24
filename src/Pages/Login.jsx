@@ -23,6 +23,7 @@ const AuthComponent = () => {
   const [showForgotPasswordPopup, setShowForgotPasswordPopup] = useState(false);
   const [showResetPasswordPopup, setShowResetPasswordPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showResetLinkSentPopup, setShowResetLinkSentPopup] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [resetPasswordData, setResetPasswordData] = useState({
     token: '',
@@ -124,7 +125,7 @@ const AuthComponent = () => {
       setSuccessMessage(res.data.message || 'Password reset email sent. Please check your inbox.');
       setErrorMessage('');
       setShowForgotPasswordPopup(false);
-      setShowResetPasswordPopup(true);
+      setShowResetLinkSentPopup(true);
     } catch (err) {
       setErrorMessage(err.response?.data?.message || 'Failed to send reset email. Please try again.');
       setSuccessMessage('');
@@ -165,18 +166,6 @@ const AuthComponent = () => {
     }
   };
 
-  const handleResendToken = async () => {
-    try {
-      const res = await axios.post(`${API_BASE_URL}/auth/forgot-password`, {
-        email: forgotPasswordEmail,
-      });
-      setSuccessMessage(res.data.message || 'Password reset email sent. Please check your inbox.');
-      setErrorMessage('');
-    } catch (err) {
-      setErrorMessage(err.response?.data?.message || 'Failed to resend reset email. Please try again.');
-    }
-  };
-
   return (
     <div className="flex min-h-screen font-sans">
       <div
@@ -193,7 +182,7 @@ const AuthComponent = () => {
         <h2 className="text-2xl font-semibold mb-2 text-center">Welcome back to LMS!</h2>
 
         {errorMessage && <p className="text-red-500 mb-4 text-center">{errorMessage}</p>}
-        {successMessage && !showForgotPasswordPopup && !showResetPasswordPopup && !showSuccessPopup && (
+        {successMessage && !showForgotPasswordPopup && !showResetPasswordPopup && !showSuccessPopup && !showResetLinkSentPopup && (
           <div className="text-center">
             <p className="text-green-500 mb-4">{successMessage}</p>
             <button
@@ -369,149 +358,29 @@ const AuthComponent = () => {
       {showForgotPasswordPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
-            {successMessage ? (
-              <>
-                <p className="text-green-500 mb-4">{successMessage}</p>
-                <button
-                  onClick={() => {
-                    setShowForgotPasswordPopup(false);
-                    setShowResetPasswordPopup(true);
-                    setErrorMessage('');
-                    setSuccessMessage('');
-                  }}
-                  className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
-                >
-                  Proceed to Reset Password
-                </button>
-              </>
-            ) : (
-              <>
-                <h3 className="text-xl font-bold mb-4">Reset Your Password</h3>
-                <p className="mb-4 text-gray-600">Enter your email to receive a password reset link</p>
-                <form onSubmit={handleForgotPassword}>
-                  <input
-                    type="email"
-                    value={forgotPasswordEmail}
-                    onChange={(e) => setForgotPasswordEmail(e.target.value)}
-                    className="w-full mb-4 p-2 border border-gray-300 rounded-md"
-                    placeholder="Enter your email"
-                    required
-                  />
-                  {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-                  <div className="flex justify-center gap-4">
-                    <button
-                      type="submit"
-                      className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
-                    >
-                      Send Reset Link
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowForgotPasswordPopup(false);
-                        setForgotPasswordEmail('');
-                        setErrorMessage('');
-                        setSuccessMessage('');
-                      }}
-                      className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
-      {showResetPasswordPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
-            <h3 className="text-xl font-bold mb-4">Set New Password</h3>
-            <p className="mb-4 text-gray-600">
-              Enter the token from the reset email and your new password
-            </p>
-            <form onSubmit={handleResetPassword}>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Reset Token</label>
-                <input
-                  type="text"
-                  name="token"
-                  value={resetPasswordData.token}
-                  onChange={handleResetPasswordChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="Enter token from email"
-                  required
-                />
-              </div>
-              <div className="mb-4 relative">
-                <label className="block text-gray-700 mb-2">New Password</label>
-                <input
-                  type={showResetPassword ? 'text' : 'password'}
-                  name="newPassword"
-                  value={resetPasswordData.newPassword}
-                  onChange={handleResetPasswordChange}
-                  className="w-full p-2 border border-gray-300 rounded-md pr-10"
-                  placeholder="Enter new password (min 8 characters)"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowResetPassword(!showResetPassword)}
-                  className="absolute right-3 top-11 text-gray-600 hover:text-gray-800"
-                >
-                  {showResetPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
-                </button>
-              </div>
-              <div className="mb-4 relative">
-                <label className="block text-gray-700 mb-2">Confirm Password</label>
-                <input
-                  type={showResetPassword ? 'text' : 'password'}
-                  name="confirmPassword"
-                  value={resetPasswordData.confirmPassword}
-                  onChange={handleResetPasswordChange}
-                  className="w-full p-2 border border-gray-300 rounded-md pr-10"
-                  placeholder="Confirm new password"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowResetPassword(!showResetPassword)}
-                  className="absolute right-3 top-11 text-gray-600 hover:text-gray-800"
-                >
-                  {showResetPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
-                </button>
-              </div>
-              {errorMessage && (
-                <p className="text-red-500 mb-4">
-                  {errorMessage}
-                  {errorMessage.includes('token') && (
-                    <span>
-                      {' '}
-                      <button
-                        type="button"
-                        onClick={handleResendToken}
-                        className="text-teal-600 hover:underline"
-                      >
-                        Resend token
-                      </button>
-                    </span>
-                  )}
-                </p>
-              )}
+            <h3 className="text-xl font-bold mb-4">Reset Your Password</h3>
+            <p className="mb-4 text-gray-600">Enter your email to receive a password reset link</p>
+            <form onSubmit={handleForgotPassword}>
+              <input
+                type="email"
+                value={forgotPasswordEmail}
+                onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                className="w-full mb-4 p-2 border border-gray-300 rounded-md"
+                placeholder="Enter your email"
+                required
+              />
+              {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
               <div className="flex justify-center gap-4">
                 <button
                   type="submit"
                   className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
                 >
-                  Reset Password
+                  Send Reset Link
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    setShowResetPasswordPopup(false);
-                    setResetPasswordData({ token: '', newPassword: '', confirmPassword: '' });
+                    setShowForgotPasswordPopup(false);
                     setForgotPasswordEmail('');
                     setErrorMessage('');
                     setSuccessMessage('');
@@ -526,21 +395,24 @@ const AuthComponent = () => {
         </div>
       )}
 
-      {showSuccessPopup && (
+      {showResetLinkSentPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
-            <h3 className="text-xl font-bold mb-4">Success</h3>
-            <p className="text-green-500 mb-4">Password updated successfully! You can now log in with your new password.</p>
+            <h3 className="text-xl font-bold mb-4">Reset Link Sent</h3>
+            <p className="mb-4 text-gray-600">
+              OTP verification link has been sent to <strong>{forgotPasswordEmail}</strong>. Please check your inbox.
+            </p>
             <button
               onClick={() => {
-                setShowSuccessPopup(false);
+                setShowResetLinkSentPopup(false);
                 setIsLogin(true);
+                setForgotPasswordEmail('');
                 setErrorMessage('');
                 setSuccessMessage('');
               }}
               className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
             >
-              Back to Login
+              OK
             </button>
           </div>
         </div>

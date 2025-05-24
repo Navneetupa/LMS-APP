@@ -1,5 +1,5 @@
 // src/pages/ResetPassword.js
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -38,7 +38,10 @@ const ResetPassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">Reset Password</h2>
+       <div className="border border-[#7ddedf] bg-[#7ddedf] text-white p-6 rounded-lg shadow-md">
+  <h2 className="text-2xl font-bold text-center mb-6">Reset Password</h2>
+</div>
+
         {message && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">{message}</div>}
         {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>}
         <form onSubmit={handleSubmit}>
@@ -71,7 +74,7 @@ const ResetPassword = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full py-2 px-4 bg-[#7ddedf] text-white rounded hover:bg-[#59c1c3] focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               loading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
