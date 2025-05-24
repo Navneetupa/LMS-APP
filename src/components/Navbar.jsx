@@ -34,12 +34,14 @@ const HeroWithNavbar = () => {
         // Fetch categories
         const categoriesResponse = await fetch("https://lms-backend-flwq.onrender.com/api/v1/courses/categories");
         const categoriesData = await categoriesResponse.json();
-        if (categoriesData.success) {
-          setCategories(categoriesData.data || []);
+
+        if (categoriesData.success && Array.isArray(categoriesData.data)) {
+          setCategories(categoriesData.data.map((category) => category.toLowerCase()));
         } else {
           // Fallback static data if API fails
           setCategories(["Web Development", "Data Science", "Mobile Development", "Machine Learning"]);
         }
+
 
         // Fetch languages
         const languagesResponse = await fetch("https://lms-backend-flwq.onrender.com/api/v1/courses/languages");
@@ -317,7 +319,7 @@ const HeroWithNavbar = () => {
                 {searchResults.map((course) => (
                   <li key={course._id} className="py-2">
                     <div
-                      onClick={() => handleCourseClick(course. _id)}
+                      onClick={() => handleCourseClick(course._id)}
                       className="bg-gray-100 hover:bg-blue-100 transition p-4 rounded-lg flex flex-col items-center text-center shadow-md cursor-pointer"
                     >
                       <img

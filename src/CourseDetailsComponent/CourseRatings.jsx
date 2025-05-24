@@ -10,11 +10,11 @@ import {
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const CourseRatings = () => {
   const { courseId } = useParams();
 
-  // Review states
   const [reviews, setReviews] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [commentText, setCommentText] = useState('');
@@ -23,13 +23,15 @@ const CourseRatings = () => {
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(null);
 
-  // Course states
   const [price, setPrice] = useState(null);
   const [discountPrice, setDiscountPrice] = useState(null);
   const [currency, setCurrency] = useState('INR');
-  const [courseName, setCourseName] = useState(''); // State for course name
+  const [courseName, setCourseName] = useState('');
   const [courseError, setCourseError] = useState(null);
   const [courseLoading, setCourseLoading] = useState(false);
+  const [enrollLoading, setEnrollLoading] = useState(false);
+  const [enrollError, setEnrollError] = useState(null);
+  const [enrollSuccess, setEnrollSuccess] = useState(null);
 
   const currencySymbols = {
     INR: '₹',
@@ -45,10 +47,7 @@ const CourseRatings = () => {
     ? `https://lms-backend-flwq.onrender.com/api/v1/courses/${courseId}/reviews`
     : null;
 
-  useEffect(() => {
-  }, [courseId]);
-
-  // Fetch course details including name
+  // Fetch course details
   useEffect(() => {
     const fetchCourse = async () => {
       if (!courseId || !courseApiUrl) {
@@ -58,22 +57,12 @@ const CourseRatings = () => {
 
       setCourseLoading(true);
       try {
-        const res = await fetch(courseApiUrl);
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-        const data = await res.json();
-        if (data.success) {
-          if (!data.data) {
-            throw new Error('No data field in response');
-          }
+        const { data } = await axios.get(courseApiUrl);
+        if (data.success && data.data) {
           setPrice(data.data.price || null);
           setDiscountPrice(data.data.discountPrice || null);
           setCurrency(data.data.currency || 'INR');
-          setCourseName(data.data.title || 'Unknown Course'); // Set course name (using 'title' field)
-          if (!data.data.price || !data.data.discountPrice) {
-            setCourseError('Missing price or discountPrice in response');
-          }
+          setCourseName(data.data.title || 'Unknown Course');
         } else {
           setCourseError(data.message || 'Failed to fetch course data');
         }
@@ -86,7 +75,7 @@ const CourseRatings = () => {
     };
 
     fetchCourse();
-  }, [courseId, courseApiUrl]);
+  }, [courseId]);
 
   // Fetch reviews
   useEffect(() => {
@@ -98,12 +87,8 @@ const CourseRatings = () => {
 
       setReviewLoading(true);
       try {
-        const response = await fetch(reviewsApiUrl);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data.success) {
+        const { data } = await axios.get(reviewsApiUrl);
+        if (data.success && data.data) {
           const mappedReviews = data.data.map((review) => ({
             name: `${review.user?.firstName || 'Unknown'} ${review.user?.lastName || ''}`,
             rating: review.rating || 0,
@@ -122,9 +107,8 @@ const CourseRatings = () => {
     };
 
     fetchReviews();
-  }, [courseId, reviewsApiUrl]);
+  }, [courseId]);
 
-  // Review filtering and calculations
   const filteredReviews = reviews.filter((review) =>
     review.text.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -138,7 +122,6 @@ const CourseRatings = () => {
     (rating) => reviews.filter((review) => review.rating === rating).length
   );
 
-  // Handle adding a comment
   const handleAddComment = async () => {
     if (!courseId || !reviewsApiUrl) {
       setReviewError('Invalid or missing course ID');
@@ -147,18 +130,11 @@ const CourseRatings = () => {
     if (commentText.trim() && commentName.trim() && commentRating > 0) {
       setReviewLoading(true);
       try {
-        const response = await fetch(reviewsApiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            rating: commentRating,
-            comment: commentText,
-          }),
+        const { data } = await axios.post(reviewsApiUrl, {
+          rating: commentRating,
+          comment: commentText,
         });
 
-        const data = await response.json();
         if (data.success) {
           const newReview = {
             name: commentName,
@@ -183,11 +159,53 @@ const CourseRatings = () => {
     }
   };
 
-  // Calculate discount percentage
   const getDiscountPercent = () => {
     if (!price || !discountPrice) return null;
     return Math.round(((price - discountPrice) / price) * 100);
   };
+
+  const handleEnrollNow = async () => {
+    if (!courseId) {
+      setEnrollError('Invalid course ID');
+      return;
+    }
+
+    // Get token from localStorage (adjust based on your auth implementation)
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      setEnrollError('You must be logged in to enroll.');
+      return;
+    }
+
+    setEnrollLoading(true);
+    setEnrollError(null);
+    setEnrollSuccess(null);
+
+    try {
+      const response = await axios.post(
+        'https://lms-backend-flwq.onrender.com/api/v1/students/courses',
+        { courseId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setEnrollSuccess('You have been enrolled successfully!');
+      } else {
+        setEnrollError(response.data.message || 'Enrollment failed');
+      }
+    } catch (error) {
+      console.error('Enroll API error:', error);
+      setEnrollError(error.response?.data?.message || error.message || 'Enrollment failed');
+    } finally {
+      setEnrollLoading(false);
+    }
+  };
+
 
   return (
     <div className="flex flex-col lg:flex-row items-start justify-between gap-6 relative p-4 sm:p-6 bg-gray-50">
@@ -201,6 +219,7 @@ const CourseRatings = () => {
         <h2 className="w-full max-w-[400px] h-[50px] text-lg sm:text-xl font-bold text-white bg-[#49BBBD] flex items-center justify-center mb-4 rounded cursor-pointer hover:bg-[#3ea1a3] transition">
           {courseLoading ? 'Loading...' : `Course Overview - ${courseName || 'Unknown Course'}`}
         </h2>
+
         {courseError && <p className="text-sm text-red-500 mb-4">{courseError}</p>}
 
         <input
@@ -267,7 +286,10 @@ const CourseRatings = () => {
             </div>
           </>
         )}
-{/* 
+
+        {/* Add Comment Section (Optional) */}
+        {/* Uncomment to allow users to submit new reviews */}
+        {/* 
         <div className="mt-6 border-t pt-4">
           <h3 className="text-sm font-semibold text-gray-700 mb-2">Add a Comment</h3>
           <input
@@ -282,9 +304,7 @@ const CourseRatings = () => {
               <FaStar
                 key={star}
                 size={20}
-                className={`cursor-pointer mr-1 ${
-                  star <= commentRating ? 'text-yellow-400' : 'text-gray-300'
-                }`}
+                className={`cursor-pointer mr-1 ${star <= commentRating ? 'text-yellow-400' : 'text-gray-300'}`}
                 onClick={() => setCommentRating(star)}
               />
             ))}
@@ -305,8 +325,10 @@ const CourseRatings = () => {
           >
             {reviewLoading ? 'Submitting...' : 'Add Comment'}
           </button>
-        </div> */}
+        </div>
+        */}
       </motion.div>
+
       <motion.div
         className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full lg:w-[350px]"
         initial={{ opacity: 0, x: -100 }}
@@ -315,10 +337,8 @@ const CourseRatings = () => {
         viewport={{ once: true }}
       >
         <p className="text-gray-600 text-xs mb-2">This course Price Now...</p>
-
         {courseLoading && <p className="text-sm text-gray-600">Loading price...</p>}
         {courseError && <p className="text-sm text-red-500">{courseError}</p>}
-
         {!courseLoading && !courseError && (
           <div className="flex items-end flex-wrap gap-2 sm:space-x-3 mb-4">
             <span className="text-2xl font-bold text-gray-900">
@@ -336,37 +356,30 @@ const CourseRatings = () => {
             )}
           </div>
         )}
-
-        <button className="w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white font-bold py-2 text-sm rounded-lg transition duration-200 mb-4">
-          Enroll Now
-        </button>
-
         <hr className="w-full border border-gray-300 mb-4" />
-
         <h2 className="text-lg font-bold text-gray-800 mb-3">This Course Includes</h2>
-
         <ul className="text-xs text-gray-700 space-y-2 mb-4">
           <li>✔️ Full lifetime access</li>
           <li>✔️ Certificate of completion</li>
           <li>✔️ Access on mobile and TV</li>
           <li>✔️ Training for 5+ people</li>
         </ul>
-
-        <button className="w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white py-2 text-sm rounded-lg transition-all duration-300 mb-4">
-          Enroll Now
+        <button
+          onClick={handleEnrollNow}
+          disabled={enrollLoading}
+          className={`w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white py-2 rounded text-sm ${enrollLoading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+        >
+          {enrollLoading ? 'Enrolling...' : 'Enroll Now'}
         </button>
 
-        <div className="text-gray-500 text-xs mt-4">
-          <div className="font-bold mb-2">Share this course</div>
-          <div className="flex flex-wrap gap-3 text-base mt-2">
-            <FaFacebookF className="hover:text-blue-500 cursor-pointer" />
-            <FaTwitter className="hover:text-sky-400 cursor-pointer" />
-            <FaLinkedinIn className="hover:text-blue-700 cursor-pointer" />
-            <FaTelegram className="hover:text-blue-500 cursor-pointer" />
-            <FaWhatsapp className="hover:text-green-500 cursor-pointer" />
-            <FaYoutube className="hover:text-red-500 cursor-pointer" />
-          </div>
-        </div>
+        {/* Show success or error messages */}
+        {enrollSuccess && (
+          <p className="mt-2 text-green-600 text-sm font-medium">{enrollSuccess}</p>
+        )}
+        {enrollError && (
+          <p className="mt-2 text-red-600 text-sm font-medium">{enrollError}</p>
+        )}
       </motion.div>
     </div>
   );
