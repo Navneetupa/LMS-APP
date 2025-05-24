@@ -38,7 +38,7 @@ const ResetPassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-       <h2 className="text-2xl font-bold text-center mb-6">Reset <span className="bg-[#59c1c3]"> Password</span></h2>
+       <h2 className="text-2xl font-bold text-center mb-6">Reset <span className="text-[#59c1c3]"> Password</span></h2>
         {message && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">{message}</div>}
         {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>}
         <form onSubmit={handleSubmit}>
