@@ -12,6 +12,47 @@ import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
+// Modal Component for Pop-Up
+const Modal = ({ isOpen, message, type, onClose }) => {
+  useEffect(() => {
+    if (isOpen) {
+      // Auto-close after 3 seconds
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div
+        className={`p-6 rounded-lg shadow-lg max-w-sm w-full ${
+          type === 'success' ? 'bg-green-100' : 'bg-red-100'
+        }`}
+      >
+        <p
+          className={`text-sm font-medium ${
+            type === 'success' ? 'text-green-800' : 'text-red-800'
+          }`}
+        >
+          {message}
+        </p>
+        <button
+          onClick={onClose}
+          className={`mt-4 px-4 py-2 rounded text-white text-sm ${
+            type === 'success' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
+          }`}
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const CourseRatings = () => {
   const { courseId } = useParams();
 
@@ -170,7 +211,6 @@ const CourseRatings = () => {
       return;
     }
 
-    // Get token from localStorage (adjust based on your auth implementation)
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -206,6 +246,10 @@ const CourseRatings = () => {
     }
   };
 
+  const closeModal = () => {
+    setEnrollSuccess(null);
+    setEnrollError(null);
+  };
 
   return (
     <div className="flex flex-col lg:flex-row items-start justify-between gap-6 relative p-4 sm:p-6 bg-gray-50">
@@ -286,47 +330,6 @@ const CourseRatings = () => {
             </div>
           </>
         )}
-
-        {/* Add Comment Section (Optional) */}
-        {/* Uncomment to allow users to submit new reviews */}
-        {/* 
-        <div className="mt-6 border-t pt-4">
-          <h3 className="text-sm font-semibold text-gray-700 mb-2">Add a Comment</h3>
-          <input
-            type="text"
-            placeholder="Your Name"
-            className="w-full mb-2 p-2 border border-gray-300 rounded text-sm"
-            value={commentName}
-            onChange={(e) => setCommentName(e.target.value)}
-          />
-          <div className="flex mb-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <FaStar
-                key={star}
-                size={20}
-                className={`cursor-pointer mr-1 ${star <= commentRating ? 'text-yellow-400' : 'text-gray-300'}`}
-                onClick={() => setCommentRating(star)}
-              />
-            ))}
-          </div>
-          <textarea
-            placeholder="Your comment..."
-            className="w-full p-2 border border-gray-300 rounded text-sm mb-2"
-            rows="3"
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-          />
-          <button
-            onClick={handleAddComment}
-            disabled={reviewLoading}
-            className={`bg-[#49BBBD] text-white px-4 py-2 rounded hover:bg-[#3ea1a3] transition text-sm ${
-              reviewLoading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            {reviewLoading ? 'Submitting...' : 'Add Comment'}
-          </button>
-        </div>
-        */}
       </motion.div>
 
       <motion.div
@@ -367,20 +370,21 @@ const CourseRatings = () => {
         <button
           onClick={handleEnrollNow}
           disabled={enrollLoading}
-          className={`w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white py-2 rounded text-sm ${enrollLoading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+          className={`w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white py-2 rounded text-sm ${
+            enrollLoading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
           {enrollLoading ? 'Enrolling...' : 'Enroll Now'}
         </button>
-
-        {/* Show success or error messages */}
-        {enrollSuccess && (
-          <p className="mt-2 text-green-600 text-sm font-medium">{enrollSuccess}</p>
-        )}
-        {enrollError && (
-          <p className="mt-2 text-red-600 text-sm font-medium">{enrollError}</p>
-        )}
       </motion.div>
+
+      {/* Modal for Enroll Success/Error */}
+      <Modal
+        isOpen={!!enrollSuccess || !!enrollError}
+        message={enrollSuccess || enrollError}
+        type={enrollSuccess ? 'success' : 'error'}
+        onClose={closeModal}
+      />
     </div>
   );
 };
