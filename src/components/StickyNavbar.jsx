@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { FaBars, FaTimes, FaUserCircle, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { FaBars, FaTimes, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/logo.png";
@@ -30,7 +30,7 @@ const FixedNavbar = () => {
       });
       
       if (response.data.success && response.data.data.avatar) {
-        setAvatarUrl(`https://lms-backend-flwq.onrender.com/uploads/${response.data.data.avatar}`);
+        setAvatarUrl(response.data.data.avatar);
       }
     } catch (error) {
       console.error("Error fetching profile:", error.response?.data || error.message);
@@ -196,7 +196,7 @@ const FixedNavbar = () => {
               <img
                 src={avatarUrl}
                 alt="User Avatar"
-                className="w-8 h-8 rounded-full border-2 border-[#00A78E] object-cover hover:border-[#5ec7b7] transition-colors"
+                className="w-8 h-8 rounded-full border-2 border-white object-cover hover:border-[#00A78E] transition-colors"
                 onError={(e) => {
                   e.target.src = defaultAvatar;
                 }}

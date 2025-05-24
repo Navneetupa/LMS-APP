@@ -7,8 +7,9 @@ import {
   SkipForward,
   ChevronDown,
   Lock,
+  HelpCircle,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import arrowLeft from '../assets/image (1).png';
 
@@ -25,7 +26,21 @@ export default function CoursePlayer() {
   const [activeLecture, setActiveLecture] = useState({ moduleIndex: null, lessonIndex: null });
   const [assessments, setAssessments] = useState([]);
   const [isAssessmentsModalOpen, setIsAssessmentsModalOpen] = useState(false);
+  const [isHelpSidebarOpen, setIsHelpSidebarOpen] = useState(false);
   const [assessmentsError, setAssessmentsError] = useState('');
+
+  // Support form state
+  const [form, setForm] = useState({
+    name: '',
+    subject: '',
+    message: '',
+    category: 'course',
+    relatedCourse: courseId || '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [contactCourses, setContactCourses] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +87,16 @@ export default function CoursePlayer() {
           }
         );
 
+        // Fetch user profile and enrolled courses for support form
+        const profileRes = await axios.get(
+          'https://lms-backend-flwq.onrender.com/api/v1/students/profile',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const { firstName, lastName } = profileRes.data.data;
+        setForm((prev) => ({ ...prev, name: `${firstName} ${lastName}` }));
+
         if (enrollmentRes.data.success) {
           const enrolledCourses = enrollmentRes.data.data;
           const isUserEnrolled = enrolledCourses.some(
@@ -86,6 +111,10 @@ export default function CoursePlayer() {
             setCourseTitle(course.course.title);
             setInstructorName(`${course.course.instructor.firstName} ${course.course.instructor.lastName}`);
           }
+          setContactCourses(enrolledCourses.map((enrollment) => ({
+            _id: enrollment.course._id,
+            title: enrollment.course.title,
+          })));
         }
 
         if (contentRes.data.success) {
@@ -105,7 +134,6 @@ export default function CoursePlayer() {
           }));
           setModules(formattedModules);
 
-          // Auto-select the first lecture of the first module
           if (formattedModules.length > 0 && formattedModules[0].lessons.length > 0) {
             const firstLecture = formattedModules[0].lessons[0];
             setSelectedVideo({
@@ -148,9 +176,56 @@ export default function CoursePlayer() {
     setIsAssessmentsModalOpen(!isAssessmentsModalOpen);
   };
 
+  const toggleHelpSidebar = () => {
+    setIsHelpSidebarOpen(!isHelpSidebarOpen);
+  };
+
   const handleAttemptAssessment = (assessmentId) => {
     navigate(`/courses/${courseId}/assessments/${assessmentId}`);
     setIsAssessmentsModalOpen(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setSuccessMsg('');
+    setErrorMsg('');
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        'https://lms-backend-flwq.onrender.com/api/v1/students/support',
+        {
+          subject: form.subject,
+          message: form.message,
+          category: 'course',
+          relatedCourse: form.relatedCourse || undefined,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.data.success) {
+        setSuccessMsg('Support ticket submitted successfully.');
+        setForm((prev) => ({
+          ...prev,
+          subject: '',
+          message: '',
+          category: 'course',
+          relatedCourse: courseId || '',
+        }));
+      } else {
+        setErrorMsg('Failed to submit the ticket.');
+      }
+    } catch (error) {
+      setErrorMsg('Failed to submit the ticket.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -175,27 +250,85 @@ export default function CoursePlayer() {
             </p>
           </div>
         </div>
-        <button
-          onClick={toggleAssessmentsModal}
-          className="bg-[#49BBBD] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-[#49BBBD] transition"
-        >
-          Your Assessments
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <button
+            onClick={toggleAssessmentsModal}
+            className="bg-[#49BBBD] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-[#3AA8AA] transition"
+          >
+            Your Assessments
+          </button>
+          <button
+            onClick={toggleHelpSidebar}
+            className="bg-transparent text-black px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-[#49BBBD] hover:text-white border border-2-[#49BBBD] transition flex items-center gap-1"
+          >
+            <HelpCircle className="w-4 h-4" />
+            Help
+          </button>
+        </div>
       </motion.div>
 
       {/* Assessments Modal */}
-      {isAssessmentsModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <AnimatePresence>
+        {isAssessmentsModalOpen && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="bg-white rounded-lg p-4 sm:p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto"
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
           >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg sm:text-xl font-semibold">Course Assessments</h2>
+            <div className="bg-white rounded-lg p-4 sm:p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg sm:text-xl font-semibold">Course Assessments</h2>
+                <button
+                  onClick={toggleAssessmentsModal}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              {assessmentsError ? (
+                <p className="text-red-500 text-sm">{assessmentsError}</p>
+              ) : assessments.length === 0 ? (
+                <p className="text-gray-600 text-sm">No assessments available.</p>
+              ) : (
+                <div className="space-y-4">
+                  {assessments.map((assessment) => (
+                    <div key={assessment._id} className="border rounded-lg p-3 flex justify-between items-center">
+                      <div>
+                        <h3 className="text-sm sm:text-base font-semibold">{assessment.title}</h3>
+                        <p className="text-xs sm:text-sm text-gray-600">{assessment.description}</p>
+                      </div>
+                      <button
+                        onClick={() => handleAttemptAssessment(assessment._id)}
+                        className="bg-green-500 text-white px-3 py-1 rounded-md text-xs sm:text-sm hover:bg-green-600 transition"
+                      >
+                        Attempt
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Help Sidebar */}
+      <AnimatePresence>
+        {isHelpSidebarOpen && (
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'tween', duration: 0.3 }}
+            className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-xl z-50 overflow-y-auto"
+          >
+            <div className="flex justify-between items-center p-4 border-b">
+              <h2 className="text-lg sm:text-xl font-semibold">Contact Support</h2>
               <button
-                onClick={toggleAssessmentsModal}
+                onClick={toggleHelpSidebar}
                 className="text-gray-500 hover:text-gray-700"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,31 +336,98 @@ export default function CoursePlayer() {
                 </svg>
               </button>
             </div>
-            {assessmentsError ? (
-              <p className="text-red-500 text-sm">{assessmentsError}</p>
-            ) : assessments.length === 0 ? (
-              <p className="text-gray-600 text-sm">No assessments available.</p>
-            ) : (
-              <div className="space-y-4">
-                {assessments.map((assessment) => (
-                  <div key={assessment._id} className="border rounded-lg p-3 flex justify-between items-center">
-                    <div>
-                      <h3 className="text-sm sm:text-base font-semibold">{assessment.title}</h3>
-                      <p className="text-xs sm:text-sm text-gray-600">{assessment.description}</p>
-                    </div>
-                    <button
-                      onClick={() => handleAttemptAssessment(assessment._id)}
-                      className="bg-green-500 text-white px-3 py-1 rounded-md text-xs sm:text-sm hover:bg-green-600 transition"
-                    >
-                      Attempt
-                    </button>
-                  </div>
-                ))}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="p-4 w-full"
+            >
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4 sm:mb-6 text-center">
+                Contact Support
+              </h2>
+
+              {successMsg && (
+                <p className="text-green-600 text-sm sm:text-base mb-4 sm:mb-6 text-center">
+                  {successMsg}
+                </p>
+              )}
+              {errorMsg && (
+                <p className="text-red-600 text-sm sm:text-base mb-4 sm:mb-6 text-center">
+                  {errorMsg}
+                </p>
+              )}
+
+              <div className="space-y-4 sm:space-y-5">
+                <div>
+                  <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    disabled
+                    className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 bg-gray-100 cursor-not-allowed text-gray-600 text-sm sm:text-base focus:ring-0"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+                    Related Course
+                  </label>
+                  <select
+                    name="relatedCourse"
+                    value={form.relatedCourse}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Select a course (optional)</option>
+                    {contactCourses.map((course) => (
+                      <option key={course._id} value={course._id}>
+                        {course.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    name="subject"
+                    value={form.subject}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+                    Message
+                  </label>
+                  <textarea
+                    name="message"
+                    value={form.message}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                    rows={4}
+                    required
+                  ></textarea>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="w-full bg-[#49BBBD] text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-[#3AA8AA] transition duration-200 text-sm sm:text-base font-medium disabled:bg-blue-300 disabled:cursor-not-allowed"
+                >
+                  {loading ? 'Submitting...' : 'Submit Ticket'}
+                </button>
               </div>
-            )}
+            </motion.div>
           </motion.div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
       {/* Main Layout */}
       <div className="flex flex-col lg:grid lg:grid-cols-3 gap-3 sm:gap-4 mt-2 w-full max-w-7xl mx-auto flex-1">
@@ -244,7 +444,7 @@ export default function CoursePlayer() {
                 src={selectedVideo.url}
                 controls
                 controlsList="nodownload"
-                className="rounded-lg object-cover w-full max-h-[260px] sm:max-h-[400px] md:max-h-[500px]"
+                className="rounded-lg object-cover w-full max-h-[300px] sm:max-h-[400px] md:max-h-[500px]"
               />
             ) : (
               <div className="rounded-lg w-full bg-gray-200 h-[260px] sm:h-[400px] md:h-[500px]" />

@@ -37,9 +37,9 @@ export default function MyCourses() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-sky-50 p-4 sm:px-4 pt-20 md:px-4 overflow-auto">
+    <div className="min-h-screen w-full bg-sky-50 p-4 sm:px-4 mt-12 md:mt-6 md:px-4 overflow-auto">
       <div className="flex justify-between items-start mb-4 sm:mb-6">
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">My Courses</h1>
+        <h1 className="text-lg sm:text-xl md:text-3xl font-bold text-slate-900">My Courses</h1>
       </div>
 
       {loading ? (
@@ -85,11 +85,17 @@ export default function MyCourses() {
               </p>
 
               <div className="flex justify-between items-center text-xs sm:text-sm">
-                <span className="font-semibold text-slate-700">
-                  ₹{item.course.discountPrice ?? item.course.price}
-                </span>
-                {item.course.discountPrice && (
-                  <span className="text-gray-500 line-through">
+                {item.course.discountPrice ? (
+                  <>
+                    <span className="font-semibold text-slate-700">
+                      ₹{item.course.price - item.course.discountPrice}
+                    </span>
+                    <span className="text-gray-500 line-through">
+                      ₹{item.course.price}
+                    </span>
+                  </>
+                ) : (
+                  <span className="font-semibold text-slate-700">
                     ₹{item.course.price}
                   </span>
                 )}

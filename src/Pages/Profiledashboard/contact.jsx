@@ -1,35 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const Contact = () => {
+const Contact = ({ relatedCourseId }) => {
   const [form, setForm] = useState({
     name: '',
     subject: '',
     message: '',
     category: 'technical',
+    relatedCourse: relatedCourseId || '',
   });
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(
+
+        // Fetch user profile
+        const profileRes = await axios.get(
           'https://lms-backend-flwq.onrender.com/api/v1/students/profile',
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        const { firstName, lastName } = res.data.data;
+        const { firstName, lastName } = profileRes.data.data;
         setForm((prev) => ({ ...prev, name: `${firstName} ${lastName}` }));
+
+        // Fetch enrolled courses
+        const coursesRes = await axios.get(
+          'https://lms-backend-flwq.onrender.com/api/v1/students/courses',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (coursesRes.data.success) {
+          setCourses(coursesRes.data.data.map((enrollment) => ({
+            _id: enrollment.course._id,
+            title: enrollment.course.title,
+          })));
+        }
       } catch (error) {
-        console.error('Failed to fetch user profile:', error);
+        console.error('Failed to fetch data:', error);
       }
     };
 
-    fetchUserProfile();
+    fetchData();
   }, []);
 
   const handleChange = (e) => {
@@ -42,87 +60,152 @@ const Contact = () => {
     setLoading(true);
     setSuccessMsg('');
     setErrorMsg('');
+
+    const allowedCategories = ['technical', 'course', 'billing', 'account', 'other'];
+    if (!allowedCategories.includes(form.category)) {
+      setErrorMsg('Invalid category selected.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
-      await axios.post(
+
+      const response = await axios.post(
         'https://lms-backend-flwq.onrender.com/api/v1/students/support',
         {
           subject: form.subject,
           message: form.message,
           category: form.category,
+          relatedCourse: form.relatedCourse || undefined,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setSuccessMsg('Support ticket submitted successfully.');
-      setForm((prev) => ({ ...prev, subject: '', message: '', category: 'technical' }));
+
+      console.log("Response from support API:", response);
+
+      if (response.data.success) {
+        setSuccessMsg('Support ticket submitted successfully.');
+        setForm((prev) => ({
+          ...prev,
+          subject: '',
+          message: '',
+          category: 'technical',
+          relatedCourse: relatedCourseId || '',
+        }));
+      } else {
+        setErrorMsg('Failed to submit the ticket. Server returned success: false.');
+      }
     } catch (error) {
-      setErrorMsg('Failed to submit the ticket.');
+      console.error("Error submitting ticket:", error);
+      setErrorMsg(
+        error?.response?.data?.message ||
+        'Failed to submit the ticket due to a network or server error.'
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-white rounded-xl shadow !pt-20 p-4 sm:p-6 max-w-3xl mx-auto mt-4 sm:mt-8 w-full">
-      <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 text-center">Contact Support</h2>
+    <div className="w-full max-w-full sm:max-w-[60%] px-4 py-6 mx-0 mt-12 md:mt-6 sm:mx-auto sm:px-6">
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4 sm:mb-6 text-center">
+        Ticket Support
+      </h2>
 
-      {successMsg && <p className="text-green-600 text-sm mb-3 text-center">{successMsg}</p>}
-      {errorMsg && <p className="text-red-600 text-sm mb-3 text-center">{errorMsg}</p>}
+      {successMsg && (
+        <p className="text-green-600 text-sm sm:text-base mb-4 sm:mb-6 text-center">
+          {successMsg}
+        </p>
+      )}
+      {errorMsg && (
+        <p className="text-red-600 text-sm sm:text-base mb-4 sm:mb-6 text-center">
+          {errorMsg}
+        </p>
+      )}
 
-      <div className="space-y-4 text-sm sm:text-base">
+      <div className="space-y-4 sm:space-y-5">
         <div>
-          <label className="block text-gray-700 mb-1 text-xs sm:text-sm">Name</label>
+          <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+            Name
+          </label>
           <input
             type="text"
             name="name"
             value={form.name}
             disabled
-            className="w-full border border-gray-300 rounded-md p-2 bg-gray-100 cursor-not-allowed text-gray-600 text-xs sm:text-sm"
+            className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 bg-gray-100 cursor-not-allowed text-gray-600 text-sm sm:text-base focus:ring-0"
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-1 text-xs sm:text-sm">Subject</label>
+          <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+            Related Course
+          </label>
+          <select
+            name="relatedCourse"
+            value={form.relatedCourse}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select a course (optional)</option>
+            {courses.map((course) => (
+              <option key={course._id} value={course._id}>
+                {course.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+            Subject
+          </label>
           <input
             type="text"
             name="subject"
             value={form.subject}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 text-xs sm:text-sm"
+            className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-1 text-xs sm:text-sm">Message</label>
+          <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+            Message
+          </label>
           <textarea
             name="message"
             value={form.message}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 text-xs sm:text-sm"
+            className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
             rows={4}
             required
           ></textarea>
         </div>
         <div>
-          <label className="block text-gray-700 mb-1 text-xs sm:text-sm">Category</label>
+          <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+            Category
+          </label>
           <select
             name="category"
             value={form.category}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 text-xs sm:text-sm"
+            className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
           >
             <option value="technical">Technical</option>
             <option value="billing">Billing</option>
-            <option value="general">General</option>
+            <option value="course">Course</option>
+            <option value="account">Account</option>
+            <option value="other">Other</option>
           </select>
         </div>
         <button
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200 text-sm sm:text-base"
+          className="w-full bg-[#49BBBD] text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-[#49BBBD] transition duration-200 text-sm sm:text-base font-medium disabled:bg-blue-300 disabled:cursor-not-allowed"
         >
           {loading ? 'Submitting...' : 'Submit Ticket'}
         </button>

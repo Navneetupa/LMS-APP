@@ -3,6 +3,7 @@ import Sidebar from './sidebar';
 import Dashboard from './dashboard';
 import MyCourses from './mycourses';
 import Contact from './contact';
+import AssessmentScores from './assessmentscore';
 
 const ParentLayout = () => {
   const [activePage, setActivePage] = useState('dashboard');
@@ -20,47 +21,53 @@ const ParentLayout = () => {
         return <MyCourses />;
       case 'contact':
         return <Contact />;
+      case 'assessmentscore':
+        return <AssessmentScores />;
       default:
         return <Dashboard />;
     }
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex flex-col min-h-screen">
       {/* Navbar */}
-      {/* <div className="w-full h-[3.5rem] bg-white shadow-md flex items-center px-4 fixed top-0 z-70">
-      
-      </div> */}
-
-      {/* Sidebar */}
-      <div
-        className={`fixed left-0 h-[calc(100vh-3.5rem)] w-16 transition-transform duration-300 ease-in-out z-100
-          md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full '}`}
-      >
-        <Sidebar activePage={activePage} setActivePage={(page) => {
-          setActivePage(page);
-          setIsSidebarOpen(false); // Close sidebar after selection on mobile
-        }} />
+      <div className="h-[3.5rem] bg-white shadow-md flex items-center px-4">
+        {/* Navbar content can go here if needed */}
       </div>
 
-      {/* Overlay when sidebar is open on small screens */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
-          onClick={toggleSidebar}
-        ></div>
-      )}
-
-      {/* Sidebar Toggle Button (visible only on small screens) */}
+      {/* Sidebar Toggle Button (Visible only on mobile) */}
       <button
-        className="fixed top-[4rem] right-4 z-50 p-2 bg-[#49BBBD] text-white rounded-md md:hidden"
+        className="md:hidden fixed top-[4rem] right-4 z-20 p-2 bg-[#49BBBD] text-white rounded-md"
         onClick={toggleSidebar}
       >
         {isSidebarOpen ? 'Close' : 'Menu'}
       </button>
 
+      {/* Sidebar */}
+      <div
+        className={`fixed left-0 h-[calc(100vh-3.5rem)] w-16 transition-transform duration-300 ease-in-out md:translate-x-0 ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } z-40`}
+      >
+        <Sidebar
+          activePage={activePage}
+          setActivePage={(page) => {
+            setActivePage(page);
+            setIsSidebarOpen(false); // Close sidebar on mobile after selection
+          }}
+        />
+      </div>
+
+      {/* Overlay when sidebar is open (Visible only on mobile) */}
+      {isSidebarOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+
       {/* Content Area */}
-      <div className="flex-1 overflow-auto bg-gray-50 px-2 min-h-[calc(100vh-3.5rem)] mt-[3.5rem] md:ml-16">
+      <div className="flex-1 overflow-auto bg-gray-50 px-2 min-h-[calc(100vh-3.5rem)] md:ml-16">
         {renderPage()}
       </div>
     </div>
