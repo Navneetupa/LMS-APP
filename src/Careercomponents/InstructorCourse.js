@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import { motion, useInView } from "framer-motion";
 import "swiper/css";
 import "swiper/css/autoplay";
 
@@ -37,6 +38,43 @@ const instructors = [
   },
 ];
 
+// ✅ Extracted card component
+const InstructorCard = ({ instructor }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, threshold: 0.2 });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="relative bg-white/70 backdrop-blur-md border border-gray-200 rounded-3xl shadow-xl transition-transform duration-500 hover:scale-105 overflow-hidden group max-w-sm w-full"
+    >
+      <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-cyan-400 to-cyan-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+        ★ Featured
+      </div>
+      <div className="relative">
+        <img
+          src={instructor.img}
+          alt={instructor.name}
+          style={{ objectPosition: "center 20%" }}
+          className="w-full h-[200px] object-cover transition-transform duration-500 group-hover:scale-110 rounded-t-3xl"
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300 rounded-t-3xl" />
+      </div>
+      <div className="p-6 text-center">
+        <h3 className="text-xl font-bold text-cyan-600 mb-2 group-hover:text-cyan-800 transition-colors duration-300">
+          {instructor.name}
+        </h3>
+        <p className="text-gray-600 text-sm leading-relaxed">
+          {instructor.description}
+        </p>
+      </div>
+    </motion.div>
+  );
+};
+
 const InstructorCourse = () => {
   return (
     <div className="w-full bg-gradient-to-b from-white via-gray-50 to-[#e6f7f9] py-20 px-4 md:px-20 text-center relative">
@@ -60,34 +98,7 @@ const InstructorCourse = () => {
       >
         {instructors.map((instructor, index) => (
           <SwiperSlide key={index} className="flex justify-center">
-            <div className="relative bg-white/70 backdrop-blur-md border border-gray-200 rounded-3xl shadow-xl transition-transform duration-500 hover:scale-105 overflow-hidden group max-w-sm w-full">
-              
-              {/* Ribbon */}
-              <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-cyan-400 to-cyan-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                ★ Featured
-              </div>
-
-             {/* Image */}
-<div className="relative">
-  <img
-    src={instructor.img}
-    alt={instructor.name}
-    style={{ objectPosition: "center 20%" }}
-    className="w-full h-[200px] object-cover transition-transform duration-500 group-hover:scale-110 rounded-t-3xl"
-  />
-  <div className="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300 rounded-t-3xl" />
-</div>
-
-              {/* Content */}
-              <div className="p-6 text-center">
-                <h3 className="text-xl font-bold text-cyan-600 mb-2 group-hover:text-cyan-800 transition-colors duration-300">
-                  {instructor.name}
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  {instructor.description}
-                </p>
-              </div>
-            </div>
+            <InstructorCard instructor={instructor} />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -96,3 +107,5 @@ const InstructorCourse = () => {
 };
 
 export default InstructorCourse;
+
+

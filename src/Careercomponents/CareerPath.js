@@ -5,6 +5,8 @@ import {
   School,
   Rocket,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 const steps = [
   {
@@ -54,38 +56,76 @@ const steps = [
   },
 ];
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
 const CareerPath = () => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.3,
+  });
+
   return (
     <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-white to-gray-100">
-      <div className="text-center mb-14">
-        <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900">
-          Your <span className="text-[#49bbbd]">Career Path</span>
-        </h2>
-        <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-          Visualize your journey from learner to leader with modern steps.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {steps.map((step, idx) => (
-          <div
-            key={idx}
-            className="relative bg-[#49bbbd1a] border border-transparent hover:border-[#49bbbd] rounded-3xl p-6 shadow-md hover:shadow-lg transition-all duration-300 group"
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={inView ? "visible" : "hidden"}
+        variants={containerVariants}
+      >
+        <div className="text-center mb-14">
+          <motion.h2
+            className="text-4xl sm:text-5xl font-extrabold text-gray-900"
+            variants={itemVariants}
           >
-            <div className="absolute top-5 right-5 w-10 h-10 bg-[#49bbbd] text-white rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
-              {step.icon}
-            </div>
-            <div className="mt-14">
-              <h4 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-[#49bbbd] transition-colors">
-                {step.title}
-              </h4>
-              <p className="text-gray-600 text-sm">{step.description}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+            Your <span className="text-orange-400">Career Path</span>
+          </motion.h2>
+          <motion.p
+            className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto"
+            variants={itemVariants}
+          >
+            Visualize your journey from learner to leader with modern steps.
+          </motion.p>
+        </div>
+
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          variants={containerVariants}
+        >
+          {steps.map((step, idx) => (
+            <motion.div
+              key={idx}
+              className="relative bg-[#49bbbd1a] border border-transparent hover:border-[#49bbbd] rounded-3xl p-6 shadow-md hover:shadow-lg transition-all duration-300 group"
+              variants={itemVariants}
+            >
+              <div className="absolute top-5 right-5 w-10 h-10 bg-[#49bbbd] text-white rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
+                {step.icon}
+              </div>
+              <div className="mt-14">
+                <h4 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-[#49bbbd] transition-colors">
+                  {step.title}
+                </h4>
+                <p className="text-gray-600 text-sm">{step.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
 
 export default CareerPath;
+
+

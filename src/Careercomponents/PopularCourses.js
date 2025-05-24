@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const careerTracks = [
   {
@@ -55,20 +57,26 @@ const CareerPaths = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const previewTracks = careerTracks.slice(0, 4);
 
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
   return (
-    <section className="py-20 bg-white px-6 md:px-16 relative">
+    <section className="py-20 bg-white px-4 sm:px-8 md:px-12 lg:px-16 relative">
       <div className={modalOpen ? "filter blur-sm pointer-events-none" : ""}>
-        <h2 className="text-4xl font-extrabold text-center text-black mb-6 tracking-wide">
-          Explore Your <span className="text-[#49BBBD]">Career Paths</span>
+        <h2 className="text-3xl md:text-4xl font-extrabold text-center text-cyan-900 mb-6 tracking-wide">
+          Explore Your <span className="text-orange-400">Career Paths</span>
         </h2>
-        <p className="text-center text-black max-w-3xl mx-auto mb-12 text-lg">
+        <p className="text-center text-cyan-700 max-w-3xl mx-auto mb-10 text-base md:text-lg px-2">
           Choose a career track to build skills that employers value. Start with basics, then master your domain.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-7xl mx-auto">
           {previewTracks.map((track, index) => (
             <div
               key={index}
+              data-aos="fade-up"
+              data-aos-delay={index * 100}
               className="bg-gradient-to-br from-cyan-50 to-white p-6 rounded-3xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer flex flex-col items-center text-center"
             >
               <img
@@ -87,7 +95,7 @@ const CareerPaths = () => {
         <div className="flex justify-center mt-12">
           <button
             onClick={() => setModalOpen(true)}
-            className="px-8 py-3 bg-[#59c1c3] text-white rounded-full font-semibold text-lg hover:bg-[#7ddedf] transition-colors duration-300 shadow-lg"
+            className="px-8 py-3 bg-cyan-400 text-white rounded-full font-semibold text-lg hover:bg-cyan-600 transition-colors duration-300 shadow-lg"
           >
             View All Career Paths
           </button>
@@ -101,7 +109,7 @@ const CareerPaths = () => {
           onClick={() => setModalOpen(false)}
         >
           <div
-            className="bg-white rounded-3xl max-w-5xl w-full max-h-[80vh] overflow-y-auto p-8 relative"
+            className="bg-white rounded-3xl max-w-6xl w-full max-h-[80vh] overflow-y-auto p-6 md:p-8 relative"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -112,13 +120,15 @@ const CareerPaths = () => {
             >
               &times;
             </button>
-            <h3 className="text-3xl font-extrabold text-black mb-8 text-center">
-              All <span className="text-[#49BBBD]">Career Paths</span>
+            <h3 className="text-2xl md:text-3xl font-extrabold text-cyan-900 mb-6 text-center">
+              All <span className="text-cyan-500">Career Paths</span>
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {careerTracks.map((track, index) => (
                 <div
                   key={index}
+                  data-aos="zoom-in-up"
+                  data-aos-delay={index * 100}
                   className="bg-gradient-to-br from-cyan-50 to-white p-5 rounded-2xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 flex flex-col items-center text-center cursor-pointer"
                 >
                   <img

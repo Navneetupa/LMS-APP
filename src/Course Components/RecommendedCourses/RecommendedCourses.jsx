@@ -114,7 +114,7 @@ const RecommendedCourses = () => {
     return <div className="text-center py-20 text-red-500">Error: {error}</div>;
   }
 
-  const previewCourses = courses.slice(0, 4);
+  const previewCourses = courses.slice(0, 3);
 
   return (
     <section className="py-20 bg-white px-6 md:px-16 relative">
@@ -126,7 +126,7 @@ const RecommendedCourses = () => {
           Browse our top trending courses, handpicked to boost your career and skills.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-7xl mx-auto">
           {previewCourses.map((course, index) => (
             <CourseCard
               key={course._id}
@@ -202,8 +202,8 @@ const RecommendedCourses = () => {
             <p className="mb-6 text-gray-700">Please log in to enroll in this course.</p>
             <button
               onClick={handleLoginRedirect}
-               style={{ backgroundColor: '#49BBBD' }}
-              className="px-6 py-3  text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
+              style={{ backgroundColor: '#49BBBD' }}
+              className="px-6 py-3 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
             >
               Log In
             </button>
