@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+
 
 const Notification = ({ message, type, onClose }) => {
   if (!message) return null;
@@ -42,7 +42,7 @@ const Dashboard = () => {
   const [saving, setSaving] = useState(false);
   const [notification, setNotification] = useState({ message: '', type: '' });
   const [isEditing, setIsEditing] = useState(false);
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (notification.message) {

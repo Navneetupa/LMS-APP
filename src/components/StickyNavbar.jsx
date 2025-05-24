@@ -103,72 +103,75 @@ const FixedNavbar = () => {
       </Link>
 
       {/* Nav Links */}
-      <div
-        className={`${
-          isMenuOpen ? "flex" : "hidden"
-        } md:flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-10 bg-[#49BBBD] w-full md:w-auto absolute md:static top-14 md:top-0 left-0 z-40 px-4 py-2 md:p-0 transition-all`}
-      >
-        {!isLoggedIn ? (
-          <div className="flex flex-col md:hidden w-full gap-2">
-            <Link
-              to="/login"
-              className="text-sm px-4 py-1 rounded-full text-[#49BBBD] bg-white font-medium text-center"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="text-sm px-4 py-1 rounded-full text-white bg-[#7ddedf] font-medium text-center"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Sign Up
-            </Link>
-          </div>
-        ) : (
-          <div className="md:hidden w-full text-white font-medium space-y-2">
-            <Link
-              to="/student-dashboard"
-              className="flex items-center gap-2 py-2 px-4 hover:bg-[#3aa9ab] rounded transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <FaUser />
-              My Profile
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 py-2 px-4 text-sm text-white hover:bg-[#3aa9ab] rounded w-full transition-colors"
-            >
-              <FaSignOutAlt />
-              Logout
-            </button>
-          </div>
-        )}
 
-        {/* Navigation Pages with enhanced active styling */}
-        {navLinks.map(({ path, label }) => (
-          <Link
-            key={path}
-            to={path}
-            className={`
-              relative text-white font-semibold hover:text-[#467d74] transition-colors
-              ${isActive(path) ? "text-[#00A78E] font-bold" : ""}
-              group
-            `}
-            onClick={() => {
-              setIsMenuOpen(false);
-              window.scrollTo(0, 0);
-            }}
-          >
-            {label}
-            {/* Animated underline for active link */}
-            <span className={`
-              absolute left-0 -bottom-1 w-0 h-0.5 bg-[#45897d] transition-all duration-300
-              ${isActive(path) ? "w-full" : "group-hover:w-full"}
-            `}></span>
-          </Link>
-        ))}
-      </div>
+<div
+  className={`${
+    isMenuOpen ? "flex" : "hidden"
+  } md:flex flex-col md:flex-row items-center md:items-center gap-4 md:gap-10 bg-[#49BBBD] w-full md:w-auto absolute md:static top-14 md:top-0 left-0 z-40 px-4 py-2 md:p-0 transition-all text-center`}
+>
+  {!isLoggedIn ? (
+    <div className="flex flex-col md:hidden w-full gap-2">
+      <Link
+        to="/login"
+        className="text-sm px-4 py-1 rounded-full text-[#49BBBD] bg-white font-medium text-center"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        Login
+      </Link>
+      <Link
+        to="/signup"
+        className="text-sm px-4 py-1 rounded-full text-white bg-[#7ddedf] font-medium text-center"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        Sign Up
+      </Link>
+    </div>
+  ) : (
+    <div className="md:hidden w-full text-white font-medium space-y-2">
+      <Link
+        to="/student-dashboard"
+        className="flex items-center justify-center gap-2 py-2 px-4 hover:bg-[#3aa9ab] rounded transition-colors"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        <FaUser />
+        My Profile
+      </Link>
+      <button
+        onClick={handleLogout}
+        className="flex items-center justify-center gap-2 py-2 px-4 text-sm text-white hover:bg-[#3aa9ab] rounded w-full transition-colors"
+      >
+        <FaSignOutAlt />
+        Logout
+      </button>
+    </div>
+  )}
+
+  {/* Navigation Pages with enhanced active styling */}
+  {navLinks.map(({ path, label }) => (
+    <Link
+      key={path}
+      to={path}
+      className={`
+        relative text-white font-semibold hover:text-[#467d74] transition-colors
+        ${isActive(path) ? "text-[#00A78E] font-bold" : ""}
+        group
+      `}
+      onClick={() => {
+        setIsMenuOpen(false);
+        window.scrollTo(0, 0);
+      }}
+    >
+      {label}
+      {/* Animated underline for active link */}
+      <span className={`
+        absolute left-1/2 transform -translate-x-1/2 -bottom-1 w-0 h-0.5 bg-[#45897d] transition-all duration-300
+        ${isActive(path) ? "w-full" : "group-hover:w-full"}
+      `}></span>
+    </Link>
+  ))}
+</div>
+
+
 
       {/* Profile / Auth Buttons Desktop */}
       <div className="hidden md:flex items-center space-x-3" ref={dropdownRef}>

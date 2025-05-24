@@ -10,7 +10,7 @@ import RecommendedCourses from '../Course Components/RecommendedCourses/Recommen
 import PromoSection from '../Course Components/PromoSection/PromoSection.jsx';
 import PopularCourses from '../Course Components/PopularCourses/PopularCourses.jsx';
 import LatestCourses from '../Course Components/LatestCourses/LatestCourses.jsx';
-import Footer from '../Course Components/Footer/Footer.jsx';
+import Footer from '../components/Footer.jsx';
 
 function CoursePage() {
   useEffect(() => {

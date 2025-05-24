@@ -6,7 +6,7 @@ import InstructorCourse from "../Careercomponents/InstructorCourse";
 import WhyItWorks from "../Careercomponents/WhyItWorks";
 import LMSFeatures from "../Careercomponents/LMSFeatures";
 import Navbar from "../components/StickyNavbar";
-import Footer from "../CourseDetailsComponent/Footer";
+import Footer from "../components/Footer";
 
 const AnimatedSection = ({ children, delay = 0 }) => {
   const ref = useRef(null);

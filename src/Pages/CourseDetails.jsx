@@ -5,7 +5,7 @@ import MarketingArticles from "../CourseDetailsComponent/MarketingArticles";
 import FeatureHighlight from "../CourseDetailsComponent/FeatureHighlight";
 import TopInstructors from "../CourseDetailsComponent/TopInstructors";
 import Header from "../components/StickyNavbar";
-import Footer from "../CourseDetailsComponent/Footer";
+import Footer from "../components/Footer";
 
 function CourseDetails() {
   return (

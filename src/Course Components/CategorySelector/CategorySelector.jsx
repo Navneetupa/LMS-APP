@@ -10,6 +10,11 @@ import photographyImage from '../../assets/photographyImage.png';
 import businessImage from '../../assets/businessImage.png';
 import actingImage from '../../assets/actingImage.png';
 import webDevelopmentImage from '../../assets/webDevelopmentImage.png';
+import clearImage from '../../assets/webDevelopmentImage.png';
+// Default image for categories without a specific image
+
+const DEFAULT_IMAGE = clearImage;
+
 
 // Metadata for categories (maps category names to images and quotes)
 const categoryMetadata = {
@@ -52,7 +57,7 @@ const CategorySelector = () => {
           // Create dynamic categories with metadata
           const dynamicCategories = courseCategories.map((category, index) => {
             const metadata = categoryMetadata[category.toLowerCase()] || {
-              image: 'https://via.placeholder.com/150', // Fallback image
+              image: DEFAULT_IMAGE, // Use default image
               quote: 'Learn and grow with this course.', // Fallback quote
             };
             return {
@@ -133,7 +138,7 @@ const CategorySelector = () => {
                 src={cat.image}
                 alt={cat.title}
                 className="w-20 h-20 sm:w-24 sm:h-24 mb-4 object-cover rounded-full"
-                onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
+                onError={(e) => (e.target.src = DEFAULT_IMAGE)} // Fallback for broken images
               />
               <span className="text-base sm:text-lg font-medium">{cat.title}</span>
               <p className="text-xs sm:text-sm mt-4 text-gray-500">{cat.quote}</p>
@@ -157,7 +162,7 @@ const CategorySelector = () => {
                   src={cat.image}
                   alt={cat.title}
                   className="w-20 h-20 sm:w-24 sm:h-24 mb-4 object-cover rounded-full"
-                  onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
+                  onError={(e) => (e.target.src = DEFAULT_IMAGE)} // Fallback for broken images
                 />
                 <span className="text-base sm:text-lg font-medium">{cat.title}</span>
                 <p className="text-xs sm:text-sm mt-4 text-gray-500">{cat.quote}</p>
@@ -224,10 +229,10 @@ const CategorySelector = () => {
                   >
                     <div className="bg-gray-100 hover:bg-blue-100 transition p-4 sm:p-6 rounded-xl flex flex-col items-center text-center shadow-md">
                       <img
-                        src={course.thumbnail || 'https://via.placeholder.com/150'}
+                        src={course.thumbnail || DEFAULT_IMAGE} // Use default image for courses
                         alt={course.title}
                         className="w-20 h-20 sm:w-24 sm:h-24 mb-4 object-cover rounded-full"
-                        onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
+                        onError={(e) => (e.target.src = DEFAULT_IMAGE)} // Fallback for broken images
                       />
                       <span className="text-base sm:text-lg font-medium text-gray-800">{course.title}</span>
                       <p className="text-xs sm:text-sm mt-2 text-gray-600 line-clamp-2">{course.subtitle}</p>

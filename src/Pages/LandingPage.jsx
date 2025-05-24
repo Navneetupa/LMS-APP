@@ -21,7 +21,7 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <div className="font-sans overflow-x-hidden">
+    <div className="font-sans overflow-x-hidden ">
       <StickyNavbar />
       <Navbar />
       <SuccessMetrics />
@@ -31,8 +31,7 @@ const LandingPage = () => {
       <LearnGrow />
       <LearningSection />
       <SimplifyLearning />
-    
-      <TestimonialNewsSection />
+    <TestimonialNewsSection />
       <NewsSection />
       <Footer />
     </div>

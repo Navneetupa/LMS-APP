@@ -5,7 +5,7 @@ import Navbar from '../components/StickyNavbar';
 import bgImage from '../assets/contact-background.avif';
 
 
-import Footer from '../CourseDetailsComponent/Footer';
+import Footer from '../components/Footer';
 
 const ContactUs = () => {
   return (

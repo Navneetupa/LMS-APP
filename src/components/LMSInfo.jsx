@@ -35,7 +35,7 @@ device, track progress, and learn anytime — bringing the full classroom experi
               FOR INSTRUCTORS
             </h3>
           <a
-  href="https://lmsinstructor.vercel.app/"
+  href="/"
   className="border-2 border-white text-white px-5 py-2 rounded-full text-sm sm:text-base hover:bg-white hover:text-black transition inline-block text-center"
 >
   Create & Share Your Courses

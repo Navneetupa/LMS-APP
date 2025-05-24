@@ -5,7 +5,7 @@ import 'aos/dist/aos.css';
 import PopularCourses from "../Careercomponents/PopularCourses";
 import PopularCompanies from '../Careercomponents/PopularCompanies';
 import CareerPath from '../Careercomponents/CareerPath';
-import Footer from '../CourseDetailsComponent/Footer';
+import Footer from '../components/Footer';
 import Navbar from '../components/StickyNavbar';
 
 const companies = [
