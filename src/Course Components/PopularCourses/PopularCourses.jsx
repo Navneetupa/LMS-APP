@@ -130,7 +130,7 @@ const PopularCourses = () => {
     return <div className="text-center py-20 text-red-500">Error: {error}</div>;
   }
 
-  const previewCourses = courses.slice(0, 4);
+  const previewCourses = courses.slice(0, 3);
 
   return (
     <section className="py-20 bg-white px-6 md:px-16 relative">
@@ -142,7 +142,7 @@ const PopularCourses = () => {
           Browse our top trending courses, handpicked to boost your career and skills.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-7xl mx-auto">
           {previewCourses.map((course, index) => (
             <CourseCard
               key={course._id}
@@ -157,7 +157,7 @@ const PopularCourses = () => {
         <div className="flex justify-center mt-12">
           <button
             onClick={() => setModalOpen(true)}
-             className="px-8 py-3 bg-[#59c1c3] text-white rounded-full font-semibold text-lg hover:bg-[#7dded] transition-colors duration-300 shadow-lg"
+            className="px-8 py-3 bg-[#59c1c3] text-white rounded-full font-semibold text-lg hover:bg-[#7dded] transition-colors duration-300 shadow-lg"
           >
             View All Courses
           </button>
@@ -217,14 +217,13 @@ const PopularCourses = () => {
           >
             <h2 className="text-2xl font-semibold mb-4 text-cyan-900">You have not signed in</h2>
             <p className="mb-6 text-gray-700">Please sign up to access this course.</p>
-           <button
-  onClick={handleSignupRedirect}
-  style={{ backgroundColor: '#49BBBD' }}
-  className="px-6 py-3 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
->
-  Log In
-</button>
-
+            <button
+              onClick={handleSignupRedirect}
+              style={{ backgroundColor: '#49BBBD' }}
+              className="px-6 py-3 text-white rounded-full font-semibold hover:bg-cyan-600 transition-colors duration-300"
+            >
+              Log In
+            </button>
             <button
               onClick={() => setAuthPopupOpen(false)}
               className="absolute top-3 right-3 text-cyan-500 hover:text-cyan-700 font-bold text-xl"

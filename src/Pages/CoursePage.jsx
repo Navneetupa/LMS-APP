@@ -18,7 +18,7 @@ function CoursePage() {
   }, []);
 
   return (
-    <div className="font-sans overflow-x-hidden">
+    <div className="font-sans overflow-x-hidden space-y-0"> {/* Added space-y-0 */}
       <Header />
       <Hero />
       <CategorySelector />

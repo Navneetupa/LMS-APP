@@ -112,55 +112,55 @@ const CategorySelector = () => {
     : [];
 
   return (
-    <div className="max-w-7xl mx-auto py-10 px-6 md:px-16 bg-white">
+    <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 md:px-16 bg-white">
       {/* First Container */}
       <section>
-        <h2 className="text-3xl font-bold mb-8 text-center" data-aos="fade-right">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center" data-aos="fade-right">
           <span className="text-[#0b0b0b]">Categories</span>{' '}
           <span className="text-[#49BBBD]">Courses</span>
           <span> For You</span>
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {availableCategories.slice(0, 4).map((cat) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+          {availableCategories.slice(0, 3).map((cat) => (
             <div
               key={cat.id}
-              className={`bg-gray-100 hover:bg-blue-100 transition p-6 rounded-xl flex flex-col items-center text-center shadow-md cursor-pointer ${selectedCategory === cat.title ? 'bg-blue-200' : ''}`}
+              className={`bg-gray-100 hover:bg-blue-100 transition p-4 sm:p-6 rounded-xl flex flex-col items-center text-center shadow-md cursor-pointer ${selectedCategory === cat.title ? 'bg-blue-200' : ''}`}
               data-aos="zoom-in"
               onClick={() => handleCategoryClick(cat.title)}
             >
               <img
                 src={cat.image}
                 alt={cat.title}
-                className="w-24 h-24 mb-4 object-cover rounded-full"
+                className="w-20 h-20 sm:w-24 sm:h-24 mb-4 object-cover rounded-full"
                 onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
               />
-              <span className="text-lg font-medium">{cat.title}</span>
-              <p className="text-sm mt-4 text-gray-500">{cat.quote}</p>
+              <span className="text-base sm:text-lg font-medium">{cat.title}</span>
+              <p className="text-xs sm:text-sm mt-4 text-gray-500">{cat.quote}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Second Container */}
-      {availableCategories.length > 4 && (
+      {availableCategories.length > 3 && (
         <section className="mt-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {availableCategories.slice(4).map((cat) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+            {availableCategories.slice(3).map((cat) => (
               <div
                 key={cat.id}
-                className={`bg-gray-100 hover:bg-blue-100 transition p-6 rounded-xl flex flex-col items-center text-center shadow-md cursor-pointer ${selectedCategory === cat.title ? 'bg-blue-200' : ''}`}
+                className={`bg-gray-100 hover:bg-blue-100 transition p-4 sm:p-6 rounded-xl flex flex-col items-center text-center shadow-md cursor-pointer ${selectedCategory === cat.title ? 'bg-blue-200' : ''}`}
                 data-aos="zoom-in"
                 onClick={() => handleCategoryClick(cat.title)}
               >
                 <img
                   src={cat.image}
                   alt={cat.title}
-                  className="w-24 h-24 mb-4 object-cover rounded-full"
+                  className="w-20 h-20 sm:w-24 sm:h-24 mb-4 object-cover rounded-full"
                   onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
                 />
-                <span className="text-lg font-medium">{cat.title}</span>
-                <p className="text-sm mt-4 text-gray-500">{cat.quote}</p>
+                <span className="text-base sm:text-lg font-medium">{cat.title}</span>
+                <p className="text-xs sm:text-sm mt-4 text-gray-500">{cat.quote}</p>
               </div>
             ))}
           </div>
@@ -170,7 +170,7 @@ const CategorySelector = () => {
       {/* Show Login Prompt */}
       {showLoginPrompt && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl relative text-center">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-sm w-full shadow-2xl relative text-center">
             <button
               onClick={() => setShowLoginPrompt(false)}
               className="absolute top-4 right-4 text-[#00B4CC] text-xl font-bold hover:text-[#0098aa] transition"
@@ -178,11 +178,11 @@ const CategorySelector = () => {
             >
               ×
             </button>
-            <h3 className="text-2xl font-semibold text-[#023047] mb-2">You have not signed in</h3>
-            <p className="text-gray-600 mb-6">Please sign up to access this course.</p>
+            <h3 className="text-xl sm:text-2xl font-semibold text-[#023047] mb-2">You have not signed in</h3>
+            <p className="text-gray-600 mb-6 text-sm sm:text-base">Please sign up to access this course.</p>
             <button
               onClick={goToSignIn}
-              className="bg-[#00B4CC] hover:bg-[#0098aa] text-white px-6 py-2 rounded-full text-lg font-semibold transition duration-300"
+              className="bg-[#00B4CC] hover:bg-[#0098aa] text-white px-4 sm:px-6 py-2 rounded-full text-base sm:text-lg font-semibold transition duration-300"
             >
               Log In
             </button>
@@ -193,28 +193,28 @@ const CategorySelector = () => {
       {/* Modal for Filtered Courses */}
       {selectedCategory && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 p-4">
-          <div className="bg-white rounded-xl p-8 max-w-5xl w-full max-h-[85vh] overflow-y-auto shadow-2xl relative">
+          <div className="bg-white rounded-xl p-6 sm:p-8 max-w-[740px] w-full max-h-[85vh] overflow-y-auto shadow-2xl relative">
             <div className="modal-header">
               <button
-                className="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-full w-10 h-10 flex items-center justify-center text-xl font-semibold transition"
+                className="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-lg sm:text-xl font-semibold transition"
                 onClick={closeModal}
                 aria-label="Close modal"
               >
                 ×
               </button>
-              <h3 className="text-3xl font-bold mb-8 text-center text-gray-800">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-8 text-center text-gray-800">
                 Courses in {selectedCategory}
               </h3>
             </div>
-            {loading && <p className="text-center text-gray-600 text-lg">Loading courses...</p>}
-            {error && <p className="text-center text-red-500 text-lg">{error}</p>}
+            {loading && <p className="text-center text-gray-600 text-base sm:text-lg">Loading courses...</p>}
+            {error && <p className="text-center text-red-500 text-base sm:text-lg">{error}</p>}
             {!loading && !error && filteredCourses.length === 0 && (
-              <p className="text-center text-gray-600 text-lg">
+              <p className="text-center text-gray-600 text-base sm:text-lg">
                 No courses found for {selectedCategory}
               </p>
             )}
             {!loading && !error && filteredCourses.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                 {filteredCourses.map((course) => (
                   <div
                     key={course._id}
@@ -222,21 +222,21 @@ const CategorySelector = () => {
                     onClick={() => handleCourseClick(course._id)}
                     data-aos="zoom-in"
                   >
-                    <div className="bg-gray-100 hover:bg-blue-100 transition p-6 rounded-xl flex flex-col items-center text-center shadow-md">
+                    <div className="bg-gray-100 hover:bg-blue-100 transition p-4 sm:p-6 rounded-xl flex flex-col items-center text-center shadow-md">
                       <img
                         src={course.thumbnail || 'https://via.placeholder.com/150'}
                         alt={course.title}
-                        className="w-24 h-24 mb-4 object-cover rounded-full"
+                        className="w-20 h-20 sm:w-24 sm:h-24 mb-4 object-cover rounded-full"
                         onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
                       />
-                      <span className="text-lg font-medium text-gray-800">{course.title}</span>
-                      <p className="text-sm mt-2 text-gray-600 line-clamp-2">{course.subtitle}</p>
-                      <p className="text-sm mt-2 text-gray-500">
+                      <span className="text-base sm:text-lg font-medium text-gray-800">{course.title}</span>
+                      <p className="text-xs sm:text-sm mt-2 text-gray-600 line-clamp-2">{course.subtitle}</p>
+                      <p className="text-xs sm:text-sm mt-2 text-gray-500">
                         By {course.instructor.firstName} {course.instructor.lastName}
                       </p>
-                      <p className="text-sm mt-1 text-gray-500">{course.duration} hours</p>
-                      <p className="text-sm mt-1 text-gray-500">${course.discountPrice}</p>
-                      <p className="text-sm mt-1 text-gray-500">
+                      <p className="text-xs sm:text-sm mt-1 text-gray-500">{course.duration} hours</p>
+                      <p className="text-xs sm:text-sm mt-1 text-gray-500">${course.discountPrice}</p>
+                      <p className="text-xs sm:text-sm mt-1 text-gray-500">
                         Rating: {course.rating} ({course.totalRatings} reviews)
                       </p>
                     </div>
@@ -245,12 +245,14 @@ const CategorySelector = () => {
               </div>
             )}
             {hasMore && !loading && (
-              <button
-                onClick={loadMore}
-                className="mt-6 text-white px-4 py-2 rounded"
-              >
-              
-              </button>
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={loadMore}
+                  className="bg-[#00B4CC] hover:bg-[#0098aa] text-white px-4 sm:px-6 py-2 rounded-full text-base sm:text-lg font-semibold transition duration-300"
+                >
+                  Load More
+                </button>
+              </div>
             )}
           </div>
         </div>
