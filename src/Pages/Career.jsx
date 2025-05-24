@@ -11,7 +11,7 @@ import Navbar from '../components/StickyNavbar';
 const companies = [
   { name: 'Slack', logo: 'slack.png' },
   { name: 'Microsoft', logo: 'microsoft.png' },
-  { name: 'Google', logo: 'google.jpg' },
+  { name: 'Google', logo: 'Google.jpg' },
   { name: 'Airbnb', logo: 'airbnb.png' },
 ];
 
