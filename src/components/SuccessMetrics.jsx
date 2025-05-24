@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 const metrics = [
-  { value: "5K+", label: "Learners Empowered", start: 1 },
-  { value: "500+", label: "Expert Instructors", start: 10 },
-  { value: "3,200+", label: "Courses Delivered", start: 10 },
+  { value: "5K+", label: " Learners Empowered across India and growing.", start: 1 },
+  { value: "500+", label: "Courses Offered, covering technology, languages, arts, and more.", start: 10 },
+  { value: "3,200+", label: "Experienced Educators using Brain Bridge every day.", start: 10 },
   { value: "50", label: "Chief Experts", start: 1 },
-  { value: "95%", label: "Satisfaction Rate", start: 0 },
+  { value: "95%", label: "Satisfaction Rate among students and teachers", start: 0 },
 ];
 
 const parseNumericValue = (str) => {

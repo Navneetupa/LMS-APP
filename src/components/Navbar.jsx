@@ -18,10 +18,58 @@ const HeroWithNavbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [languages, setLanguages] = useState([]);
+  const [courseTypes, setCourseTypes] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     AOS.init({ duration: 1000, easing: "ease-in-out", once: true });
+  }, []);
+
+  // Fetch dropdown options on component mount
+  useEffect(() => {
+    const fetchDropdownOptions = async () => {
+      try {
+        // Fetch categories
+        const categoriesResponse = await fetch("https://lms-backend-flwq.onrender.com/api/v1/courses/categories");
+        const categoriesData = await categoriesResponse.json();
+        if (categoriesData.success) {
+          setCategories(categoriesData.data || []);
+        } else {
+          // Fallback static data if API fails
+          setCategories(["Web Development", "Data Science", "Mobile Development", "Machine Learning"]);
+        }
+
+        // Fetch languages
+        const languagesResponse = await fetch("https://lms-backend-flwq.onrender.com/api/v1/courses/languages");
+        const languagesData = await languagesResponse.json();
+        if (languagesData.success) {
+          setLanguages(languagesData.data || []);
+        } else {
+          // Fallback static data if API fails
+          setLanguages(["English", "Spanish", "French", "German"]);
+        }
+
+        // Fetch course types
+        const courseTypesResponse = await fetch("https://lms-backend-flwq.onrender.com/api/v1/courses/levels");
+        const courseTypesData = await courseTypesResponse.json();
+        if (courseTypesData.success) {
+          setCourseTypes(courseTypesData.data || []);
+        } else {
+          // Fallback static data if API fails
+          setCourseTypes(["Beginner", "Intermediate", "Advanced"]);
+        }
+      } catch (err) {
+        console.error("Error fetching dropdown options:", err);
+        // Fallback to static data
+        setCategories(["Web Development", "Data Science", "Mobile Development", "Machine Learning"]);
+        setLanguages(["English", "Spanish", "French", "German"]);
+        setCourseTypes(["Beginner", "Intermediate", "Advanced"]);
+      }
+    };
+
+    fetchDropdownOptions();
   }, []);
 
   useEffect(() => {
@@ -176,8 +224,9 @@ const HeroWithNavbar = () => {
           className="text-sm border px-2 py-2 rounded w-full sm:w-40"
         >
           <option value="">Course Category</option>
-          <option value="Web Development">Web Development</option>
-          
+          {categories.map((cat, index) => (
+            <option key={index} value={cat}>{cat}</option>
+          ))}
         </select>
         <select
           value={language}
@@ -185,9 +234,9 @@ const HeroWithNavbar = () => {
           className="text-sm border px-2 py-2 rounded w-full sm:w-40"
         >
           <option value="">Language</option>
-          <option value="English">English</option>
-          <option value="Spanish">Spanish</option>
-          <option value="French">French</option>
+          {languages.map((lang, index) => (
+            <option key={index} value={lang}>{lang}</option>
+          ))}
         </select>
         <select
           value={courseType}
@@ -195,24 +244,24 @@ const HeroWithNavbar = () => {
           className="text-sm border px-2 py-2 rounded w-full sm:w-40"
         >
           <option value="">Course Type</option>
-          <option value="beginner">Beginner</option>
-          <option value="intermediate">Intermediate</option>
-          <option value="advanced">Advanced</option>
+          {courseTypes.map((type, index) => (
+            <option key={index} value={type}>{type}</option>
+          ))}
         </select>
       </div>
 
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center px-4 sm:px-6 mt-12 md:mt-2">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center px-4 sm:px-6 mt-10 md:mt-2">
         <div
-          className="md:w-1/2 -mt-1 md:mt-0 mb-10 md:mb-0 text-center md:text-left ml-6 md:ml-10"
+          className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left ml-0 md:ml-10"
+          style={{ marginTop: '-40px' }}
           data-aos="fade-right"
         >
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
-            <span className="text-orange-400">Studying</span> Online is now{" "}
+          <h1 className="mt-8 md:mt-0 text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
+            <span className="text-orange-400">Empowering</span> Online Education{" "}
             <br className="hidden sm:block" />
-            much easier
           </h1>
           <p className="mt-4 text-white text-sm sm:text-base">
-            TOTC is an interesting platform that will teach you in a more interactive way.
+            <span className="text-semibold">Brain Bridge</span> is your all-in-one cloud learning hub, uniting students, teachers, and administrators in one intuitive platform. From engaging tools and secure hosting to a modern, user-friendly interface, TOTC makes learning from home or managing a school smarter and more efficient than ever
           </p>
           <Link to="/courses">
             <button className="mt-4 bg-[#7ddedf] text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-[#59c1c3] transition-all duration-300">
@@ -268,7 +317,7 @@ const HeroWithNavbar = () => {
                 {searchResults.map((course) => (
                   <li key={course._id} className="py-2">
                     <div
-                      onClick={() => handleCourseClick(course._id)}
+                      onClick={() => handleCourseClick(course. _id)}
                       className="bg-gray-100 hover:bg-blue-100 transition p-4 rounded-lg flex flex-col items-center text-center shadow-md cursor-pointer"
                     >
                       <img

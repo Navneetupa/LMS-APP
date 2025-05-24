@@ -105,20 +105,20 @@ const LearnGrow = () => {
             data-aos="fade-up"
             data-aos-delay="700"
           >
-            <button 
+            <p 
               className="px-5 py-2 bg-blue-600 text-white font-semibold rounded-full shadow hover:bg-blue-700 transition-all transform hover:scale-105"
               data-aos="zoom-in"
               data-aos-delay="750"
             >
               Certificates
-            </button>
-            <button 
-              className="px-5 py-2 bg-pink-500 text-white font-semibold rounded-full shadow hover:bg-pink-600 transition-all transform hover:scale-105"
+            </p>
+            <p 
+              className="px-5 py-2 bg-pink-500 text-white font-semibold rounded-full shadow hover:bg-pink-600 transition-all transform "
               data-aos="zoom-in"
               data-aos-delay="800"
             >
               Enroll
-            </button>
+            </p>
           </div>
         </div>
 

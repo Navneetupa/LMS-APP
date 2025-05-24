@@ -84,11 +84,13 @@ export default function Career() {
       <section className="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-12 items-center relative">
   <div className="relative z-20">
     <h1 className="text-4xl md:text-5xl font-bold leading-tight pl-4">
-      Grow your skills with Advanced <span className="text-orange-400">Courses</span>
+      Unlock Your Future with Expert-Led  <span className="text-orange-400">Courses.</span>
     </h1>
     <p className="mt-6 text-gray-600 pl-4">
-      Start, switch, or advance your career with more than 5,000 courses. <br />
-      Unlock your potential — skill up with thousands of expert-led courses.
+      Fuel your professional growth and spark your career trajectory with 5,000+
+rigorously curated, expert-led courses. <br />
+    Whether initiating a new professional chapter or strategically leveling up existing proficiencies, your next significant opportunity
+awaits.
     </p>
     <div className="mt-10 flex flex-wrap items-center gap-8 pl-4">
       <div className="flex items-center border border-gray-300 px-4 py-2 rounded-full w-full md:w-72 transition-all duration-300 hover:ring-2 hover:ring-cyan-300 hover:shadow-md">

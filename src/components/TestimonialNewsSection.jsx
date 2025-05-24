@@ -48,12 +48,23 @@ export default function TestimonialSection() {
         </h3>
         <h2 className="text-3xl font-bold text-[#49BBBD] mb-4">What They Say?</h2>
         <p className="text-gray-600 mb-2">
-          LMS has got more than 100k positive ratings from our users around the world.
+          “TOTC’s interactive quizzes and badges keep me motivated every day. Studying has never been this
+fun!” – Priya Nair, Student
+“As a teacher, TOTC’s tools simplified course management. I save hours each week on planning and
+grading.” – Rahul Sharma, Instructor
+
+
         </p>
         <p className="text-gray-600 mb-2">
-          Some of the students and teachers were greatly helped by the Skilline.
+         “Our students now easily collaborate online. TOTC transformed our classes even when we can’t
+meet in person.” – Vikram Singh, School Administrator
+“I love the 24/7 access to lessons. Even on busy days, I catch up on lectures at my own pace.” –
+Anjali Kumar, Student
         </p>
-        <p className="text-gray-600 mb-6">Are you too? Please give your assessment</p>
+        <p className="text-gray-600 mb-6">“Issuing certificates and tracking progress is super easy now. Parents are impressed with their kids’
+digital badges!” – Neha Iyer, Teacher
+“The mobile app works flawlessly. My students join lectures from anywhere, and attendance is
+always accurate.” – Karan Desai, Coach</p>
 
       </motion.div>
 

@@ -17,8 +17,9 @@ const LMSInfo = () => {
           What is <span className="text-[#49BBBD] px-2 py-1">LMS</span>?
         </h2>
         <p className="mt-4 text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">
-          LMS is a platform that enables instructors and students to connect efficiently.
-          Instructors can manage content, and students can access learning tools anytime.
+         Brain Bridge cloud-based LMS connects teachers, students, and admins on one secure platform.
+Instructors can create courses, share materials, and assess learners. Students can join from any
+device, track progress, and learn anytime — bringing the full classroom experience online.
         </p>
       </div>
 

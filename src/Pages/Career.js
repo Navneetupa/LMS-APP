@@ -68,7 +68,7 @@ export default function Career() {
     </p>
   </div>
 
-  <div className="bg-[#7ddedf]  p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex flex-col items-center gap-4">
+  <div className="bg-[#7ddedf] p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex-1 flex flex-col items-center gap-4">
     <svg
       className="w-6 h-6 text-gray-400 flex-shrink-0"
       fill="none"
@@ -132,7 +132,7 @@ export default function Career() {
         {/* Companies Section */}
         <section className="text-center mt-10 px-4">
           <p className="text-black text-xl font-semibold">
-            Join the Most Well-Known <span className="text-[#49BBBD]">Companies</span> Around the World
+            Join the Most Well-Known <span className="text-cyan-500">Companies</span> Around the World
           </p>
           <div className="mt-6 flex justify-center flex-wrap gap-10 sm:gap-12 md:gap-16 items-center">
             {companies.map((company) => (

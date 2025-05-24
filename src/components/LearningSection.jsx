@@ -80,11 +80,23 @@ const LearningSection = () => {
           data-aos-delay="300"
         >
           <h3 className="text-2xl sm:text-3xl font-bold mb-4">
-            Assessments, <span className="text-[#49BBBD]">Quizzes</span>, Tests
+            Real-Time <span className="text-[#49BBBD]">Assessments </span>& Management
           </h3>
           <p className="text-gray-600 max-w-md sm:max-w-lg">
-            Easily launch live assignments, quizzes, and tests. Student results are automatically entered in the student account.
-          </p>
+  <span className="font-bold">Live Quizzes & Exams:</span> Launch timed quizzes during class or assign tests for homework. Questions
+  can be auto-graded for immediate feedback.
+</p>
+    <p className="text-gray-600 max-w-md sm:max-w-lg">
+  <span className="font-bold">Instant Grading:</span> Objective answers are graded instantly. Teachers can review subjective answers in real time or offline later.</p>
+        
+              <p className="text-gray-600 max-w-md sm:max-w-lg">
+  <span className="font-bold">Attendance & Rosters:</span>Take attendance online–even in virtual classes and maintain up-to-date
+class lists. Integrates with your schedule seamlessly.
+</p>
+                   <p className="text-gray-600 max-w-md sm:max-w-lg">
+  <span className="font-bold">Private Discussions:</span>Chat one-on-one with any student during or after class. Keep personalized
+threads for confidential feedback or tutoring.
+</p>
         </div>
       </div>
     </div>

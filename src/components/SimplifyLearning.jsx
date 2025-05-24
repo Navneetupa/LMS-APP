@@ -70,12 +70,20 @@ export default function SimplifyLearning() {
       {/* Header Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-center">
         <ScrollFadeSection>
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#49BBBD] leading-tight">
-            Simplify Learning.<br />
-            Streamline Management. Scale Success.
+       <div>
+           <h2 className="text-3xl sm:text-4xl font-bold text-[#49BBBD] leading-tight">
+            <span className="text-black">Empower </span> Learning.
+
+<br />
+          <span className="text-black">Elevate </span>Management. <br/>
+ <span className="text-black">Expand </span> Possibilities.
           </h2>
+       </div>
           <p className="mt-4 text-gray-600 text-sm sm:text-base">
-            A complete Learning Management System designed for educational institutions and training organizations to deliver, track, and manage learning — efficiently and effectively.
+           Unlock the full potential of education with a powerful Learning Management System built
+for institutions and training organizations. From seamless course delivery to real-time
+progress tracking — manage, scale, and transform learning experiences with unmatched
+efficiency
           </p>
         </ScrollFadeSection>
 
@@ -100,10 +108,12 @@ export default function SimplifyLearning() {
 
         <ScrollFadeSection>
           <h3 className="text-2xl sm:text-3xl font-bold text-black-900 mb-2">
-            One-on-One <span className="text-[#49BBBD]">Discussions</span>
+           Private One-on-One <span className="text-[#49BBBD]">Discussions</span>
           </h3>
           <p className="text-gray-600 text-sm sm:text-base">
-            Teachers and teacher assistants can talk with students privately without leaving the Zoom environment.
+           Facilitate meaningful conversations between teachers, assistants, and students — all within the
+Zoom platform. Discuss progress, provide feedback, or offer support without ever leaving the virtual
+classroom.
           </p>
         </ScrollFadeSection>
       </div>

@@ -7,17 +7,17 @@ const features = [
   {
     icon: <FaFileInvoiceDollar className="text-3xl text-blue-500" />,
     title: "Online Billing, Invoicing & Contracts",
-    description: "Manage all billing-related tasks with ease, including contracts and payments."
+    description: " Manage tuition, invoicing, and contracts easily through a secure dashboard."
   },
   {
     icon: <FaClipboardList className="text-3xl text-green-500" />,
-    title: "Easy Enrollment & Attendance Tracking",
-    description: "Simple tools for managing student attendance and course enrollments."
+    title: "Scheduling & Attendance",
+    description: " Create class schedules and track attendance with automated tools."
   },
   {
     icon: <FaChartLine className="text-3xl text-purple-500" />,
-    title: "Learners' Tracking",
-    description: "Track learner progress, engagement and performance in real-time."
+    title: "Gradebook & Analytics",
+    description: "Use the built-in gradebook and reports to monitor performance and identify where help is needed."
   }
 ];
 
@@ -42,7 +42,7 @@ const Features = () => {
           All-in-One <span className="text-[#49BBBD]">Cloud Software</span>.
         </h2>
         <p className="mt-2 text-gray-600 max-w-xl mx-auto text-sm sm:text-base">
-          LMS is a powerful online solution that combines all the tools needed to run a successful learning platform.
+       Brain Bridge combines every tool needed for modern learning in one secure online suite:
         </p>
       </div>
 
