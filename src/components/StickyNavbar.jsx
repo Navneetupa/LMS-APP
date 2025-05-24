@@ -3,7 +3,7 @@ import { FaBars, FaTimes, FaUserCircle, FaUser, FaSignOutAlt } from "react-icons
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/logo.png";
-import defaultAvatar from "../assets/user-icon.jpg";
+import defaultAvatar from "../assets/usersss.png";
 
 const FixedNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -308,14 +308,14 @@ const AuthComponent = () => {
               >
                 Login as Admin
               </a>
-              <a
+              {/* <a
                 href="https://lmsinstructor.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block text-center text-teal-600 mt-1"
               >
-                Login as Instructor
-              </a>
+                
+              </a> */}
             </form>
           ) : (
             <form onSubmit={handleRegister}>

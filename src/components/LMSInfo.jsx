@@ -34,7 +34,7 @@ const LMSInfo = () => {
               FOR INSTRUCTORS
             </h3>
           <a
-  href="/login"
+  href="https://lmsinstructor.vercel.app/"
   className="border-2 border-white text-white px-5 py-2 rounded-full text-sm sm:text-base hover:bg-white hover:text-black transition inline-block text-center"
 >
   Create & Share Your Courses
