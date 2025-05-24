@@ -1,5 +1,5 @@
 // src/pages/ResetPassword.js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -38,10 +38,9 @@ const ResetPassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-       <div className="border border-[#7ddedf] bg-[#7ddedf] text-white p-2 rounded-lg shadow-md">
-  <h2 className="text-2xl font-bold text-center mb-6">Reset Password</h2>
-</div>
-
+        <div>
+          <h2 className="text-2xl font-bold text-center mb-6">Reset <span className="hover:bg-[#59c1c3]">Password</span></h2>
+        </div>
         {message && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">{message}</div>}
         {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>}
         <form onSubmit={handleSubmit}>
@@ -49,7 +48,7 @@ const ResetPassword = () => {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               New Password
             </label>
-            <input
+            <inputa
               type="password"
               id="password"
               value={password}
