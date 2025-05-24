@@ -11,7 +11,7 @@ import FixedNavbar from "./components/StickyNavbar.jsx"; // Make sure path is co
 import StudentDashboard from './Pages/Profiledashboard/parentLayout.jsx'
 import CoursePlayer from "./Pages/CoursePlayer.jsx";
 import StudentAssessment from './Pages/StudentAssessment.jsx'
-
+import ResetPassword from "./Pages/ResetPassword.jsx";
 function App() {
   return (
     <Router>
@@ -29,6 +29,7 @@ function App() {
           <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/course-player/:courseId" element={<CoursePlayer />} />
           <Route path="//courses/:courseId/assessments/:assessmentId" element={<StudentAssessment />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </div>
     </Router>
