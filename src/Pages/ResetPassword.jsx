@@ -23,7 +23,7 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      const response = await axios.put(`http://localhost:6600/api/v1/auth/reset-password`, {
+      const response = await axios.put(`https://lms-backend-flwq.onrender.com/api/v1/auth/reset-password`, {
         token,
         password
       });
