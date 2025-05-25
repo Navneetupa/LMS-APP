@@ -18,7 +18,7 @@ const Footer = () => {
     {/* Newsletter Subscription Section */}
 <div className="text-center mb-8 px-4">
   <h3 className="text-2xl mb-4 font-poppins text-white">
-    Subscribe to get our Newsletter
+    Subscribe to get our Latest Courses.
   </h3>
 
   <div className="max-w-2xl mx-auto">

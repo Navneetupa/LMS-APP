@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
+import heroImage from "../../assets/coursespage.png";
 
 export default function Career() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -121,11 +122,13 @@ export default function Career() {
 
           <div className="relative flex justify-center items-center z-20 mt-8 md:mt-0">
             <div className="absolute w-64 sm:w-80 md:w-[22rem] h-64 sm:h-80 md:h-[22rem] z-0 top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-lg" />
-            <img
-              src="hero.webp"
-              alt="Job Search Illustration"
-              className="w-full max-w-xs sm:max-w-sm md:max-w-md relative z-10"
-            />
+             <img
+    src={heroImage}
+    alt="Job Search Illustration"
+    className="w-full max-w-xs sm:max-w-sm md:max-w-md relative z-10 mx-auto"
+    data-aos="zoom-in"
+    data-aos-delay="200"
+  />
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-white shadow-md px-3 sm:px-4 py-1 sm:py-2 rounded-full flex items-center text-xs sm:text-sm z-20">
               <span className="text-cyan-500 font-semibold mr-1">10.5K</span> Happy Students
             </div>
