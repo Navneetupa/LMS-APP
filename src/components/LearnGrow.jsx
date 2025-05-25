@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import instructor1 from '../assets/instructor1.png';
+import instructor1 from '../assets/feature.jpg';
 import instructor2 from '../assets/instructor2.png';
 import instructor3 from '../assets/instructor3.png';
 import AOS from "aos";
@@ -31,14 +31,13 @@ const LearnGrow = () => {
       </div>
  
       {/* Content Grid */}
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
-        {/* Left - Video Preview & Actions */}
+      {/* <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
+        
         <div 
           className="bg-gray-50 rounded-2xl p-6 shadow-lg max-w-2xl w-full"
           data-aos="fade-right"
           data-aos-delay="100"
         >
-          {/* Top row (image cards) */}
           <div className="grid grid-cols-3 gap-4 mb-4">
             {[instructor1, instructor2, instructor3].map((img, index) => (
               <div 
@@ -64,7 +63,7 @@ const LearnGrow = () => {
             ))}
           </div>
 
-          {/* Middle row (learner + 2 more images) */}
+      
           <div 
             className="flex flex-wrap items-center justify-between mb-4 gap-4"
             data-aos="fade-up"
@@ -99,7 +98,7 @@ const LearnGrow = () => {
             </div>
           </div>
 
-          {/* Buttons */}
+        
           <div 
             className="flex items-center justify-center gap-4 mt-4 flex-wrap"
             data-aos="fade-up"
@@ -121,9 +120,11 @@ const LearnGrow = () => {
             </p>
           </div>
         </div>
+ */}
+
 
         {/* Right - Feature List */}
-        <div 
+        {/* <div 
           className="space-y-6 max-w-md w-full"
           data-aos="fade-left"
           data-aos-delay="100"
@@ -149,8 +150,64 @@ const LearnGrow = () => {
               </p>
             </div>
           ))}
-        </div>
+        </div> */}
+  {/* Content Grid */}
+<div className="flex flex-col lg:flex-row items-center justify-between gap-10">
+  
+  {/* Left - Image */}
+  <div 
+    className="bg-gray-50 rounded-2xl p-6 shadow-lg max-w-2xl w-full lg:w-1/2"
+    data-aos="fade-right"
+    data-aos-delay="100"
+  >
+    <img 
+      src={instructor1}
+      alt="Instructors and Learners Group" 
+      className="rounded-xl w-full h-auto object-cover shadow-md hover:shadow-lg transition-shadow"
+      data-aos="zoom-in"
+      data-aos-delay="200"
+    />
+  </div>
+
+  {/* Right - Feature List */}
+  <div 
+    className="space-y-6 max-w-md w-full lg:w-1/2"
+    data-aos="fade-left"
+    data-aos-delay="100"
+  >
+    {[
+      {
+        color: "bg-blue-500",
+        text: "Engaging video lectures, quizzes, and assignments designed for real-world learning."
+      },
+      {
+        color: "bg-orange-500",
+        text: "Learn from industry leaders with practical experience and teaching excellence."
+      },
+      {
+        color: "bg-gray-400",
+        text: "Get downloadable and shareable certificates after completing courses."
+      }
+    ].map((item, index) => (
+      <div 
+        key={index}
+        className="flex items-start gap-4"
+        data-aos="fade-left"
+        data-aos-delay={200 + index * 150}
+      >
+        <div 
+          className={`mt-1 w-3 h-3 rounded-full ${item.color}`}
+          data-aos="zoom-in"
+          data-aos-delay={250 + index * 150}
+        ></div>
+        <p className="text-gray-700 text-sm sm:text-base">
+          {item.text}
+        </p>
       </div>
+    ))}
+  </div>
+</div>
+
     </section>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import record from "../assets/record.png";
-import email from "../assets/email.png";
+import email from "../assets/email.jpg";
 
 const containerVariants = {
   hidden: { opacity: 0 },

@@ -19,12 +19,12 @@ const FeatureHighlight = () => {
         transition={{ duration: 0.6, delay: 0.2 }}
       >
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-3">
-          Everything you can do in a physical classroom,{" "}
+          Everything you can do in a <br />physical classroom,{" "} 
           <span className="text-[#00CBB8]">you can do with LMS</span>
         </h2>
 
         <p className="text-sm sm:text-base text-gray-600 mb-4">
-          Our Learning Management System enables you to access resources,
+          Our Learning Management System enables you to access resources,<br />
           submit assignments, and engage with instructors in real-time.
         </p>
       </motion.div>

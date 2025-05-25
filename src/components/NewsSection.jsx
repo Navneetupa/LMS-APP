@@ -8,31 +8,31 @@ import New from "../assets/feature.png";
 
 const newsItems = [
   {
-    title: "LMS adds $30 million to its balance sheet for a Zoom-friendly edtech solution",
+    title: "Discover how AI-driven tools personalize each student’s education.",
     category: "NEWS",
     image: Group,
-    description: "LMS, launched less than a year ago by Blackboard co-founder Riya Bisht, integrates exclusively...",
+    description: "Integrating AI Tutors into Everyday Learning” – by Riya Bisht (June 2025)",
     link: "#",
   },
   {
-    title: "Class Technologies Inc. Closes $30 Million Series A Financing to Meet High Demand",
+    title: "Explore game-based strategies that boost motivation in online classes.",
     category: "PRESS RELEASE",
     image: My,
-    description: "Class Technologies Inc., the company that created Class,...",
+    description: "Engaging Students with Gamification” – by Rahul Mehta (May 2025)",
     link: "#",
   },
   {
-    title: "Zoom’s earliest investors are betting millions on a better Zoom for schools",
+    title: "Practical advice for blending in-person and virtual learning effectively.",
     category: "NEWS",
     image: News,
-    description: "Zoom was never created to be a consumer product. Nonetheless, the...",
+    description: "Top 5 Tips for Hybrid Teaching” – by Ananya Singh (April 2025) ",
     link: "#",
   },
   {
-    title: "Former Blackboard CEO Raises $16M to Bring LMS Features to Zoom Classrooms",
+    title: " Explore game-based strategies that boost motivation in online classes.",
     category: "NEWS",
     image: New,
-    description: "This year, investors have reaped big financial returns from betting on Zoom...",
+    description: "This year, investors have reaped big financial returns from betting on Game Based Strategies.",
     link: "#",
   },
 ];
