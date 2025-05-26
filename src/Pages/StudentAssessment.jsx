@@ -161,7 +161,7 @@ export default function StudentAssessment() {
                   <button
                     onClick={handleSubmit}
                     disabled={submitting}
-                    className="bg-blue-500 text-white px-6 py-2 rounded-md text-sm sm:text-base hover:bg-blue-600 transition disabled:bg-blue-300"
+                    className="bg-[#49BBBD] text-white px-6 py-2 rounded-md text-sm sm:text-base hover:bg-[#49BBBD] transition disabled:bg-blue-300"
                   >
                     {submitting ? 'Submitting...' : 'Submit Test'}
                   </button>
