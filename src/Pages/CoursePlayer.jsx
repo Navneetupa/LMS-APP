@@ -285,11 +285,11 @@ export default function CoursePlayer() {
   transition={{ duration: 0.4 }}
   className="flex flex-col sm:flex-row  sm:items-center sm:justify-between bg-white px-3 py-2 rounded-xl shadow w-full gap-y-2"
 >
-  <div className="flex items-center gap-3 min-w-0 w-full sm:flex-1">
+  <div className="flex items-center gap-3 min-w-[12rem] w-full sm:flex-1">
     <Link to="/courses" className="p-1 w-[2.5rem] h-[2.5rem] rounded-full bg-gray-100 flex-shrink-0">
       <img src={arrowLeft} alt="Back" className="w-full h-full rounded-md" />
     </Link>
-    <div className="min-w-0 flex-1">
+    <div className="w-full flex-1">
       <h1 className="font-medium text-sm truncate">
         Course: {courseTitle}
       </h1>
