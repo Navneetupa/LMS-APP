@@ -11,10 +11,9 @@ import businessImage from '../../assets/businessImage.png';
 import actingImage from '../../assets/actingImage.png';
 import webDevelopmentImage from '../../assets/webDevelopmentImage.png';
 import clearImage from '../../assets/webDevelopmentImage.png';
+
 // Default image for categories without a specific image
-
 const DEFAULT_IMAGE = clearImage;
-
 
 // Metadata for categories (maps category names to images and quotes)
 const categoryMetadata = {
@@ -96,7 +95,7 @@ const CategorySelector = () => {
   };
 
   const handleCourseClick = (courseId) => {
-    const token = localStorage.getItem('token');
+   const token = localStorage.getItem('token');
     if (token) {
       navigate(`/courses/${courseId}`);
     } else {
@@ -227,23 +226,31 @@ const CategorySelector = () => {
                     onClick={() => handleCourseClick(course._id)}
                     data-aos="zoom-in"
                   >
-                    <div className="bg-gray-100 hover:bg-blue-100 transition p-4 sm:p-6 rounded-xl flex flex-col items-center text-center shadow-md">
-                      <img
-                        src={course.thumbnail || DEFAULT_IMAGE} // Use default image for courses
-                        alt={course.title}
-                        className="w-20 h-20 sm:w-24 sm:h-24 mb-4 object-cover rounded-full"
-                        onError={(e) => (e.target.src = DEFAULT_IMAGE)} // Fallback for broken images
-                      />
-                      <span className="text-base sm:text-lg font-medium text-gray-800">{course.title}</span>
-                      <p className="text-xs sm:text-sm mt-2 text-gray-600 line-clamp-2">{course.subtitle}</p>
-                      <p className="text-xs sm:text-sm mt-2 text-gray-500">
-                        By {course.instructor.firstName} {course.instructor.lastName}
-                      </p>
-                      <p className="text-xs sm:text-sm mt-1 text-gray-500">{course.duration} hours</p>
-                      <p className="text-xs sm:text-sm mt-1 text-gray-500">${course.discountPrice}</p>
-                      <p className="text-xs sm:text-sm mt-1 text-gray-500">
-                        Rating: {course.rating} ({course.totalRatings} reviews)
-                      </p>
+                    <div className="bg-white rounded-xl flex items-center p-4 shadow-md hover:shadow-lg transition">
+                      <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
+                        <img
+                          src={course.thumbnail || DEFAULT_IMAGE}
+                          alt={course.title}
+                          className="w-full h-full object-cover rounded-full"
+                          onError={(e) => (e.target.src = DEFAULT_IMAGE)}
+                        />
+                        <div className="absolute bottom-0 right-0 bg-teal-500 rounded-full p-1 flex items-center justify-center">
+                          <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-4 flex-1">
+                        <h4 className="text-sm sm:text-base font-semibold text-gray-800">{course.title}</h4>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                          By {course.instructor.firstName} {course.instructor.lastName}
+                        </p>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1">{course.duration} hours</p>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1">₹{course.discountPrice}</p>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                          Rating: {course.rating} ({course.totalRatings} reviews)
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}

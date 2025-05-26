@@ -29,13 +29,16 @@ const CourseCard = ({ course, index, onUnauthenticatedClick }) => {
   const handleCourseClick = (courseId) => {
     const token = localStorage.getItem('token');
     if (token) {
-      // User logged in, go to enrollment page
       navigate(`/courses/${courseId}`);
     } else {
-      // User not logged in, trigger auth popup
       onUnauthenticatedClick(`/courses/${courseId}/enroll`);
     }
   };
+
+  // Combine firstName and lastName for display, or fallback to "Unknown"
+  const instructorName = course.instructor
+    ? `${course.instructor.firstName} ${course.instructor.lastName || ''}`.trim()
+    : "Unknown";
 
   return (
     <motion.div
@@ -47,18 +50,65 @@ const CourseCard = ({ course, index, onUnauthenticatedClick }) => {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === "Enter") handleCourseClick(course._id); }}
-      className="bg-gradient-to-br from-cyan-50 to-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col items-center text-center cursor-pointer"
+      className="bg-gradient-to-br from-cyan-50 to-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col text-left cursor-pointer relative"
       aria-label={`View ${course.title} course`}
     >
-      <img
-        src={course.thumbnail || "https://img.icons8.com/color/96/code.png"}
-        alt={course.title}
-        className="w-16 h-16 mb-3 object-cover"
-        loading="lazy"
-      />
+      {/* Thumbnail */}
+      <div className="relative">
+        <img
+          src={course.thumbnail || "https://img.icons8.com/color/96/code.png"}
+          alt={course.title}
+          className="w-full h-32 object-cover rounded-lg mb-3"
+          loading="lazy"
+        />
+        {/* Play Button Overlay */}
+        <div className="absolute inset-0 flex justify-center items-center">
+          <button className="bg-cyan-500 bg-opacity-80 rounded-full p-3 hover:bg-opacity-100 transition-opacity">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="white"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 3l14 9-14 9V3z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Course Details */}
       <h4 className="text-lg font-semibold mb-1 text-cyan-900">{course.title}</h4>
       <p className="text-sm text-gray-600 mb-2">{course.subtitle}</p>
-      <p className="text-cyan-600 font-semibold">{course.totalStudents} enrolled</p>
+      <p className="text-cyan-600 font-semibold mb-2">₹{course.price}</p>
+
+      {/* Instructor and Rating */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <img
+            src={course.instructor?.avatar || "https://img.icons8.com/ios-filled/24/teacher.png"}
+            alt="Instructor"
+            className="w-5 h-5 mr-1 rounded-full"
+          />
+          <p className="text-sm text-gray-700">{instructorName}</p>
+        </div>
+        <div className="flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            className="w-5 h-5 text-yellow-500 mr-1"
+          >
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+          </svg>
+          <p className="text-sm text-gray-700">{course.rating || 0}</p>
+        </div>
+      </div>
     </motion.div>
   );
 };
@@ -114,7 +164,7 @@ const RecommendedCourses = () => {
     return <div className="text-center py-20 text-red-500">Error: {error}</div>;
   }
 
-  const previewCourses = courses.slice(0, 3);
+  const previewCourses = courses.slice(0, 4); // Fetch 4 courses, but control display with grid
 
   return (
     <section className="py-20 bg-white px-6 md:px-16 relative">
@@ -126,7 +176,7 @@ const RecommendedCourses = () => {
           Browse our top trending courses, handpicked to boost your career and skills.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 max-w-7xl mx-auto">
           {previewCourses.map((course, index) => (
             <CourseCard
               key={course._id}
