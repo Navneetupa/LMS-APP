@@ -332,51 +332,54 @@ const CourseRatings = () => {
         )}
       </motion.div>
 
-      <motion.div
-        className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full lg:w-[350px]"
-        initial={{ opacity: 0, x: -100 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
-      >
-        <p className="text-gray-600 text-xs mb-2">This course Price Now...</p>
-        {courseLoading && <p className="text-sm text-gray-600">Loading price...</p>}
-        {courseError && <p className="text-sm text-red-500">{courseError}</p>}
-        {!courseLoading && !courseError && (
-          <div className="flex items-end flex-wrap gap-2 sm:space-x-3 mb-4">
-            <span className="text-2xl font-bold text-gray-900">
-              {currencySymbols[currency] || currency} {discountPrice || '...'}
-            </span>
-            {price && (
-              <span className="text-base line-through text-gray-500">
-                {currencySymbols[currency] || currency} {price}
-              </span>
-            )}
-            {price && discountPrice && (
-              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-semibold">
-                {getDiscountPercent()}% Off
-              </span>
-            )}
-          </div>
-        )}
-        <hr className="w-full border border-gray-300 mb-4" />
-        <h2 className="text-lg font-bold text-gray-800 mb-3">This Course Includes</h2>
-        <ul className="text-xs text-gray-700 space-y-2 mb-4">
-          <li>✔️ Full lifetime access</li>
-          <li>✔️ Certificate of completion</li>
-          <li>✔️ Access on mobile and TV</li>
-          <li>✔️ Training for 5+ people</li>
-        </ul>
-        <button
-          onClick={handleEnrollNow}
-          disabled={enrollLoading}
-          className={`w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white py-2 rounded text-sm ${
-            enrollLoading ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-        >
-          {enrollLoading ? 'Enrolling...' : 'Enroll Now'}
-        </button>
-      </motion.div>
+     <motion.div
+  className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full lg:w-[350px]"
+  initial={{ opacity: 0, x: -100 }}
+  whileInView={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true }}
+>
+  <p className="text-gray-600 text-xs mb-2">This course Price Now...</p>
+  {courseLoading && <p className="text-sm text-gray-600">Loading price...</p>}
+  {courseError && <p className="text-sm text-red-500">{courseError}</p>}
+  {!courseLoading && !courseError && (
+    <div className="flex items-end flex-wrap gap-2 sm:space-x-3 mb-4">
+      {/* Discounted Price (Actual Price after discount) */}
+      <span className="text-2xl font-bold text-gray-900">
+        {currencySymbols[currency] || currency}{' '}
+        {discountPrice ? (price - discountPrice).toFixed(2) : '...'}
+      </span>
+      {/* Original Price with line-through */}
+      {price && (
+        <span className="text-base line-through text-gray-500">
+          {currencySymbols[currency] || currency} {price}
+        </span>
+      )}
+      {price && discountPrice && (
+        <span className="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-semibold">
+          {getDiscountPercent()}% Off
+        </span>
+      )}
+    </div>
+  )}
+  <hr className="w-full border border-gray-300 mb-4" />
+  <h2 className="text-lg font-bold text-gray-800 mb-3">This Course Includes</h2>
+  <ul className="text-xs text-gray-700 space-y-2 mb-4">
+    <li>✔️ Full lifetime access</li>
+    <li>✔️ Certificate of completion</li>
+    <li>✔️ Access on mobile and TV</li>
+    <li>✔️ Training for 5+ people</li>
+  </ul>
+  <button
+    onClick={handleEnrollNow}
+    disabled={enrollLoading}
+    className={`w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white py-2 rounded text-sm ${
+      enrollLoading ? 'opacity-50 cursor-not-allowed' : ''
+    }`}
+  >
+    {enrollLoading ? 'Enrolling...' : 'Enroll Now'}
+  </button>
+</motion.div>
 
       {/* Modal for Enroll Success/Error */}
       <Modal

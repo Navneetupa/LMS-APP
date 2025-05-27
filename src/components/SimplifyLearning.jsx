@@ -69,23 +69,22 @@ export default function SimplifyLearning() {
     >
       {/* Header Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
-        <ScrollFadeSection>
-          <div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#49BBBD] leading-tight">
-              <span className="text-black">Empower </span> Learning.
-              <br />
-              <span className="text-black">Elevate </span>Management. <br />
-              <span className="text-black">Expand </span> Possibilities.
-            </h2>
-            <p className="mt-4 text-gray-600 text-sm sm:text-base">
-              Unlock the full potential of education with a powerful Learning Management System built
-              for institutions and training organizations. From seamless course delivery to real-time
-              progress tracking — manage, scale, and transform learning experiences with unmatched
-              efficiency
-            </p>
-          </div>
-        </ScrollFadeSection>
-
+ <ScrollFadeSection>
+  <div className="ml-[20px]">
+    <h2 className="text-3xl sm:text-4xl font-bold text-[#49BBBD] leading-tight">
+      <span className="text-black">Empower </span> Learning.
+      <br />
+      <span className="text-black">Elevate </span>Management. <br />
+      <span className="text-black">Expand </span> Possibilities.
+    </h2>
+    <p className="mt-4 text-gray-600 text-sm sm:text-base">
+      Unlock the full potential of education with a powerful Learning Management System built
+      for institutions and training organizations. From seamless course delivery to real-time
+      progress tracking — manage, scale, and transform learning experiences with unmatched
+      efficiency
+    </p>
+  </div>
+</ScrollFadeSection>
         <ScrollFadeSection>
           <div className="p-6 rounded-2xl shadow-lg relative">
             <img src={record} alt="Record of Results" className="w-full rounded-lg" />
