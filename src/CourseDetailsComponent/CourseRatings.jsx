@@ -235,7 +235,7 @@ const CourseRatings = () => {
 
   const getDiscountPercent = () => {
     if (!price || !discountPrice) return null;
-    return Math.round(((price - discountPrice) / price) * 100);
+    return Math.round(((price - (price - discountPrice)) / price) * 100);
   };
 
   const handleEnrollNow = async () => {
@@ -244,7 +244,6 @@ const CourseRatings = () => {
       return;
     }
 
-    // Validate courseId format (MongoDB ObjectId)
     if (!/^[0-9a-fA-F]{24}$/.test(courseId)) {
       setEnrollError('Invalid course ID format');
       return;
@@ -263,8 +262,7 @@ const CourseRatings = () => {
     console.log('Enroll attempt:', { courseId, token: token.substring(0, 10) + '...' });
 
     try {
-      // Handle free courses
-      if (price === 0 || discountPrice === 0) {
+      if (price === 0 || (price - discountPrice) === 0) {
         console.log('Enrolling in free course:', courseId);
         const enrollResponse = await axios.post(
           `${API_BASE_URL}/api/v1/students/courses`,
@@ -285,7 +283,6 @@ const CourseRatings = () => {
         return;
       }
 
-      // Load Razorpay script
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
         setEnrollError('Failed to load Razorpay payment gateway');
@@ -293,7 +290,6 @@ const CourseRatings = () => {
         return;
       }
 
-      // Step 1: Create order
       console.log('Creating order for course:', courseId);
       const orderResponse = await axios.post(
         `${API_BASE_URL}/api/v1/payments/create-order`,
@@ -315,7 +311,6 @@ const CourseRatings = () => {
       const { orderId, amount, currency, paymentId } = orderResponse.data.data;
       console.log('Order created:', { orderId, amount, currency, paymentId });
 
-      // Step 2: Open Razorpay checkout
       const options = {
         key: process.env.REACT_APP_RAZORPAY_KEY_ID,
         amount: amount,
@@ -326,7 +321,6 @@ const CourseRatings = () => {
         handler: async function (response) {
           console.log('Razorpay payment response:', response);
           try {
-            // Step 3: Verify payment
             const verifyResponse = await axios.post(
               `${API_BASE_URL}/api/v1/payments/verify`,
               {
@@ -348,7 +342,6 @@ const CourseRatings = () => {
               return;
             }
 
-            // Step 4: Enroll in course
             console.log('Enrolling with paymentId:', verifyResponse.data.data.paymentId);
             const enrollResponse = await axios.post(
               `${API_BASE_URL}/api/v1/students/courses`,
@@ -507,14 +500,14 @@ const CourseRatings = () => {
         {!courseLoading && !courseError && (
           <div className="flex items-end flex-wrap gap-2 sm:space-x-3 mb-4">
             <span className="text-2xl font-bold text-gray-900">
-              {currencySymbols[currency] || currency} {discountPrice || '...'}
+              {currencySymbols[currency] || currency} {price && discountPrice !== null ? price - discountPrice : '...'}
             </span>
             {price && (
               <span className="text-base line-through text-gray-500">
                 {currencySymbols[currency] || currency} {price}
               </span>
             )}
-            {price && discountPrice && (
+            {price && discountPrice !== null && (
               <span className="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-semibold">
                 {getDiscountPercent()}% Off
               </span>
