@@ -202,7 +202,7 @@ const CourseRatings = () => {
 
   const getDiscountPercent = () => {
     if (!price || !discountPrice) return null;
-    return Math.round(((price - discountPrice) / price) * 100);
+    return Math.round(((price -(price- discountPrice)) / price) * 100);
   };
 
   const handleEnrollNow = async () => {
