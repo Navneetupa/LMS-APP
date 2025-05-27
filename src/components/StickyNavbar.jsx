@@ -79,7 +79,7 @@ const FixedNavbar = () => {
   };
 
   // Hide navbar on login and signup pages
-  if (location.pathname === "/login" || location.pathname === "/signup") return null;
+  if (location.pathname === "/login" || location.pathname === "/login") return null;
 
   // Nav links data
   const navLinks = [
@@ -145,7 +145,7 @@ const FixedNavbar = () => {
               Login
             </Link>
             <Link
-              to="/signup"
+              to="/login"
               className="text-sm px-4 py-1 rounded-full text-white bg-[#7ddedf] font-medium text-center"
               onClick={() => setIsMenuOpen(false)}
             >
@@ -184,7 +184,7 @@ const FixedNavbar = () => {
               Login
             </Link>
             <Link
-              to="/signup"
+              to="/login"
               className="text-sm px-4 py-0.5 rounded-full text-white bg-[#7ddedf] font-medium hover:bg-[#59c1c3] transition-colors"
             >
               Sign Up
