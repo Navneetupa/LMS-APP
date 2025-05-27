@@ -16,7 +16,6 @@ import axios from 'axios';
 const Modal = ({ isOpen, message, type, onClose }) => {
   useEffect(() => {
     if (isOpen) {
-      // Auto-close after 3 seconds
       const timer = setTimeout(() => {
         onClose();
       }, 3000);
@@ -81,12 +80,26 @@ const CourseRatings = () => {
     GBP: '£',
   };
 
+  // Use environment variable for API base URL
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://lms-backend-flwq.onrender.com';
   const courseApiUrl = courseId
-    ? `https://lms-backend-flwq.onrender.com/api/v1/courses/${courseId}`
+    ? `${API_BASE_URL}/api/v1/courses/${courseId}`
     : null;
   const reviewsApiUrl = courseId
-    ? `https://lms-backend-flwq.onrender.com/api/v1/courses/${courseId}/reviews`
+    ? `${API_BASE_URL}/api/v1/courses/${courseId}/reviews`
     : null;
+
+  // Load Razorpay script
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
 
   // Fetch course details
   useEffect(() => {
@@ -98,7 +111,12 @@ const CourseRatings = () => {
 
       setCourseLoading(true);
       try {
-        const { data } = await axios.get(courseApiUrl);
+        const token = localStorage.getItem('token');
+        const { data } = await axios.get(courseApiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (data.success && data.data) {
           setPrice(data.data.price || null);
           setDiscountPrice(data.data.discountPrice || null);
@@ -109,14 +127,14 @@ const CourseRatings = () => {
         }
       } catch (err) {
         console.error('Failed to fetch course pricing:', err);
-        setCourseError('Error fetching course data: ' + err.message);
+        setCourseError(`Error fetching course data: ${err.response?.data?.message || err.message}`);
       } finally {
         setCourseLoading(false);
       }
     };
 
     fetchCourse();
-  }, [courseId]);
+  }, [courseId, courseApiUrl]);
 
   // Fetch reviews
   useEffect(() => {
@@ -128,7 +146,13 @@ const CourseRatings = () => {
 
       setReviewLoading(true);
       try {
-        const { data } = await axios.get(reviewsApiUrl);
+        const token = localStorage.getItem('token');
+        console.log('Fetching reviews for courseId:', courseId);
+        const { data } = await axios.get(reviewsApiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (data.success && data.data) {
           const mappedReviews = data.data.map((review) => ({
             name: `${review.user?.firstName || 'Unknown'} ${review.user?.lastName || ''}`,
@@ -141,14 +165,14 @@ const CourseRatings = () => {
         }
       } catch (err) {
         console.error('Failed to fetch reviews:', err);
-        setReviewError('Error fetching reviews: ' + err.message);
+        setReviewError(`Error fetching reviews: ${err.response?.data?.message || err.message}`);
       } finally {
         setReviewLoading(false);
       }
     };
 
     fetchReviews();
-  }, [courseId]);
+  }, [courseId, reviewsApiUrl]);
 
   const filteredReviews = reviews.filter((review) =>
     review.text.toLowerCase().includes(searchTerm.toLowerCase())
@@ -171,10 +195,19 @@ const CourseRatings = () => {
     if (commentText.trim() && commentName.trim() && commentRating > 0) {
       setReviewLoading(true);
       try {
-        const { data } = await axios.post(reviewsApiUrl, {
-          rating: commentRating,
-          comment: commentText,
-        });
+        const token = localStorage.getItem('token');
+        const { data } = await axios.post(
+          reviewsApiUrl,
+          {
+            rating: commentRating,
+            comment: commentText,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (data.success) {
           const newReview = {
@@ -191,7 +224,7 @@ const CourseRatings = () => {
         }
       } catch (err) {
         console.error('Error submitting review:', err);
-        setReviewError('Error submitting review: ' + err.message);
+        setReviewError(`Error submitting review: ${err.response?.data?.message || err.message}`);
       } finally {
         setReviewLoading(false);
       }
@@ -202,7 +235,7 @@ const CourseRatings = () => {
 
   const getDiscountPercent = () => {
     if (!price || !discountPrice) return null;
-    return Math.round(((price -(price- discountPrice)) / price) * 100);
+    return Math.round(((price - discountPrice) / price) * 100);
   };
 
   const handleEnrollNow = async () => {
@@ -211,8 +244,13 @@ const CourseRatings = () => {
       return;
     }
 
-    const token = localStorage.getItem('token');
+    // Validate courseId format (MongoDB ObjectId)
+    if (!/^[0-9a-fA-F]{24}$/.test(courseId)) {
+      setEnrollError('Invalid course ID format');
+      return;
+    }
 
+    const token = localStorage.getItem('token');
     if (!token) {
       setEnrollError('You must be logged in to enroll.');
       return;
@@ -222,9 +260,43 @@ const CourseRatings = () => {
     setEnrollError(null);
     setEnrollSuccess(null);
 
+    console.log('Enroll attempt:', { courseId, token: token.substring(0, 10) + '...' });
+
     try {
-      const response = await axios.post(
-        'https://lms-backend-flwq.onrender.com/api/v1/students/courses',
+      // Handle free courses
+      if (price === 0 || discountPrice === 0) {
+        console.log('Enrolling in free course:', courseId);
+        const enrollResponse = await axios.post(
+          `${API_BASE_URL}/api/v1/students/courses`,
+          { courseId, paymentId: null },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (enrollResponse.data.success) {
+          setEnrollSuccess('You have been enrolled successfully!');
+        } else {
+          setEnrollError(enrollResponse.data.message || 'Enrollment failed');
+        }
+        setEnrollLoading(false);
+        return;
+      }
+
+      // Load Razorpay script
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        setEnrollError('Failed to load Razorpay payment gateway');
+        setEnrollLoading(false);
+        return;
+      }
+
+      // Step 1: Create order
+      console.log('Creating order for course:', courseId);
+      const orderResponse = await axios.post(
+        `${API_BASE_URL}/api/v1/payments/create-order`,
         { courseId },
         {
           headers: {
@@ -233,15 +305,105 @@ const CourseRatings = () => {
         }
       );
 
-      if (response.data.success) {
-        setEnrollSuccess('You have been enrolled successfully!');
-      } else {
-        setEnrollError(response.data.message || 'Enrollment failed');
+      if (!orderResponse.data.success) {
+        console.error('Order creation failed:', orderResponse.data);
+        setEnrollError(orderResponse.data.message || 'Failed to create payment order');
+        setEnrollLoading(false);
+        return;
       }
+
+      const { orderId, amount, currency, paymentId } = orderResponse.data.data;
+      console.log('Order created:', { orderId, amount, currency, paymentId });
+
+      // Step 2: Open Razorpay checkout
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        amount: amount,
+        currency: currency,
+        name: 'LMS Platform',
+        description: `Payment for course: ${courseName}`,
+        order_id: orderId,
+        handler: async function (response) {
+          console.log('Razorpay payment response:', response);
+          try {
+            // Step 3: Verify payment
+            const verifyResponse = await axios.post(
+              `${API_BASE_URL}/api/v1/payments/verify`,
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                paymentId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            if (!verifyResponse.data.success) {
+              setEnrollError(verifyResponse.data.message || 'Payment verification failed');
+              setEnrollLoading(false);
+              return;
+            }
+
+            // Step 4: Enroll in course
+            console.log('Enrolling with paymentId:', verifyResponse.data.data.paymentId);
+            const enrollResponse = await axios.post(
+              `${API_BASE_URL}/api/v1/students/courses`,
+              { courseId, paymentId: verifyResponse.data.data.paymentId },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            if (enrollResponse.data.success) {
+              setEnrollSuccess('You have been enrolled successfully!');
+            } else {
+              setEnrollError(enrollResponse.data.message || 'Enrollment failed');
+            }
+          } catch (error) {
+            console.error('Payment verification or enrollment error:', error);
+            const errorMessage =
+              error.response?.data?.message ||
+              error.message ||
+              'An error occurred during payment verification or enrollment';
+            setEnrollError(errorMessage);
+          } finally {
+            setEnrollLoading(false);
+          }
+        },
+        prefill: {
+          name: localStorage.getItem('userName') || '',
+          email: localStorage.getItem('userEmail') || '',
+        },
+        theme: {
+          color: '#49BBBD',
+        },
+        modal: {
+          ondismiss: () => {
+            console.log('Razorpay modal dismissed');
+            setEnrollError('Payment was cancelled');
+            setEnrollLoading(false);
+          },
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.on('payment.failed', function (response) {
+        console.error('Razorpay payment failed:', response);
+        setEnrollError(`Payment failed: ${response.error.description || 'Unknown error'}`);
+        setEnrollLoading(false);
+      });
+      razorpay.open();
     } catch (error) {
       console.error('Enroll API error:', error);
-      setEnrollError(error.response?.data?.message || error.message || 'Enrollment failed');
-    } finally {
+      const errorMessage =
+        error.response?.data?.message || error.message || 'An error occurred during enrollment';
+      setEnrollError(errorMessage);
       setEnrollLoading(false);
     }
   };
@@ -332,56 +494,52 @@ const CourseRatings = () => {
         )}
       </motion.div>
 
-     <motion.div
-  className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full lg:w-[350px]"
-  initial={{ opacity: 0, x: -100 }}
-  whileInView={{ opacity: 1, x: 0 }}
-  transition={{ duration: 0.5 }}
-  viewport={{ once: true }}
->
-  <p className="text-gray-600 text-xs mb-2">This course Price Now...</p>
-  {courseLoading && <p className="text-sm text-gray-600">Loading price...</p>}
-  {courseError && <p className="text-sm text-red-500">{courseError}</p>}
-  {!courseLoading && !courseError && (
-    <div className="flex items-end flex-wrap gap-2 sm:space-x-3 mb-4">
-      {/* Discounted Price (Actual Price after discount) */}
-      <span className="text-2xl font-bold text-gray-900">
-        {currencySymbols[currency] || currency}{' '}
-        {discountPrice ? (price - discountPrice).toFixed(2) : '...'}
-      </span>
-      {/* Original Price with line-through */}
-      {price && (
-        <span className="text-base line-through text-gray-500">
-          {currencySymbols[currency] || currency} {price}
-        </span>
-      )}
-      {price && discountPrice && (
-        <span className="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-semibold">
-          {getDiscountPercent()}% Off
-        </span>
-      )}
-    </div>
-  )}
-  <hr className="w-full border border-gray-300 mb-4" />
-  <h2 className="text-lg font-bold text-gray-800 mb-3">This Course Includes</h2>
-  <ul className="text-xs text-gray-700 space-y-2 mb-4">
-    <li>✔️ Full lifetime access</li>
-    <li>✔️ Certificate of completion</li>
-    <li>✔️ Access on mobile and TV</li>
-    <li>✔️ Training for 5+ people</li>
-  </ul>
-  <button
-    onClick={handleEnrollNow}
-    disabled={enrollLoading}
-    className={`w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white py-2 rounded text-sm ${
-      enrollLoading ? 'opacity-50 cursor-not-allowed' : ''
-    }`}
-  >
-    {enrollLoading ? 'Enrolling...' : 'Enroll Now'}
-  </button>
-</motion.div>
+      <motion.div
+        className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full lg:w-[350px]"
+        initial={{ opacity: 0, x: -100 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+      >
+        <p className="text-gray-600 text-xs mb-2">This course Price Now...</p>
+        {courseLoading && <p className="text-sm text-gray-600">Loading price...</p>}
+        {courseError && <p className="text-sm text-red-500">{courseError}</p>}
+        {!courseLoading && !courseError && (
+          <div className="flex items-end flex-wrap gap-2 sm:space-x-3 mb-4">
+            <span className="text-2xl font-bold text-gray-900">
+              {currencySymbols[currency] || currency} {discountPrice || '...'}
+            </span>
+            {price && (
+              <span className="text-base line-through text-gray-500">
+                {currencySymbols[currency] || currency} {price}
+              </span>
+            )}
+            {price && discountPrice && (
+              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-semibold">
+                {getDiscountPercent()}% Off
+              </span>
+            )}
+          </div>
+        )}
+        <hr className="w-full border border-gray-300 mb-4" />
+        <h2 className="text-lg font-bold text-gray-800 mb-3">This Course Includes</h2>
+        <ul className="text-xs text-gray-700 space-y-2 mb-4">
+          <li>✔️ Full lifetime access</li>
+          <li>✔️ Certificate of completion</li>
+          <li>✔️ Access on mobile and TV</li>
+          <li>✔️ Training for 5+ people</li>
+        </ul>
+        <button
+          onClick={handleEnrollNow}
+          disabled={enrollLoading}
+          className={`w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white py-2 rounded text-sm ${
+            enrollLoading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          {enrollLoading ? 'Processing Payment...' : 'Enroll Now'}
+        </button>
+      </motion.div>
 
-      {/* Modal for Enroll Success/Error */}
       <Modal
         isOpen={!!enrollSuccess || !!enrollError}
         message={enrollSuccess || enrollError}
