@@ -70,7 +70,7 @@ export default function SimplifyLearning() {
       {/* Header Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
  <ScrollFadeSection>
-  <div className="ml-[20px]">
+  <div className="ml-2 sm:ml-[20px]">
     <h2 className="text-3xl sm:text-4xl font-bold text-[#49BBBD] leading-tight">
       <span className="text-black">Empower </span> Learning.
       <br />
