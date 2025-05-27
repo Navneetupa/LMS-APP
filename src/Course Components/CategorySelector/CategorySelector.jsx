@@ -217,45 +217,50 @@ const CategorySelector = () => {
                 No courses found for {selectedCategory}
               </p>
             )}
-            {!loading && !error && filteredCourses.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                {filteredCourses.map((course) => (
-                  <div
-                    key={course._id}
-                    className="w-full cursor-pointer"
-                    onClick={() => handleCourseClick(course._id)}
-                    data-aos="zoom-in"
-                  >
-                    <div className="bg-white rounded-xl flex items-center p-4 shadow-md hover:shadow-lg transition">
-                      <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
-                        <img
-                          src={course.thumbnail || DEFAULT_IMAGE}
-                          alt={course.title}
-                          className="w-full h-full object-cover rounded-full"
-                          onError={(e) => (e.target.src = DEFAULT_IMAGE)}
-                        />
-                        <div className="absolute bottom-0 right-0 bg-teal-500 rounded-full p-1 flex items-center justify-center">
-                          <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="ml-4 flex-1">
-                        <h4 className="text-sm sm:text-base font-semibold text-gray-800">{course.title}</h4>
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                          By {course.instructor.firstName} {course.instructor.lastName}
-                        </p>
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1">{course.duration} hours</p>
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1">₹{course.discountPrice}</p>
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                          Rating: {course.rating} ({course.totalRatings} reviews)
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+
+
+
+          {!loading && !error && filteredCourses.length > 0 && (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+    {filteredCourses.map((course) => (
+      <div
+        key={course._id}
+        className="w-full cursor-pointer"
+        onClick={() => handleCourseClick(course._id)}
+        data-aos="zoom-in"
+      >
+        <div className="bg-white rounded-xl flex items-center p-4 shadow-md hover:shadow-lg transition h-34"> {/* Fixed height */}
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
+            <img
+              src={course.thumbnail || DEFAULT_IMAGE}
+              alt={course.title}
+              className="w-full h-full object-cover rounded-full"
+              onError={(e) => (e.target.src = DEFAULT_IMAGE)}
+            />
+            <div className="absolute bottom-0 right-0 bg-teal-500 rounded-full p-1 flex items-center justify-center">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+          <div className="ml-4 flex-1 flex flex-col justify-between overflow-hidden">
+            <h4 className="text-sm sm:text-base font-semibold text-gray-800 truncate">{course.title}</h4> {/* Truncate long titles */}
+            <p className="text-xs sm:text-sm text-gray-500 mt-1 truncate">
+              By {course.instructor.firstName} {course.instructor.lastName}
+            </p>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">{course.duration} hours</p>
+            <div className="flex justify-between items-center">
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">₹{course.discountPrice}</p>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                Rating: {course.rating} ({course.totalRatings} reviews)
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
             {hasMore && !loading && (
               <div className="flex justify-center mt-6">
                 <button
