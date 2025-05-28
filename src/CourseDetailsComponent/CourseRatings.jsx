@@ -147,7 +147,6 @@ const CourseRatings = () => {
       setReviewLoading(true);
       try {
         const token = localStorage.getItem('token');
-        console.log('Fetching reviews for courseId:', courseId);
         const { data } = await axios.get(reviewsApiUrl, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -259,8 +258,6 @@ const CourseRatings = () => {
     setEnrollError(null);
     setEnrollSuccess(null);
 
-    console.log('Enroll attempt:', { courseId, token: token.substring(0, 10) + '...' });
-
     try {
       if (price === 0 || (price - discountPrice) === 0) {
         console.log('Enrolling in free course:', courseId);
@@ -311,9 +308,12 @@ const CourseRatings = () => {
       const { orderId, amount, currency, paymentId } = orderResponse.data.data;
       console.log('Order created:', { orderId, amount, currency, paymentId });
 
+      // Log amount in rupees for verification
+      console.log('Amount in rupees (for display):', amount / 100);
+
       const options = {
         key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-        amount: amount,
+        amount: amount, // Backend returns (price - discountPrice) * 100 in paise
         currency: currency,
         name: 'LMS Platform',
         description: `Payment for course: ${courseName}`,
@@ -384,6 +384,9 @@ const CourseRatings = () => {
           },
         },
       };
+
+      // Log options to verify amount
+      console.log('Razorpay options:', options);
 
       const razorpay = new window.Razorpay(options);
       razorpay.on('payment.failed', function (response) {
@@ -482,6 +485,43 @@ const CourseRatings = () => {
               ) : (
                 <p className="text-sm text-gray-600">No reviews match your search.</p>
               )}
+            </div>
+
+            {/* Add Review Form */}
+            <div className="mt-6">
+              <h3 className="text-lg font-bold text-gray-800 mb-3">Add a Review</h3>
+              <input
+                type="text"
+                placeholder="Your Name"
+                className="w-full p-2 border border-gray-300 rounded mb-2 text-sm"
+                value={commentName}
+                onChange={(e) => setCommentName(e.target.value)}
+              />
+              <div className="flex mb-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <FaStar
+                    key={star}
+                    size={20}
+                    className={`cursor-pointer ${commentRating >= star ? 'text-yellow-400' : 'text-gray-300'}`}
+                    onClick={() => setCommentRating(star)}
+                  />
+                ))}
+              </div>
+              <textarea
+                placeholder="Your Review"
+                className="w-full p-2 border border-gray-300 rounded mb-2 text-sm"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+              ></textarea>
+              <button
+                onClick={handleAddComment}
+                disabled={reviewLoading}
+                className={`w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white py-2 rounded text-sm ${
+                  reviewLoading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                {reviewLoading ? 'Submitting...' : 'Submit Review'}
+              </button>
             </div>
           </>
         )}
