@@ -263,12 +263,12 @@ const CategorySelector = () => {
             )}
             {hasMore && !loading && (
               <div className="flex justify-center mt-6">
-                <button
+                {/* <button
                   onClick={loadMore}
                   className="bg-[#00B4CC] hover:bg-[#0098aa] text-white px-4 sm:px-6 py-2 rounded-full text-base sm:text-lg font-semibold transition duration-300"
                 >
                   Load More
-                </button>
+                </button> */}
               </div>
             )}
           </div>
