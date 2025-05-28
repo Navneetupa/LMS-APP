@@ -15,6 +15,10 @@ const Contact = ({ relatedCourseId }) => {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -37,10 +41,15 @@ const Contact = ({ relatedCourseId }) => {
           }
         );
         if (coursesRes.data.success) {
-          setCourses(coursesRes.data.data.map((enrollment) => ({
-            _id: enrollment.course._id,
-            title: enrollment.course.title,
-          })));
+          // Filter out enrollments with null course
+          setCourses(
+            coursesRes.data.data
+              .filter((enrollment) => enrollment.course !== null)
+              .map((enrollment) => ({
+                _id: enrollment.course._id,
+                title: enrollment.course.title,
+              }))
+          );
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -111,7 +120,7 @@ const Contact = ({ relatedCourseId }) => {
 
   return (
     <div className="w-full max-w-full sm:max-w-[60%] px-4 py-6 mx-0 mt-12 md:mt-6 sm:mx-auto sm:px-6">
-      <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4 sm:mb-6 text-center">
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-center">
         Ticket Support
       </h2>
 
