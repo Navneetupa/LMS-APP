@@ -28,9 +28,10 @@ const LandingPage = () => {
       <Features />
       <LMSInfo />
       <FeatureHighlight />
-      <LearnGrow />
+    
       <LearningSection />
       <SimplifyLearning />
+        <LearnGrow />
     <TestimonialNewsSection />
       {/* <NewsSection /> */}
       <Footer />

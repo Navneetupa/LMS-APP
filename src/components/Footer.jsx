@@ -1,71 +1,111 @@
-import React from "react";
-import logo from "../assets/logo.png"; // Replace with the correct path to your logo
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faFacebookF,
+  faXTwitter,
+  faLinkedinIn,
+  faInstagram,
+  faTiktok,
+  faYoutube,
+  faTelegram,
+} from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-10 w-full mt-0">
-      <div className="w-full px-4 sm:px-8 flex flex-col items-center">
-     {/* Footer Brand Section */}
-<div className="flex flex-col md:flex-row justify-center items-center mb-8 gap-8">
-  <img src={logo} alt="Logo" className="h-12 mb-4 md:mb-0" />
-  <div className="text-center md:text-left">
-    <p className="text-xl">Virtual Class</p>
-    <p className="text-xl">for Zoom</p>
-  </div>
-</div>
+    <footer className="bg-gray-900 text-white py-8 px-4 sm:px-6 md:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Top Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3">
+              <span className="text-2xl font-bold">Brain Bridge</span>
+              <span className="text-sm uppercase text-gray-400">Empower Your Future</span>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
+            <span className="hover:underline cursor-pointer">FAQs</span>
+            <span className="hover:underline cursor-pointer">Customer Support</span>
+            <div className="flex items-center space-x-2 text-sm">
+              <span>Rated Excellent</span>
+              <span className="text-yellow-400">★★★★★</span>
+              <span>(Trustpilot)</span>
+            </div>
+          </div>
+        </div>
 
+        {/* Grid Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+          {/* Course Category */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Course Category</h3>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#" className="hover:underline">Web Development</a></li>
+              <li><a href="#" className="hover:underline">App Development</a></li>
+              <li><a href="#" className="hover:underline">Machine Learning</a></li>
+              <li><a href="#" className="hover:underline">Data Science</a></li>
+              <li><a href="#" className="hover:underline">Cyber Security</a></li>
+            </ul>
+          </div>
 
-    {/* Newsletter Subscription Section */}
-<div className="text-center mb-8 px-4">
-  <h3 className="text-2xl mb-4 font-poppins text-white">
-    Subscribe to get our Latest Courses.
-  </h3>
+          {/* About */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3">About</h3>
+            <ul className="space-y-2 text-sm">
+              <li><a href="/aboutus" className="hover:underline">About Us</a></li>
+              <li><a href="/career" className="hover:underline">Careers</a></li>
+              <li><a href="/contactus" className="hover:underline">Contact Us</a></li>
+            </ul>
+          </div>
 
-  <div className="max-w-2xl mx-auto">
-    <form className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full">
-      <input
-        type="email"
-        placeholder="Your Email"
-        className="flex-1 px-6 py-2 rounded-full border border-gray-300 bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-400 text-white w-full"
-      />
-      <button
-        type="submit"
-        className="px-4 py-1.5 rounded-full bg-blue-400 text-white font-semibold hover:bg-blue-300 transition duration-300 w-auto text-sm min-w-[100px]"
-      >
-        Subscribe
-      </button>
-    </form>
-  </div>
-</div>
+          {/* Business */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Brain Bridge for Business</h3>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#" className="hover:underline">Corporate Business</a></li>
+              <li><a href="#" className="hover:underline">Corporate Training</a></li>
+              <li><a href="#" className="hover:underline">Partner Program</a></li>
+            </ul>
+          </div>
 
+          {/* Legal */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Legal & Accessibility</h3>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#" className="hover:underline">Accessibility Statement</a></li>
+              <li><a href="#" className="hover:underline">Privacy Policy</a></li>
+              <li><a href="#" className="hover:underline">Sitemap</a></li>
+              <li><a href="#" className="hover:underline">Terms</a></li>
+            </ul>
+          </div>
+        </div>
 
-        {/* Footer Links Section */}
-        <div className="text-center mb-8">
-          <div className="flex flex-col md:flex-row justify-center items-center">
-            <a
-              href="/career"
-              className="text-white hover:text-blue-600 mx-4 text-lg transition duration-300 mb-2 md:mb-0"
-            >
-              Careers
+        {/* Social and Download */}
+        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-gray-700 pt-4 gap-4">
+          {/* Social Icons */}
+          <div className="flex flex-wrap justify-center sm:justify-start gap-4">
+            {[faFacebookF, faXTwitter, faLinkedinIn, faInstagram, faTiktok, faYoutube, faTelegram].map((icon, idx) => (
+              <a key={idx} href="#" className="hover:text-gray-400">
+                <FontAwesomeIcon icon={icon} style={{ width: 22, height: 22 }} />
+              </a>
+            ))}
+          </div>
+
+          {/* App Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <a href="#" className="bg-white text-black px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-gray-200 text-sm">
+              <span role="img" aria-label="apple">🍏</span>
+              <span>App Store</span>
             </a>
-            <a
-              href="/privacy"
-              className="text-white hover:text-blue-600 mx-4 text-lg transition duration-300 mb-2 md:mb-0"
-            >
-              Privacy Policy
-            </a>
-            <a
-              href="/terms"
-              className="text-white hover:text-blue-600 mx-4 text-lg transition duration-300"
-            >
-              Terms & Conditions
+            <a href="#" className="bg-white text-black px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-gray-200 text-sm">
+              <span role="img" aria-label="play">▶️</span>
+              <span>Google Play</span>
             </a>
           </div>
         </div>
 
-        {/* Footer Copyright Section */}
-        <div className="text-center">
-          <p className="text-sm">© 2025 Class Technologies Inc.</p>
+        {/* Copyright */}
+        <div className="text-center text-sm mt-6 text-gray-400">
+          <p>© Brain Bridge 2025 | <a href="#" className="hover:underline">Privacy</a> | <a href="#" className="hover:underline">Terms</a> | <a href="#" className="hover:underline">Cookie Policy</a> | <a href="#" className="hover:underline">Sitemap</a></p>
         </div>
       </div>
     </footer>

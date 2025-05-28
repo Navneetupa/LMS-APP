@@ -17,17 +17,16 @@ const DEFAULT_IMAGE = clearImage;
 
 // Metadata for categories (maps category names to images and quotes)
 const categoryMetadata = {
-  "web development": { image: developmentImage, gradient: 'from-blue-900 to-teal-500' },
-  "app development": { image: designImage, gradient: 'from-brown-900 to-yellow-800' },
-  "data science": { image: marketingImage, gradient: 'from-yellow-700 to-orange-500' },
-  "machine learning": { image: languagesImage, gradient: 'from-teal-400 to-cyan-400' },
-  "cyber security": { image: photographyImage, gradient: 'from-pink-300 to-purple-200' },
-  "cloud computing": { image: businessImage, gradient: 'from-orange-400 to-yellow-400' },
-  "devops": { image: actingImage, gradient: 'from-pink-500 to-purple-400' },
-  "blockchain": { image: webDevelopmentImage, gradient: 'from-blue-600 to-blue-400' },
+  "web development": { image: developmentImage, quote: "Build the future with code." },
+  "app development": { image: designImage, quote: "Design is not just what it looks like, it's how it works." },
+  "data science": { image: marketingImage, quote: "Unlock insights with data." },
+  "machine learning": { image: languagesImage, quote: "Create intelligent systems." },
+  "cyber security": { image: photographyImage, quote: "Secure the digital world." },
+  "cloud computing": { image: businessImage, quote: "Scale with the cloud." },
+  "devops": { image: actingImage, quote: "Streamline development and operations." },
+  "blockchain": { image: webDevelopmentImage, quote: "Build decentralized solutions." },
 };
 
-// Modified CategorySelector component
 const CategorySelector = () => {
   const [courses, setCourses] = useState([]);
   const [availableCategories, setAvailableCategories] = useState([]);
@@ -51,21 +50,20 @@ const CategorySelector = () => {
           setCourses((prev) => [...prev, ...data.data]);
           setHasMore(data.data.length === 10);
 
-          // Extract unique categories from courses and count courses per category
+          // Extract unique categories from courses
           const courseCategories = [...new Set(data.data.map(course => course.category.toLowerCase()))];
-          
+
+          // Create dynamic categories with metadata
           const dynamicCategories = courseCategories.map((category, index) => {
             const metadata = categoryMetadata[category.toLowerCase()] || {
-              image: DEFAULT_IMAGE,
-              gradient: 'from-gray-500 to-gray-700', // Fallback gradient
+              image: DEFAULT_IMAGE, // Use default image
+              quote: 'Learn and grow with this course.', // Fallback quote
             };
-            const courseCount = data.data.filter(course => course.category.toLowerCase() === category).length;
             return {
               id: index + 1,
               title: category.charAt(0).toUpperCase() + category.slice(1), // Capitalize title
               image: metadata.image,
-              gradient: metadata.gradient,
-              courseCount: courseCount,
+              quote: metadata.quote,
             };
           });
 
@@ -97,7 +95,7 @@ const CategorySelector = () => {
   };
 
   const handleCourseClick = (courseId) => {
-    const token = localStorage.getItem('token');
+   const token = localStorage.getItem('token');
     if (token) {
       navigate(`/courses/${courseId}`);
     } else {
@@ -131,18 +129,18 @@ const CategorySelector = () => {
           {availableCategories.slice(0, 3).map((cat) => (
             <div
               key={cat.id}
-              className={`bg-gradient-to-r ${cat.gradient} p-4 sm:p-6 rounded-xl flex items-center shadow-md cursor-pointer hover:opacity-90 transition`}
+              className={`bg-gray-100 hover:bg-blue-100 transition p-4 sm:p-6 rounded-xl flex flex-col items-center text-center shadow-md cursor-pointer ${selectedCategory === cat.title ? 'bg-blue-200' : ''}`}
               data-aos="zoom-in"
               onClick={() => handleCategoryClick(cat.title)}
             >
-              <div className="flex-1">
-                <h3 className="text-base sm:text-lg font-medium text-white uppercase">
-                  {cat.title}
-                </h3>
-                <p className="text-sm sm:text-base text-white mt-1">
-                  {cat.courseCount} courses
-                </p>
-              </div>
+              <img
+                src={cat.image}
+                alt={cat.title}
+                className="w-20 h-20 sm:w-24 sm:h-24 mb-4 object-cover rounded-full"
+                onError={(e) => (e.target.src = DEFAULT_IMAGE)} // Fallback for broken images
+              />
+              <span className="text-base sm:text-lg font-medium">{cat.title}</span>
+              <p className="text-xs sm:text-sm mt-4 text-gray-500">{cat.quote}</p>
             </div>
           ))}
         </div>
@@ -155,18 +153,18 @@ const CategorySelector = () => {
             {availableCategories.slice(3).map((cat) => (
               <div
                 key={cat.id}
-                className={`bg-gradient-to-r ${cat.gradient} p-4 sm:p-6 rounded-xl flex items-center shadow-md cursor-pointer hover:opacity-90 transition`}
+                className={`bg-gray-100 hover:bg-blue-100 transition p-4 sm:p-6 rounded-xl flex flex-col items-center text-center shadow-md cursor-pointer ${selectedCategory === cat.title ? 'bg-blue-200' : ''}`}
                 data-aos="zoom-in"
                 onClick={() => handleCategoryClick(cat.title)}
               >
-                <div className="flex-1">
-                  <h3 className="text-base sm:text-lg font-medium text-white uppercase">
-                    {cat.title}
-                  </h3>
-                  <p className="text-sm sm:text-base text-white mt-1">
-                    {cat.courseCount} courses
-                  </p>
-                </div>
+                <img
+                  src={cat.image}
+                  alt={cat.title}
+                  className="w-20 h-20 sm:w-24 sm:h-24 mb-4 object-cover rounded-full"
+                  onError={(e) => (e.target.src = DEFAULT_IMAGE)} // Fallback for broken images
+                />
+                <span className="text-base sm:text-lg font-medium">{cat.title}</span>
+                <p className="text-xs sm:text-sm mt-4 text-gray-500">{cat.quote}</p>
               </div>
             ))}
           </div>
@@ -220,55 +218,57 @@ const CategorySelector = () => {
               </p>
             )}
 
-            {!loading && !error && filteredCourses.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                {filteredCourses.map((course) => (
-                  <div
-                    key={course._id}
-                    className="w-full cursor-pointer"
-                    onClick={() => handleCourseClick(course._id)}
-                    data-aos="zoom-in"
-                  >
-                    <div className="bg-white rounded-xl flex items-center p-4 shadow-md hover:shadow-lg transition h-34">
-                      <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
-                        <img
-                          src={course.thumbnail || DEFAULT_IMAGE}
-                          alt={course.title}
-                          className="w-full h-full object-cover rounded-full"
-                          onError={(e) => (e.target.src = DEFAULT_IMAGE)}
-                        />
-                        <div className="absolute bottom-0 right-0 bg-teal-500 rounded-full p-1 flex items-center justify-center">
-                          <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="ml-4 flex-1 flex flex-col justify-between overflow-hidden">
-                        <h4 className="text-sm sm:text-base font-semibold text-gray-800 truncate">{course.title}</h4>
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1 truncate">
-                          By {course.instructor.firstName} {course.instructor.lastName}
-                        </p>
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1">{course.duration} hours</p>
-                        <div className="flex justify-between items-center">
-                          <p className="text-xs sm:text-sm text-gray-500 mt-1">₹{course.discountPrice}</p>
-                          <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                            Rating: {course.rating} ({course.totalRatings} reviews)
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+
+
+          {!loading && !error && filteredCourses.length > 0 && (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+    {filteredCourses.map((course) => (
+      <div
+        key={course._id}
+        className="w-full cursor-pointer"
+        onClick={() => handleCourseClick(course._id)}
+        data-aos="zoom-in"
+      >
+        <div className="bg-white rounded-xl flex items-center p-4 shadow-md hover:shadow-lg transition h-34"> {/* Fixed height */}
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
+            <img
+              src={course.thumbnail || DEFAULT_IMAGE}
+              alt={course.title}
+              className="w-full h-full object-cover rounded-full"
+              onError={(e) => (e.target.src = DEFAULT_IMAGE)}
+            />
+            <div className="absolute bottom-0 right-0 bg-teal-500 rounded-full p-1 flex items-center justify-center">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+          <div className="ml-4 flex-1 flex flex-col justify-between overflow-hidden">
+            <h4 className="text-sm sm:text-base font-semibold text-gray-800 truncate">{course.title}</h4> {/* Truncate long titles */}
+            <p className="text-xs sm:text-sm text-gray-500 mt-1 truncate">
+              By {course.instructor.firstName} {course.instructor.lastName}
+            </p>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">{course.duration} hours</p>
+            <div className="flex justify-between items-center">
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">₹{course.discountPrice}</p>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                Rating: {course.rating} ({course.totalRatings} reviews)
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
             {hasMore && !loading && (
               <div className="flex justify-center mt-6">
-                {/* <button
+                <button
                   onClick={loadMore}
                   className="bg-[#00B4CC] hover:bg-[#0098aa] text-white px-4 sm:px-6 py-2 rounded-full text-base sm:text-lg font-semibold transition duration-300"
                 >
                   Load More
-                </button> */}
+                </button>
               </div>
             )}
           </div>

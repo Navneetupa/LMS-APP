@@ -21,8 +21,8 @@ const HeroWithNavbar = () => {
   const [categories, setCategories] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [courseTypes, setCourseTypes] = useState([]);
-  const [suggestions, setSuggestions] = useState([]); // New state for autocomplete suggestions
-  const [showSuggestions, setShowSuggestions] = useState(false); // Control suggestion dropdown visibility
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
 
   // Debounce function to limit API calls
@@ -162,7 +162,7 @@ const HeroWithNavbar = () => {
                 ?.toLowerCase()
                 .includes(term.trim().toLowerCase())
           );
-          setSuggestions(filteredSuggestions.slice(0, 5)); // Limit to 5 suggestions
+          setSuggestions(filteredSuggestions.slice(0, 5));
           setShowSuggestions(true);
         } else {
           setSuggestions([]);
@@ -172,7 +172,7 @@ const HeroWithNavbar = () => {
         setSuggestions([]);
         setShowSuggestions(false);
       }
-    }, 300), // 300ms debounce delay
+    }, 300),
     []
   );
 
@@ -279,7 +279,7 @@ const HeroWithNavbar = () => {
             }}
           />
           <button
-            className="bg-[#7ddedf] text-white px-4 py-2 rounded-md font-medium text-sm shadow hover:bg-[#59c1c3] transition-all duration-300"
+            className="bg-white text-[#7ddedf] px-4 py-2 rounded-md font-medium text-sm shadow  transition-all duration-300"
             onClick={handleSearch}
           >
             Search
@@ -386,7 +386,7 @@ const HeroWithNavbar = () => {
             than ever
           </p>
           <Link to="/courses">
-            <button className="mt-4 bg-[#7ddedf] text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-[#59c1c3] transition-all duration-300">
+            <button className="mt-4 bg-white text-[#7ddedf] px-6 py-2 rounded-full font-semibold shadow-md  transition-all duration-300">
               Join for free
             </button>
           </Link>
@@ -395,7 +395,7 @@ const HeroWithNavbar = () => {
           <img
             src={heroImage}
             alt="Girl with laptop"
-            className="w-full max-w-[200px] sm:max-w-[260px] mx-auto relative z-10"
+            className="w-full max-w-[200px] sm:max-w-[285px] mx-auto relative z-10 -mb-8 "
             loading="lazy"
           />
           <div className="hidden md:block">
@@ -403,21 +403,16 @@ const HeroWithNavbar = () => {
               src={edit}
               alt="Assisted Students"
               className="absolute top-2 left-2 w-36 sm:w-40 shadow-lg rounded-lg mt-12"
-              data-aos="fade-up"
             />
             <img
               src={edit1}
               alt="Achiever Badge"
               className="absolute bottom-2 left-2 w-36 sm:w-40 shadow-lg rounded-lg"
-              data-aos="fade-up"
-              data-aos-delay="200"
             />
             <img
               src={edit2}
               alt="Admission Completed"
               className="absolute top-10 right-0 w-36 sm:w-40 mr-4 sm:mr-12 mt-20 shadow-lg rounded-lg"
-              data-aos="fade-up"
-              data-aos-delay="400"
             />
           </div>
         </div>

@@ -42,7 +42,7 @@ export default function TestimonialSection() {
   whileInView={{ opacity: 1, x: 0 }}
   viewport={{ once: true }}
   transition={{ duration: 0.8 }}
-  className="ml-10" // Added left margin
+  className="ml-2 md:ml-10" // Added left margin
 >
   <h3 className="text-sm text-gray-400 tracking-widest uppercase border-l-2 border-blue-500 pl-2 mb-3">
     Testimonial
@@ -58,17 +58,8 @@ export default function TestimonialSection() {
   <p className="text-gray-600 mb-2">
     “Our students now easily collaborate online. TOTC transformed our classes even when we can’t
     meet in person.” – Vikram Singh, School Administrator
-    <br />
-    “I love the 24/7 access to lessons. Even on busy days, I catch up on lectures at my own pace.” –
-    Anjali Kumar, Student
   </p>
-  <p className="text-gray-600 mb-6">
-    “Issuing certificates and tracking progress is super easy now. Parents are impressed with their kids’
-    digital badges!” – Neha Iyer, Teacher
-    <br />
-    “The mobile app works flawlessly. My students join lectures from anywhere, and attendance is
-    always accurate.” – Karan Desai, Coach
-  </p>
+
 </motion.div>
 
       {/* Right Image and Card */}
