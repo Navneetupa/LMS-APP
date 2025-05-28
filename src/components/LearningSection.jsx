@@ -28,12 +28,6 @@ const LearningSection = () => {
           <p className="text-gray-600 max-w-md sm:max-w-lg">
             Unlock your potential with expert-led courses, real-world projects, and flexible learning tools — all in one powerful LMS platform.
           </p>
-          <p className="text-gray-600 max-w-md sm:max-w-lg mt-2">
-            Anywhere. Anytime. At Your Pace. Unlock a world of knowledge with our intuitive and engaging LMS platform.
-          </p>
-           <p className="text-gray-600 max-w-md sm:max-w-lg mt-2">
-           Join thousands of learners who are advancing their careers with hands-on training, mentorship, and industry-relevant content.
-          </p>
         </div>
         <div 
           className="relative flex justify-center"
@@ -92,14 +86,17 @@ const LearningSection = () => {
   <span className="font-bold">Live Quizzes & Exams:</span> Launch timed quizzes during class or assign tests for homework. Questions
   can be auto-graded for immediate feedback.
 </p>
-    <p className="text-gray-600 max-w-md sm:max-w-lg mt-2">
+    <p className="text-gray-600 max-w-md sm:max-w-lg">
   <span className="font-bold">Instant Grading:</span> Objective answers are graded instantly. Teachers can review subjective answers in real time or offline later.</p>
         
-              <p className="text-gray-600 max-w-md sm:max-w-lg mt-2">
+              <p className="text-gray-600 max-w-md sm:max-w-lg">
   <span className="font-bold">Attendance & Rosters:</span>Take attendance online–even in virtual classes and maintain up-to-date
 class lists. Integrates with your schedule seamlessly.
 </p>
-           
+                   <p className="text-gray-600 max-w-md sm:max-w-lg">
+  <span className="font-bold">Private Discussions:</span>Chat one-on-one with any student during or after class. Keep personalized
+threads for confidential feedback or tutoring.
+</p>
         </div>
       </div>
     </div>

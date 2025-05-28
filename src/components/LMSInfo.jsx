@@ -17,11 +17,9 @@ const LMSInfo = () => {
           What is <span className="text-[#49BBBD] px-2 py-1">LMS</span>?
         </h2>
         <p className="mt-4 text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">
-          Brain Bridge cloud-based LMS connects teachers, students, and admins
-          on one secure platform. Instructors can create courses, share
-          materials, and assess learners. Students can join from any device,
-          track progress, and learn anytime — bringing the full classroom
-          experience online.
+         Brain Bridge cloud-based LMS connects teachers, students, and admins on one secure platform.
+Instructors can create courses, share materials, and assess learners. Students can join from any
+device, track progress, and learn anytime — bringing the full classroom experience online.
         </p>
       </div>
 
@@ -36,12 +34,13 @@ const LMSInfo = () => {
             <h3 className="text-white text-lg sm:text-xl md:text-2xl font-semibold">
               FOR INSTRUCTORS
             </h3>
-            <a
-              href="/"
-              className="border-2 border-white text-white px-5 py-2 rounded-full text-sm sm:text-base hover:bg-white hover:text-black transition inline-block text-center"
-            >
-              Create & Share Your Courses
-            </a>
+          <a
+  href="/"
+  className="border-2 border-white text-white px-5 py-2 rounded-full text-sm sm:text-base hover:bg-white hover:text-black transition inline-block text-center"
+>
+  Create & Share Your Courses
+</a>
+
           </div>
         </div>
 
@@ -55,12 +54,9 @@ const LMSInfo = () => {
             <h3 className="text-white text-lg sm:text-xl md:text-2xl font-semibold">
               FOR STUDENTS
             </h3>
-            <a
-              href="/courses"
-              className="border-2 border-white text-white px-5 py-2 rounded-full text-sm sm:text-base hover:bg-white hover:text-black transition inline-block text-center"
->
-  Create & Share Your Courses
-            </a>
+           <a href="/courses"className="bg-[#23BDEEE5] text-white px-8 sm:px-10 py-2 sm:py-3 rounded-full text-sm sm:text-base hover:bg-[#3ca2a4] transition inline-block text-center">
+  Explore Now</a>
+
           </div>
         </div>
       </div>

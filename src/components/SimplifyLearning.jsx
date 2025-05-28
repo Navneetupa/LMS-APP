@@ -68,7 +68,7 @@ export default function SimplifyLearning() {
       variants={containerVariants}
     >
       {/* Header Section */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
  <ScrollFadeSection>
   <div className="ml-2 sm:ml-[20px]">
     <h2 className="text-3xl sm:text-4xl font-bold text-[#49BBBD] leading-tight">
@@ -90,7 +90,7 @@ export default function SimplifyLearning() {
             <img src={record} alt="Record of Results" className="w-full rounded-lg" />
           </div>
         </ScrollFadeSection>
-      </div> */}
+      </div>
 
       {/* One-on-One Discussion Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center mt-10 md:mt-16">
@@ -109,9 +109,9 @@ export default function SimplifyLearning() {
             Private One-on-One <span className="text-[#49BBBD]">Discussions</span>
           </h3>
           <p className="text-gray-600 text-sm sm:text-base">
-            Facilitate meaningful conversations between teachers, assistants, <br /> and students — all within the
-            Zoom platform. Discuss progress, <br /> provide feedback, or offer support without ever leaving the virtual
-           <br /> classroom.
+            Facilitate meaningful conversations between teachers, assistants, and students — all within the
+            Zoom platform. Discuss progress, provide feedback, or offer support without ever leaving the virtual
+            classroom.
           </p>
         </ScrollFadeSection>
       </div>

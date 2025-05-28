@@ -147,6 +147,7 @@ const CourseRatings = () => {
       setReviewLoading(true);
       try {
         const token = localStorage.getItem('token');
+        console.log('Fetching reviews for courseId:', courseId);
         const { data } = await axios.get(reviewsApiUrl, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -258,6 +259,8 @@ const CourseRatings = () => {
     setEnrollError(null);
     setEnrollSuccess(null);
 
+    console.log('Enroll attempt:', { courseId, token: token.substring(0, 10) + '...' });
+
     try {
       if (price === 0 || (price - discountPrice) === 0) {
         console.log('Enrolling in free course:', courseId);
@@ -308,12 +311,9 @@ const CourseRatings = () => {
       const { orderId, amount, currency, paymentId } = orderResponse.data.data;
       console.log('Order created:', { orderId, amount, currency, paymentId });
 
-      // Log amount in rupees for verification
-      console.log('Amount in rupees (for display):', amount / 100);
-
       const options = {
         key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-        amount: amount, // Backend returns (price - discountPrice) * 100 in paise
+        amount: amount,
         currency: currency,
         name: 'LMS Platform',
         description: `Payment for course: ${courseName}`,
@@ -385,9 +385,6 @@ const CourseRatings = () => {
         },
       };
 
-      // Log options to verify amount
-      console.log('Razorpay options:', options);
-
       const razorpay = new window.Razorpay(options);
       razorpay.on('payment.failed', function (response) {
         console.error('Razorpay payment failed:', response);
@@ -424,6 +421,13 @@ const CourseRatings = () => {
 
         {courseError && <p className="text-sm text-red-500 mb-4">{courseError}</p>}
 
+        <input
+          type="text"
+          placeholder="Search reviews..."
+          className="w-full p-2 border border-gray-300 rounded mb-4 text-sm"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
 
         {reviewLoading && <p className="text-sm text-gray-600">Loading reviews...</p>}
         {reviewError && <p className="text-sm text-red-500">{reviewError}</p>}
@@ -479,8 +483,6 @@ const CourseRatings = () => {
                 <p className="text-sm text-gray-600">No reviews match your search.</p>
               )}
             </div>
-
-         
           </>
         )}
       </motion.div>
