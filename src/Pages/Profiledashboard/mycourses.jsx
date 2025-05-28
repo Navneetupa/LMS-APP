@@ -85,18 +85,13 @@ export default function MyCourses() {
               </p>
 
               <div className="flex justify-between items-center text-xs sm:text-sm">
-                {item.course.discountPrice ? (
-                  <>
-                    <span className="font-semibold text-slate-700">
-                      ₹{item.course.price - item.course.discountPrice}
-                    </span>
-                    <span className="text-gray-500 line-through">
-                      ₹{item.course.price}
-                    </span>
-                  </>
-                ) : (
-                  <span className="font-semibold text-slate-700">
-                    ₹{item.course.price}
+                <span className="font-semibold text-slate-700">
+                ₹{(item.course.discountPrice ? item.course.price - item.course.discountPrice : item.course.price).toFixed(2)}
+
+                </span>
+                {item.course.discountPrice && (
+                  <span className="text-gray-500 line-through">
+                    ₹{(item.course.price).toFixed(2)}
                   </span>
                 )}
               </div>
