@@ -180,7 +180,7 @@ const PopularCourses = () => {
     <section className="py-20 bg-white px-6 md:px-16 relative">
       <div className={modalOpen || authPopupOpen ? "pointer-events-none filter blur-sm" : ""}>
         <h2 className="text-4xl font-extrabold text-center text-black mb-6 tracking-wide">
-          Popular <span className="text-[#49BBBD]">Courses</span> <span>for You</span>
+          Top <span className="text-[#49BBBD]">Courses</span> <span>for You</span>
         </h2>
         <p className="text-center text-cyan-700 max-w-3xl mx-auto mb-12 text-lg">
           Browse our top trending courses, handpicked to boost your career and skills.
