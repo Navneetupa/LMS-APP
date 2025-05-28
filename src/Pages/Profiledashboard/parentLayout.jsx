@@ -4,7 +4,6 @@ import Dashboard from './dashboard';
 import MyCourses from './mycourses';
 import Contact from './contact';
 import AssessmentScores from './assessmentscore';
-import PaymentHistory from './paymentHistory';
 
 const ParentLayout = () => {
   const [activePage, setActivePage] = useState('dashboard');
@@ -24,8 +23,6 @@ const ParentLayout = () => {
         return <Contact />;
       case 'assessmentscore':
         return <AssessmentScores />;
-        case 'paymentHistory':
-        return <PaymentHistory />;
       default:
         return <Dashboard />;
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import heroImage from "../assets/hero-girl.png";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -21,18 +21,7 @@ const HeroWithNavbar = () => {
   const [categories, setCategories] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [courseTypes, setCourseTypes] = useState([]);
-  const [suggestions, setSuggestions] = useState([]); // New state for autocomplete suggestions
-  const [showSuggestions, setShowSuggestions] = useState(false); // Control suggestion dropdown visibility
   const navigate = useNavigate();
-
-  // Debounce function to limit API calls
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func(...args), delay);
-    };
-  };
 
   useEffect(() => {
     AOS.init({ duration: 1000, easing: "ease-in-out", once: true });
@@ -42,50 +31,41 @@ const HeroWithNavbar = () => {
   useEffect(() => {
     const fetchDropdownOptions = async () => {
       try {
-        const categoriesResponse = await fetch(
-          "https://lms-backend-flwq.onrender.com/api/v1/courses/categories"
-        );
+        // Fetch categories
+        const categoriesResponse = await fetch("https://lms-backend-flwq.onrender.com/api/v1/courses/categories");
         const categoriesData = await categoriesResponse.json();
+
         if (categoriesData.success && Array.isArray(categoriesData.data)) {
-          setCategories(
-            categoriesData.data.map((category) => category.toLowerCase())
-          );
+          setCategories(categoriesData.data.map((category) => category.toLowerCase()));
         } else {
-          setCategories([
-            "Web Development",
-            "Data Science",
-            "Mobile Development",
-            "Machine Learning",
-          ]);
+          // Fallback static data if API fails
+          setCategories(["Web Development", "Data Science", "Mobile Development", "Machine Learning"]);
         }
 
-        const languagesResponse = await fetch(
-          "https://lms-backend-flwq.onrender.com/api/v1/courses/languages"
-        );
+
+        // Fetch languages
+        const languagesResponse = await fetch("https://lms-backend-flwq.onrender.com/api/v1/courses/languages");
         const languagesData = await languagesResponse.json();
         if (languagesData.success) {
           setLanguages(languagesData.data || []);
         } else {
+          // Fallback static data if API fails
           setLanguages(["English", "Spanish", "French", "German"]);
         }
 
-        const courseTypesResponse = await fetch(
-          "https://lms-backend-flwq.onrender.com/api/v1/courses/levels"
-        );
+        // Fetch course types
+        const courseTypesResponse = await fetch("https://lms-backend-flwq.onrender.com/api/v1/courses/levels");
         const courseTypesData = await courseTypesResponse.json();
         if (courseTypesData.success) {
           setCourseTypes(courseTypesData.data || []);
         } else {
+          // Fallback static data if API fails
           setCourseTypes(["Beginner", "Intermediate", "Advanced"]);
         }
       } catch (err) {
         console.error("Error fetching dropdown options:", err);
-        setCategories([
-          "Web Development",
-          "Data Science",
-          "Mobile Development",
-          "Machine Learning",
-        ]);
+        // Fallback to static data
+        setCategories(["Web Development", "Data Science", "Mobile Development", "Machine Learning"]);
         setLanguages(["English", "Spanish", "French", "German"]);
         setCourseTypes(["Beginner", "Intermediate", "Advanced"]);
       }
@@ -95,13 +75,13 @@ const HeroWithNavbar = () => {
   }, []);
 
   useEffect(() => {
+    // Fetch courses whenever any dropdown changes (category or courseType)
     const fetchCourses = async () => {
       try {
+        // Build query parameters dynamically, only including non-empty values
         const queryParams = new URLSearchParams();
-        if (category)
-          queryParams.append("category", encodeURIComponent(category));
-        if (courseType)
-          queryParams.append("level", encodeURIComponent(courseType));
+        if (category) queryParams.append("category", encodeURIComponent(category));
+        if (courseType) queryParams.append("level", encodeURIComponent(courseType));
         queryParams.append("minPrice", "0");
         queryParams.append("maxPrice", "1000");
         queryParams.append("rating", "0");
@@ -111,6 +91,7 @@ const HeroWithNavbar = () => {
         const data = await response.json();
         if (data.success) {
           setCourses(data.data);
+          // Add 3-second delay before showing the popup
           setTimeout(() => {
             setShowPopup(true);
             setError(null);
@@ -118,6 +99,7 @@ const HeroWithNavbar = () => {
         } else {
           setError(data.message || "Failed to fetch courses");
           setCourses([]);
+          // Add 3-second delay before showing the popup with error
           setTimeout(() => {
             setShowPopup(true);
           }, 3000);
@@ -125,73 +107,28 @@ const HeroWithNavbar = () => {
       } catch (err) {
         setError("An error occurred while fetching courses");
         setCourses([]);
+        // Add 3-second delay before showing the popup with error
         setTimeout(() => {
           setShowPopup(true);
         }, 3000);
       }
     };
 
+    // Trigger fetch if at least one dropdown is selected
     if (category || courseType) {
       fetchCourses();
     }
   }, [category, courseType]);
-
-  // Fetch suggestions for autocomplete
-  const fetchSuggestions = useCallback(
-    debounce(async (term) => {
-      if (!term.trim()) {
-        setSuggestions([]);
-        setShowSuggestions(false);
-        return;
-      }
-
-      try {
-        const queryParams = new URLSearchParams();
-        queryParams.append("search", term.trim().toLowerCase());
-        const url = `https://lms-backend-flwq.onrender.com/api/v1/courses/search/filters?${queryParams.toString()}`;
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data.success) {
-          const filteredSuggestions = (data.data || []).filter(
-            (course) =>
-              course.title
-                ?.toLowerCase()
-                .startsWith(term.trim().toLowerCase()) ||
-              course.description
-                ?.toLowerCase()
-                .includes(term.trim().toLowerCase())
-          );
-          setSuggestions(filteredSuggestions.slice(0, 5)); // Limit to 5 suggestions
-          setShowSuggestions(true);
-        } else {
-          setSuggestions([]);
-          setShowSuggestions(false);
-        }
-      } catch (err) {
-        setSuggestions([]);
-        setShowSuggestions(false);
-      }
-    }, 300), // 300ms debounce delay
-    []
-  );
-
-  // Update suggestions as user types
-  useEffect(() => {
-    fetchSuggestions(searchTerm);
-  }, [searchTerm, fetchSuggestions]);
 
   const handleCourseClick = (courseId) => {
     const token = localStorage.getItem("token");
     if (token) {
       setShowPopup(false);
       setModalOpen(false);
-      setShowSuggestions(false);
       navigate(`/courses/${courseId}`);
     } else {
       setShowPopup(false);
       setModalOpen(false);
-      setShowSuggestions(false);
       setShowLoginPrompt(true);
     }
   };
@@ -204,7 +141,6 @@ const HeroWithNavbar = () => {
     setCourseType("");
     setCourses([]);
     setError(null);
-    setShowSuggestions(false);
   };
 
   const goToSignIn = () => {
@@ -212,7 +148,6 @@ const HeroWithNavbar = () => {
     setCategory("");
     setLanguage("");
     setCourseType("");
-    setShowSuggestions(false);
     navigate("/login");
   };
 
@@ -220,7 +155,6 @@ const HeroWithNavbar = () => {
     if (!searchTerm.trim()) {
       setError("Please enter a search term");
       setModalOpen(true);
-      setShowSuggestions(false);
       return;
     }
 
@@ -236,15 +170,10 @@ const HeroWithNavbar = () => {
       if (data.success) {
         const filteredResults = (data.data || []).filter(
           (course) =>
-            course.title
-              ?.toLowerCase()
-              .includes(searchTerm.trim().toLowerCase()) ||
-            course.description
-              ?.toLowerCase()
-              .includes(searchTerm.trim().toLowerCase())
+            course.title?.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+            course.description?.toLowerCase().includes(searchTerm.trim().toLowerCase())
         );
         setSearchResults(filteredResults);
-        setShowSuggestions(false);
         if (filteredResults.length === 0) {
           setError(`No courses found matching "${searchTerm}"`);
         }
@@ -262,13 +191,13 @@ const HeroWithNavbar = () => {
   };
 
   return (
-    <section className="relative bg-[#49BBBD] pb-8 pt-0 overflow-hidden text-gray-800 mt-14">
+    <section className="relative bg-[#49BBBD] pb-20 pt-0 overflow-hidden text-gray-800 mt-14">
       <div className="max-w-4xl mx-auto px-4 mt-6">
-        <div className="search-wrapper flex items-center gap-6 relative">
+        <div className="search-wrapper flex items-center gap-6">
           <input
             className="flex-1 px-4 py-2 rounded-lg shadow-md outline-none text-sm"
             type="text"
-            autoComplete="off"
+            autoComplete="none"
             placeholder="Search your favourite course..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -284,51 +213,13 @@ const HeroWithNavbar = () => {
           >
             Search
           </button>
-          {/* Suggestions Dropdown */}
-          {showSuggestions && suggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-6 mt-2 bg-white rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
-              <ul>
-                {suggestions.map((course) => (
-                  <li
-                    key={course._id}
-                    className="px-4 py-2 hover:bg-blue-100 cursor-pointer flex items-center"
-                    onClick={() => {
-                      setSearchTerm(course.title);
-                      setShowSuggestions(false);
-                      handleCourseClick(course._id);
-                    }}
-                  >
-                    <img
-                      src={course.thumbnail || "https://via.placeholder.com/50"}
-                      alt={course.title}
-                      className="w-10 h-10 object-cover rounded-full mr-3"
-                      onError={(e) =>
-                        (e.target.src = "https://via.placeholder.com/50")
-                      }
-                    />
-                    <div>
-                      <span className="text-sm font-medium text-gray-800">
-                        {course.title}
-                      </span>
-                      <p className="text-xs text-gray-500 line-clamp-1">
-                        {course.description}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
         {error && !modalOpen && !showPopup && (
           <p className="mt-4 text-red-500 text-center">{error}</p>
         )}
       </div>
 
-      <div
-        className="flex flex-wrap justify-center gap-4 mt-6 px-4"
-        data-aos="fade-up"
-      >
+      <div className="flex flex-wrap justify-center gap-4 mt-6 px-4" data-aos="fade-up">
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -336,9 +227,7 @@ const HeroWithNavbar = () => {
         >
           <option value="">Course Category</option>
           {categories.map((cat, index) => (
-            <option key={index} value={cat}>
-              {cat}
-            </option>
+            <option key={index} value={cat}>{cat}</option>
           ))}
         </select>
         <select
@@ -348,9 +237,7 @@ const HeroWithNavbar = () => {
         >
           <option value="">Language</option>
           {languages.map((lang, index) => (
-            <option key={index} value={lang}>
-              {lang}
-            </option>
+            <option key={index} value={lang}>{lang}</option>
           ))}
         </select>
         <select
@@ -360,9 +247,7 @@ const HeroWithNavbar = () => {
         >
           <option value="">Course Type</option>
           {courseTypes.map((type, index) => (
-            <option key={index} value={type}>
-              {type}
-            </option>
+            <option key={index} value={type}>{type}</option>
           ))}
         </select>
       </div>
@@ -370,7 +255,7 @@ const HeroWithNavbar = () => {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center px-4 sm:px-6 mt-10 md:mt-2">
         <div
           className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left ml-0 md:ml-10"
-          style={{ marginTop: "-40px" }}
+          style={{ marginTop: '-40px' }}
           data-aos="fade-right"
         >
           <h1 className="mt-8 md:mt-0 text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
@@ -378,12 +263,7 @@ const HeroWithNavbar = () => {
             <br className="hidden sm:block" />
           </h1>
           <p className="mt-4 text-white text-sm sm:text-base">
-            <span className="text-semibold">Brain Bridge</span> is your
-            all-in-one cloud learning hub, uniting students, teachers, and
-            administrators in one intuitive platform. From engaging tools and
-            secure hosting to a modern, user-friendly interface, TOTC makes
-            learning from home or managing a school smarter and more efficient
-            than ever
+            <span className="text-semibold">Brain Bridge</span> is your all-in-one cloud learning hub, uniting students, teachers, and administrators in one intuitive platform. From engaging tools and secure hosting to a modern, user-friendly interface, TOTC makes learning from home or managing a school smarter and more efficient than ever
           </p>
           <Link to="/courses">
             <button className="mt-4 bg-[#7ddedf] text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-[#59c1c3] transition-all duration-300">
@@ -395,8 +275,7 @@ const HeroWithNavbar = () => {
           <img
             src={heroImage}
             alt="Girl with laptop"
-            className="w-full max-w-[200px] sm:max-w-[260px] mx-auto relative z-10"
-            loading="lazy"
+            className="w-full max-w-xs sm:max-w-sm mx-auto relative z-10"
           />
           <div className="hidden md:block">
             <img
@@ -423,102 +302,104 @@ const HeroWithNavbar = () => {
         </div>
       </div>
 
-      {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-5xl w-full max-h-[70vh] overflow-y-auto relative">
-            <button
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-2xl font-bold"
-              onClick={() => setModalOpen(false)}
-            >
-              ×
-            </button>
-            <h2 className="text-2xl font-bold mb-4">
-              Search Results for "{searchTerm}"
-            </h2>
-            {error ? (
-              <p className="text-red-500 text-center">{error}</p>
-            ) : searchResults.length > 0 ? (
-              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                {searchResults.map((course) => (
-                  <li key={course._id} className="py-2">
-                    <div
-                      onClick={() => handleCourseClick(course._id)}
-                      className="bg-white hover:bg-blue-50 transition p-4 rounded-xl shadow-md cursor-pointer relative flex flex-col items-start"
-                    >
-                      <div className="relative w-full h-32 mb-2">
-                        <img
-                          src={
-                            course.thumbnail ||
-                            "https://via.placeholder.com/150"
-                          }
-                          alt={course.title}
-                          className="w-full h-full object-cover rounded-lg"
-                          onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/150")
-                          }
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <button className="bg-[#00C4B4] text-white rounded-full w-10 h-10 flex items-center justify-center">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              className="w-6 h-6"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M9 5l7 7-7 7"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                      <span className="text-sm font-medium text-gray-800 line-clamp-1">
-                        {course.title}
-                      </span>
-                      <p className="text-xs mt-1 text-gray-600 line-clamp-2">
-                        {course.description}
-                      </p>
-                      <p className="text-sm mt-2 text-gray-800 font-semibold">
-                        ₹{course.price}
-                      </p>
-                      <div className="flex items-center justify-between w-full mt-2">
-                        <div className="flex items-center">
-                          <span className="text-xs text-gray-500">
-                            {course.instructor?.firstName}{" "}
-                            {course.instructor?.lastName}
-                          </span>
-                        </div>
-                        <div className="flex items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                            className="w-4 h-4 text-yellow-400 mr-1"
-                          >
-                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                          </svg>
-                          <span className="text-xs text-gray-500">
-                            {course.rating} ({course.totalRatings || 0})
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-600 text-center">
-                No courses found matching "{searchTerm}".
-              </p>
-            )}
-          </div>
-        </div>
-      )}
 
+
+
+      
+{modalOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg max-w-5xl w-full max-h-[70vh] overflow-y-auto relative">
+      <button
+        className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-2xl font-bold"
+        onClick={() => setModalOpen(false)}
+      >
+        ×
+      </button>
+      <h2 className="text-2xl font-bold mb-4">Search Results for "{searchTerm}"</h2>
+      {error ? (
+        <p className="text-red-500 text-center">{error}</p>
+      ) : searchResults.length > 0 ? (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          {searchResults.map((course) => (
+            <li key={course._id} className="py-2">
+              <div
+                onClick={() => handleCourseClick(course._id)}
+                className="bg-white hover:bg-blue-50 transition p-4 rounded-xl shadow-md cursor-pointer relative flex flex-col items-start"
+              >
+                {/* Thumbnail with Play Button */}
+                <div className="relative w-full h-32 mb-2">
+                  <img
+                    src={course.thumbnail || "https://via.placeholder.com/150"}
+                    alt={course.title}
+                    className="w-full h-full object-cover rounded-lg"
+                    onError={(e) => (e.target.src = "https://via.placeholder.com/150")}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <button className="bg-[#00C4B4] text-white rounded-full w-10 h-10 flex items-center justify-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Course Title */}
+                <span className="text-sm font-medium text-gray-800 line-clamp-1">
+                  {course.title}
+                </span>
+
+                {/* Course Description */}
+                <p className="text-xs mt-1 text-gray-600 line-clamp-2">
+                  {course.description}
+                </p>
+
+                {/* Price */}
+                <p className="text-sm mt-2 text-gray-800 font-semibold">
+                  ₹{course.price}
+                </p>
+
+                {/* Instructor Name and Rating */}
+                <div className="flex items-center justify-between w-full mt-2">
+                  <div className="flex items-center">
+                    <span className="text-xs text-gray-500">
+                      {course.instructor?.firstName} {course.instructor?.lastName}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      className="w-4 h-4 text-yellow-400 mr-1"
+                    >
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                    <span className="text-xs text-gray-500">
+                      {course.rating} ({course.totalRatings || 0})
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-600 text-center">No courses found matching "{searchTerm}".</p>
+      )}
+    </div>
+  </div>
+)}
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-lg w-full relative">
@@ -540,34 +421,20 @@ const HeroWithNavbar = () => {
                       className="bg-gray-100 hover:bg-blue-100 transition p-6 rounded-xl flex flex-col items-center text-center shadow-md cursor-pointer"
                     >
                       <img
-                        src={
-                          course.thumbnail || "https://via.placeholder.com/150"
-                        }
+                        src={course.thumbnail || "https://via.placeholder.com/150"}
                         alt={course.title}
                         className="w-24 h-24 mb-4 object-cover rounded-full"
-                        onError={(e) =>
-                          (e.target.src = "https://via.placeholder.com/150")
-                        }
+                        onError={(e) => (e.target.src = "https://via.placeholder.com/150")}
                       />
-                      <span className="text-lg font-medium text-gray-800">
-                        {course.title}
-                      </span>
-                      <p className="text-sm mt-2 text-gray-600 line-clamp-2">
-                        {course.description}
-                      </p>
+                      <span className="text-lg font-medium text-gray-800">{course.title}</span>
+                      <p className="text-sm mt-2 text-gray-600 line-clamp-2">{course.description}</p>
                       <p className="text-sm mt-2 text-gray-500">
-                        By {course.instructor?.firstName}{" "}
-                        {course.instructor?.lastName}
+                        By {course.instructor?.firstName} {course.instructor?.lastName}
                       </p>
+                      <p className="text-sm mt-1 text-gray-500">{course.duration} hours</p>
+                      <p className="text-sm mt-1 text-gray-500">${course.price}</p>
                       <p className="text-sm mt-1 text-gray-500">
-                        {course.duration} hours
-                      </p>
-                      <p className="text-sm mt-1 text-gray-500">
-                        ${course.price}
-                      </p>
-                      <p className="text-sm mt-1 text-gray-500">
-                        Rating: {course.rating} ({course.totalRatings || 0}{" "}
-                        reviews)
+                        Rating: {course.rating} ({course.totalRatings || 0} reviews)
                       </p>
                     </div>
                   </li>
@@ -590,12 +457,8 @@ const HeroWithNavbar = () => {
             >
               ×
             </button>
-            <h3 className="text-2xl font-semibold text-[#023047] mb-2">
-              You have not signed in
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Please sign up to access this course.
-            </p>
+            <h3 className="text-2xl font-semibold text-[#023047] mb-2">You have not signed in</h3>
+            <p className="text-gray-600 mb-6">Please sign up to access this course.</p>
             <button
               onClick={goToSignIn}
               className="bg-[#00B4CC] hover:bg-[#0098aa] text-white px-6 py-2 rounded-full text-lg font-semibold transition duration-300"

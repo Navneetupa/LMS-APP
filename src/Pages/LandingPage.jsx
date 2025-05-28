@@ -32,7 +32,7 @@ const LandingPage = () => {
       <LearningSection />
       <SimplifyLearning />
     <TestimonialNewsSection />
-      {/* <NewsSection /> */}
+      <NewsSection />
       <Footer />
     </div>
   );
