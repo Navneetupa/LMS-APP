@@ -423,14 +423,7 @@ const CourseRatings = () => {
         </h2>
 
         {courseError && <p className="text-sm text-red-500 mb-4">{courseError}</p>}
-{/* 
-        <input
-          type="text"
-          placeholder="Search reviews..."
-          className="w-full p-2 border border-gray-300 rounded mb-4 text-sm"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        /> */}
+
 
         {reviewLoading && <p className="text-sm text-gray-600">Loading reviews...</p>}
         {reviewError && <p className="text-sm text-red-500">{reviewError}</p>}
@@ -487,42 +480,7 @@ const CourseRatings = () => {
               )}
             </div>
 
-            {/* Add Review Form */}
-            {/* <div className="mt-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-3">Add a Review</h3>
-              <input
-                type="text"
-                placeholder="Your Name"
-                className="w-full p-2 border border-gray-300 rounded mb-2 text-sm"
-                value={commentName}
-                onChange={(e) => setCommentName(e.target.value)}
-              />
-              <div className="flex mb-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <FaStar
-                    key={star}
-                    size={20}
-                    className={`cursor-pointer ${commentRating >= star ? 'text-yellow-400' : 'text-gray-300'}`}
-                    onClick={() => setCommentRating(star)}
-                  />
-                ))}
-              </div>
-              <textarea
-                placeholder="Your Review"
-                className="w-full p-2 border border-gray-300 rounded mb-2 text-sm"
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-              ></textarea>
-              <button
-                onClick={handleAddComment}
-                disabled={reviewLoading}
-                className={`w-full bg-[#49BBBD] hover:bg-[#3ea1a3] text-white py-2 rounded text-sm ${
-                  reviewLoading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                {reviewLoading ? 'Submitting...' : 'Submit Review'}
-              </button>
-            </div> */}
+         
           </>
         )}
       </motion.div>
