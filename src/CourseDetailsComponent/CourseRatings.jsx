@@ -423,14 +423,14 @@ const CourseRatings = () => {
         </h2>
 
         {courseError && <p className="text-sm text-red-500 mb-4">{courseError}</p>}
-
+{/* 
         <input
           type="text"
           placeholder="Search reviews..."
           className="w-full p-2 border border-gray-300 rounded mb-4 text-sm"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        /> */}
 
         {reviewLoading && <p className="text-sm text-gray-600">Loading reviews...</p>}
         {reviewError && <p className="text-sm text-red-500">{reviewError}</p>}
@@ -488,7 +488,7 @@ const CourseRatings = () => {
             </div>
 
             {/* Add Review Form */}
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <h3 className="text-lg font-bold text-gray-800 mb-3">Add a Review</h3>
               <input
                 type="text"
@@ -522,7 +522,7 @@ const CourseRatings = () => {
               >
                 {reviewLoading ? 'Submitting...' : 'Submit Review'}
               </button>
-            </div>
+            </div> */}
           </>
         )}
       </motion.div>
