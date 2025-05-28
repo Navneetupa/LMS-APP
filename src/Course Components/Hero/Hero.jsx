@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
-import heroImage from "../../assets/coursespage.png";
+import heroImage from "../../assets/boom.png";
 
 export default function Career() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -98,7 +98,7 @@ export default function Career() {
                 <input
                   type="text"
                   placeholder="Search Course (e.g., JavaScript)"
-                  className="outline-none flex-grow text-sm sm:text-base"
+                  className="outline-none flex-grow text-sm sm:text-base placeholder-gray-400"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={(e) => {
@@ -121,18 +121,17 @@ export default function Career() {
           </div>
 
           <div className="relative flex justify-center items-center z-20 mt-8 md:mt-0">
-            <div className="absolute w-64 sm:w-80 md:w-[22rem] h-64 sm:h-80 md:h-[22rem] z-0 top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-lg" />
-             <img
-    src={heroImage}
-    alt="Job Search Illustration"
-    className="w-full max-w-xs sm:max-w-sm md:max-w-md relative z-10 mx-auto"
-    data-aos="zoom-in"
-    data-aos-delay="200"
-  />
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-white shadow-md px-3 sm:px-4 py-1 sm:py-2 rounded-full flex items-center text-xs sm:text-sm z-20">
-              <span className="text-cyan-500 font-semibold mr-1">10.5K</span> Happy Students
+            <img
+              src={heroImage}
+              alt="Job Search Illustration"
+              className="w-full max-w-[16rem] sm:max-w-[20rem] md:max-w-[24rem] lg:max-w-[28rem] relative z-10 mx-auto rounded-2xl"
+              data-aos="zoom-in"
+              data-aos-delay="200"
+            />
+            <div className="absolute top-[-3.5rem] sm:top-[-3.25rem] md:top-[-3.5rem] lg:top-[-2rem] left-1/2 transform -translate-x-1/2 bg-white shadow-md px-4 py-2 rounded-full flex items-center text-sm sm:text-base z-20">
+              <span className="text-cyan-500 font-semibold mr-2">10.5K</span> Happy Students
             </div>
-            <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white shadow-md px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm z-20">
+            <div className="absolute bottom-[-3.5rem] sm:bottom-[-3rem] md:bottom-[-2.5rem] lg:bottom-[-2rem] left-1/2 transform -translate-x-1/2 bg-white shadow-md px-4 py-2 rounded-full text-sm sm:text-base z-20">
               It only takes a few seconds
             </div>
           </div>

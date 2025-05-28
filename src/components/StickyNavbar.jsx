@@ -105,7 +105,7 @@ const FixedNavbar = () => {
       {/* Nav Links */}
       <div
         className={`${
-          isMenuOpen ? "flex opacity-80" : "hidden"
+          isMenuOpen ? "flex " : "hidden"
         } md:flex flex-col md:flex-row items-center md:items-center gap-4 md:gap-10 bg-[#49BBBD] w-full md:w-auto absolute md:static top-14 md:top-0 left-0 z-40 px-4 py-2 md:p-0 transition-all text-center`}
       >
         {/* Navigation Pages with enhanced active styling */}
