@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+
 
 const Notification = ({ message, type, onClose }) => {
   if (!message) return null;
@@ -42,7 +42,7 @@ const Dashboard = () => {
   const [saving, setSaving] = useState(false);
   const [notification, setNotification] = useState({ message: '', type: '' });
   const [isEditing, setIsEditing] = useState(false);
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (notification.message) {
@@ -196,7 +196,7 @@ const Dashboard = () => {
             <div className="flex flex-col sm:flex-row items-center gap-4 -mt-20 sm:-mt-16 sm:ml-4 text-center sm:text-left">
               <div className="relative">
                 <img
-                  src={avatarPreview || 'default profile.jpg'}
+                  src={avatarPreview || 'https://via.placeholder.com/150'}
                   alt="Profile"
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow object-cover"
                 />
@@ -244,6 +244,14 @@ const Dashboard = () => {
                 <p className="text-gray-500 text-xs sm:text-sm">{student.email || 'No email available'}</p>
               </div>
             </div>
+            <div className="mt-4 sm:mt-0 sm:mr-4">
+              <button
+                onClick={toggleEditMode}
+                className="bg-[#49BBBD] hover:bg-[#49BBBD] text-white px-4 py-2 rounded-md w-full sm:w-auto text-sm sm:text-base"
+              >
+                {isEditing ? 'Cancel' : 'Edit Profile'}
+              </button>
+            </div>
           </div>
 
           {/* Fields Grid */}
@@ -277,8 +285,8 @@ const Dashboard = () => {
                     type="email"
                     name="email"
                     value={formData.email}
-                    onChange={handleChange}
                     className="w-full border border-gray-300 rounded-md p-2 text-xs sm:text-sm"
+                    disabled
                   />
                 </div>
                 <div>
@@ -401,33 +409,18 @@ const Dashboard = () => {
             )}
           </div>
 
-          {/* Buttons Section */}
-          <div className="mt-6 flex justify-center sm:justify-start gap-4">
-            {isEditing ? (
-              <>
-                <button
-                  onClick={handleUpdate}
-                  className="bg-[#49BBBD] hover:bg-[#3AA8AA] text-white px-6 py-2 rounded-md text-sm sm:text-base"
-                  disabled={saving}
-                >
-                  {saving ? 'Saving...' : 'Save Changes'}
-                </button>
-                <button
-                  onClick={toggleEditMode}
-                  className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md text-sm sm:text-base"
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
+          {/* Save Button (shown only in edit mode) */}
+          {isEditing && (
+            <div className="mt-6 flex justify-center sm:justify-start">
               <button
-                onClick={toggleEditMode}
-                className="bg-[#49BBBD] hover:bg-[#3AA8AA] text-white px-6 py-2 rounded-md text-sm sm:text-base"
+                onClick={handleUpdate}
+                className="bg-[#49BBBD] hover:bg-[#49BBBD] text-white px-6 py-2 rounded-md w-full sm:w-auto text-sm sm:text-base"
+                disabled={saving}
               >
-                Edit Profile
+                {saving ? 'Saving...' : 'Save Changes'}
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </>
       )}
     </div>
