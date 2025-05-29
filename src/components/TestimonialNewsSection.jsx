@@ -51,9 +51,11 @@ export default function TestimonialSection() {
   <p className="text-gray-600 mb-2">
     “TOTC’s interactive quizzes and badges keep me motivated every day. Studying has never been this
     fun!” – Priya Nair, Student
-    <br />
-    “As a teacher, TOTC’s tools simplified course management. I save hours each week on planning and
+    <br /> <p className="mt-2">
+  “As a teacher, TOTC’s tools simplified course management. I save hours each week on planning and
     grading.” – Rahul Sharma, Instructor
+    </p>
+  
   </p>
   <p className="text-gray-600 mb-2">
     “Our students now easily collaborate online. TOTC transformed our classes even when we can’t
