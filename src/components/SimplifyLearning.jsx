@@ -94,7 +94,22 @@ export default function SimplifyLearning() {
 
       {/* One-on-One Discussion Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center mt-10 md:mt-16">
+     
+
         <ScrollFadeSection>
+  <div className="ml-8">
+    <h3 className="text-2xl sm:text-3xl font-bold text-black-900 mb-2">
+      Private One-on-One <span className="text-[#49BBBD]">Discussions</span>
+    </h3>
+    <p className="text-gray-600 text-sm sm:text-base">
+      Facilitate meaningful conversations between teachers, assistants, <br /> and students — all within the
+      Zoom platform. Discuss progress, <br /> provide feedback, or offer support without ever leaving the virtual
+      <br /> classroom.
+    </p>
+  </div>
+</ScrollFadeSection>
+
+           <ScrollFadeSection>
           <div className="bg-white border shadow-lg rounded-xl p-6 w-full max-w-md mx-auto">
             <img
               src={email}
@@ -102,17 +117,6 @@ export default function SimplifyLearning() {
               className="w-full h-auto max-h-72 object-cover rounded-xl"
             />
           </div>
-        </ScrollFadeSection>
-
-        <ScrollFadeSection>
-          <h3 className="text-2xl sm:text-3xl font-bold text-black-900 mb-2">
-            Private One-on-One <span className="text-[#49BBBD]">Discussions</span>
-          </h3>
-          <p className="text-gray-600 text-sm sm:text-base">
-            Facilitate meaningful conversations between teachers, assistants, <br /> and students — all within the
-            Zoom platform. Discuss progress, <br /> provide feedback, or offer support without ever leaving the virtual
-           <br /> classroom.
-          </p>
         </ScrollFadeSection>
       </div>
 
