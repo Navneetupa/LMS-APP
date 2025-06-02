@@ -25,14 +25,14 @@ const LandingPage = () => {
       <StickyNavbar />
       <Navbar />
       <SuccessMetrics />
-      <Features />
-      <LMSInfo />
       <FeatureHighlight />
-    
+      <LMSInfo />
+      <Features />
+
       <LearningSection />
       <SimplifyLearning />
-        <LearnGrow />
-    <TestimonialNewsSection />
+      <LearnGrow />
+      <TestimonialNewsSection />
       {/* <NewsSection /> */}
       <Footer />
     </div>
