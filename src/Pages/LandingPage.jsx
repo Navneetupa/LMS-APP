@@ -12,7 +12,8 @@ import LearnGrow from "../components/LearnGrow";
 import SimplifyLearning from "../components/SimplifyLearning";
 import LearningSection from "../components/LearningSection";
 import TestimonialNewsSection from "../components/TestimonialNewsSection";
-import NewsSection from "../components/NewsSection";
+
+import CourseDetail from "../components/InstructorCourse"
 import Footer from "../components/Footer";
 
 const LandingPage = () => {
@@ -28,12 +29,13 @@ const LandingPage = () => {
       <FeatureHighlight />
       <LMSInfo />
       <Features />
+  <CourseDetail />
 
       <LearningSection />
       <SimplifyLearning />
       <LearnGrow />
       <TestimonialNewsSection />
-      {/* <NewsSection /> */}
+    
       <Footer />
     </div>
   );

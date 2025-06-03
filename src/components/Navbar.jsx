@@ -25,7 +25,6 @@ const HeroWithNavbar = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
 
-  // Debounce function to limit API calls
   const debounce = (func, delay) => {
     let timeoutId;
     return (...args) => {
@@ -38,7 +37,6 @@ const HeroWithNavbar = () => {
     AOS.init({ duration: 1000, easing: "ease-in-out", once: true });
   }, []);
 
-  // Fetch dropdown options on component mount
   useEffect(() => {
     const fetchDropdownOptions = async () => {
       try {
@@ -136,7 +134,6 @@ const HeroWithNavbar = () => {
     }
   }, [category, courseType]);
 
-  // Fetch suggestions for autocomplete
   const fetchSuggestions = useCallback(
     debounce(async (term) => {
       if (!term.trim()) {
@@ -176,7 +173,6 @@ const HeroWithNavbar = () => {
     []
   );
 
-  // Update suggestions as user types
   useEffect(() => {
     fetchSuggestions(searchTerm);
   }, [searchTerm, fetchSuggestions]);
@@ -186,6 +182,8 @@ const HeroWithNavbar = () => {
     if (token) {
       setShowPopup(false);
       setModalOpen(false);
+  
+
       setShowSuggestions(false);
       navigate(`/courses/${courseId}`);
     } else {
@@ -279,12 +277,11 @@ const HeroWithNavbar = () => {
             }}
           />
           <button
-            className="bg-white text-[#7ddedf] px-4 py-2 rounded-md font-medium text-sm shadow  transition-all duration-300"
+            className="bg-white text-[#7ddedf] px-4 py-2 rounded-md font-medium text-sm shadow transition-all duration-300"
             onClick={handleSearch}
           >
             Search
           </button>
-          {/* Suggestions Dropdown */}
           {showSuggestions && suggestions.length > 0 && (
             <div className="absolute top-full left-0 right-6 mt-2 bg-white rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
               <ul>
@@ -350,7 +347,7 @@ const HeroWithNavbar = () => {
           {languages.map((lang, index) => (
             <option key={index} value={lang}>
               {lang}
-            </option>
+            </ option>
           ))}
         </select>
         <select
@@ -370,7 +367,6 @@ const HeroWithNavbar = () => {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center px-4 sm:px-6 mt-10 md:mt-2">
         <div
           className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left ml-0 md:ml-10"
-          style={{ marginTop: "-40px" }}
           data-aos="fade-right"
         >
           <h1 className="mt-8 md:mt-0 text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
@@ -386,7 +382,7 @@ const HeroWithNavbar = () => {
             than ever
           </p>
           <Link to="/courses">
-            <button className="mt-4 bg-white text-[#7ddedf] px-6 py-2 rounded-full font-semibold shadow-md  transition-all duration-300">
+            <button className="mt-4 bg-white text-[#7ddedf] px-6 py-2 rounded-full font-semibold shadow-md transition-all duration-300">
               Join for free
             </button>
           </Link>
@@ -395,24 +391,24 @@ const HeroWithNavbar = () => {
           <img
             src={heroImage}
             alt="Girl with laptop"
-            className="w-full max-w-[200px] sm:max-w-[285px] mx-auto relative z-10 -mb-8 "
+            className="w-full max-w-[200px] sm:max-w-[285px] mx-auto relative z-10"
             loading="lazy"
           />
           <div className="hidden md:block">
             <img
               src={edit}
               alt="Assisted Students"
-              className="absolute top-2 left-2 w-36 sm:w-40 shadow-lg rounded-lg mt-12"
+              className="absolute top-0 left-0 w-32 sm:w-36 shadow-lg rounded-lg"
             />
             <img
               src={edit1}
               alt="Achiever Badge"
-              className="absolute bottom-2 left-2 w-36 sm:w-40 shadow-lg rounded-lg"
+              className="absolute bottom-0 left-0 w-32 sm:w-36 shadow-lg rounded-lg"
             />
             <img
               src={edit2}
               alt="Admission Completed"
-              className="absolute top-10 right-0 w-36 sm:w-40 mr-4 sm:mr-12 mt-20 shadow-lg rounded-lg"
+              className="absolute top-8 right-0 w-32 sm:w-36 mr-4 sm:mr-8 shadow-lg rounded-lg"
             />
           </div>
         </div>
@@ -489,7 +485,9 @@ const HeroWithNavbar = () => {
                         </div>
                         <div className="flex items-center">
                           <svg
-                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns="http://www.w選挙
+
+                            .w3.org/2000/svg"
                             fill="currentColor"
                             viewBox="0 0 24 24"
                             className="w-4 h-4 text-yellow-400 mr-1"
