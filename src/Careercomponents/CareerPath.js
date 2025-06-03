@@ -86,10 +86,10 @@ const CareerPath = () => {
       >
         <div className="text-center mb-14">
           <motion.h2
-            className="text-4xl sm:text-5xl font-extrabold text-black"
+            className="text-4xl sm:text-5xl font-extrabold text-gray-900"
             variants={itemVariants}
           >
-            Your <span className="text-cyan-500">Career Path</span>
+            Your <span className="text-[#59c1c3]">Career Path</span>
           </motion.h2>
           <motion.p
             className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto"

@@ -65,9 +65,9 @@ const CareerPaths = () => {
     <section className="py-20 bg-white px-4 sm:px-8 md:px-12 lg:px-16 relative">
       <div className={modalOpen ? "filter blur-sm pointer-events-none" : ""}>
         <h2 className="text-3xl md:text-4xl font-extrabold text-center text-black mb-6 tracking-wide">
-          Explore Your <span className="text-cyan-500">Career Paths</span>
+          Explore Your <span className="text-[#59c1c3]">Career Paths</span>
         </h2>
-        <p className="text-center text-cyan-700 max-w-3xl mx-auto mb-10 text-base md:text-lg px-2">
+        <p className="text-center text-black max-w-3xl mx-auto mb-10 text-base md:text-lg px-2">
           Choose a career track to build skills that employers value. Start with basics, then master your domain.
         </p>
 
@@ -95,7 +95,7 @@ const CareerPaths = () => {
         <div className="flex justify-center mt-12">
           <button
             onClick={() => setModalOpen(true)}
-            className="px-8 py-3 bg-cyan-400 text-white rounded-full font-semibold text-lg hover:bg-cyan-600 transition-colors duration-300 shadow-lg"
+            className="px-8 py-3 bg-[#59c1c3] text-white rounded-full font-semibold text-lg hover:bg-[#59c1c3] transition-colors duration-300 shadow-lg"
           >
             View All Career Paths
           </button>
