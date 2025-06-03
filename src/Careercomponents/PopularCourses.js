@@ -64,8 +64,8 @@ const CareerPaths = () => {
   return (
     <section className="py-20 bg-white px-4 sm:px-8 md:px-12 lg:px-16 relative">
       <div className={modalOpen ? "filter blur-sm pointer-events-none" : ""}>
-        <h2 className="text-3xl md:text-4xl font-extrabold text-center text-cyan-900 mb-6 tracking-wide">
-          Explore Your <span className="text-orange-400">Career Paths</span>
+        <h2 className="text-3xl md:text-4xl font-extrabold text-center text-black mb-6 tracking-wide">
+          Explore Your <span className="text-cyan-500">Career Paths</span>
         </h2>
         <p className="text-center text-cyan-700 max-w-3xl mx-auto mb-10 text-base md:text-lg px-2">
           Choose a career track to build skills that employers value. Start with basics, then master your domain.
