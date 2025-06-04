@@ -59,9 +59,9 @@ const PopularCompanies = () => {
     <section className="py-16 px-4 md:px-10 bg-white relative">
       <div className={modalOpen ? "blur-sm pointer-events-none select-none" : ""}>
         <h2 className="text-3xl md:text-4xl font-extrabold text-center text-black mb-6 tracking-wide">
-          Popular <span className="text-[#59c1c3]">Companies</span>
+          Popular <span className="text-[#49BBBD]">Companies</span>
         </h2>
-        <p className="text-center text-black max-w-3xl mx-auto mb-10 text-base md:text-lg">
+        <p className="text-center text-indigo-700 max-w-3xl mx-auto mb-10 text-base md:text-lg">
           These top companies are actively hiring for multiple roles across India.
         </p>
 
