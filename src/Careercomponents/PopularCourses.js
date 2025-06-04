@@ -121,7 +121,7 @@ const CareerPaths = () => {
               &times;
             </button>
             <h3 className="text-2xl md:text-3xl font-extrabold text-cyan-900 mb-6 text-center">
-              All <span className="text-cyan-500">Career Paths</span>
+              All <span className="text-[#49BBBD]">Career Paths</span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {careerTracks.map((track, index) => (
