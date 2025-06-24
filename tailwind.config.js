@@ -1,10 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  darkMode: 'class', // Class-based dark mode
   theme: {
     extend: {
+      colors: {
+        t600: '#1a202c', // Define t600 (replace with your desired color)
+      },
       animation: {
-        'fade-in-up': 'fadeInUp 0.8s ease-out forwards', // Define custom animation
+        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
       },
       keyframes: {
         fadeInUp: {
@@ -15,4 +19,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

@@ -3,11 +3,14 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, HelpCircle, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import { useContext } from 'react';
+import { ThemeContext } from './Profiledashboard/ThemeContext'; // Adjust path as needed
 import arrowLeft from '../assets/image (1).png';
 
 export default function CoursePlayer() {
   const { courseId } = useParams();
   const navigate = useNavigate();
+  const { theme } = useContext(ThemeContext); // Access theme from context
   const [modules, setModules] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [courseTitle, setCourseTitle] = useState('Course Player');
@@ -277,47 +280,47 @@ export default function CoursePlayer() {
   };
 
   return (
-    <div className="bg-[#eaf5ff] p-4 flex flex-col min-h-[calc(100vh-3.5rem)] w-full mt-[3.5rem]">
+    <div className="bg-gray-100 dark:bg-t600 p-4 flex flex-col min-h-[calc(100vh-3.5rem)] w-full ">
       {/* Header */}
       <motion.div
-  initial={{ opacity: 0, y: -20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.4 }}
-  className="flex flex-col sm:flex-row  sm:items-center sm:justify-between bg-white px-3 py-2 rounded-xl shadow w-full gap-y-2"
->
-  <div className="flex items-center gap-3 min-w-[12rem] w-full sm:flex-1">
-    <Link to="/courses" className="p-1 w-[2.5rem] h-[2.5rem] rounded-full bg-gray-100 flex-shrink-0">
-      <img src={arrowLeft} alt="Back" className="w-full h-full rounded-md" />
-    </Link>
-    <div className="w-full flex-1">
-      <h1 className="font-medium text-sm truncate">
-        Course: {courseTitle}
-      </h1>
-      <p className="text-xs w-fit text-white bg-green-300 px-2 py-1 rounded">
-        {instructorName}
-      </p>
-    </div>
-  </div>
-  <div className="flex flex-row gap-2 w-full sm:flex-row justify-end sm:gap-2">
-    <button
-      onClick={toggleAssessmentsModal}
-      className="bg-[#49BBBD] text-white px-4 py-2 rounded-md text-sm hover:bg-[#3AA8AA] transition flex-1 sm:flex-none"
-    >
-      Assessments
-    </button>
-    <button
-      onClick={toggleHelpSidebar}
-      className="bg-transparent text-black px-4 py-2 rounded-md text-sm hover:bg-[#49BBBD] hover:text-white border border-[#49BBBD] transition flex items-center gap-1 flex-1 sm:flex-none justify-center sm:justify-start"
-    >
-      <HelpCircle className="w-4 h-4" />
-      Help
-    </button>
-  </div>
-</motion.div>
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white dark:bg-gray-800 px-3 py-2 rounded-xl shadow w-full gap-y-2"
+      >
+        <div className="flex items-center gap-3 min-w-[12rem] w-full sm:flex-1">
+          <Link to="/courses" className="p-1 w-[2.5rem] h-[2.5rem] rounded-full bg-gray-100 dark:bg-gray-700 flex-shrink-0">
+            <img src={arrowLeft} alt="Back" className="w-full h-full rounded-md" />
+          </Link>
+          <div className="w-full flex-1">
+            <h1 className="font-medium text-sm truncate text-gray-900 dark:text-gray-100">
+              Course: {courseTitle}
+            </h1>
+            <p className="text-xs w-fit text-white bg-green-300 dark:bg-green-500 px-2 py-1 rounded">
+              {instructorName}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-row gap-2 w-full sm:flex-row justify-end sm:gap-2">
+          <button
+            onClick={toggleAssessmentsModal}
+            className="bg-[#49BBBD] text-white px-4 py-2 rounded-md text-sm hover:bg-[#3AA8AA] transition flex-1 sm:flex-none"
+          >
+            Assessments
+          </button>
+          <button
+            onClick={toggleHelpSidebar}
+            className="bg-transparent text-gray-900 dark:text-gray-100 px-4 py-2 rounded-md text-sm hover:bg-[#49BBBD] hover:text-white border border-[#49BBBD] transition flex items-center gap-1 flex-1 sm:flex-none justify-center sm:justify-start"
+          >
+            <HelpCircle className="w-4 h-4" />
+            Help
+          </button>
+        </div>
+      </motion.div>
 
       {/* Content Error */}
       {contentError && (
-        <div className="bg-red-100 p-2 rounded-md mt-2 text-sm text-center">
+        <div className="bg-red-100 dark:bg-red-900 p-2 rounded-md mt-2 text-sm text-center text-gray-900 dark:text-gray-100">
           {contentError}
         </div>
       )}
@@ -329,14 +332,14 @@ export default function CoursePlayer() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-75 flex items-center justify-center z-50 p-4"
           >
-            <div className="bg-white rounded-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Course Assessments</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Course Assessments</h2>
                 <button
                   onClick={toggleAssessmentsModal}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -344,20 +347,20 @@ export default function CoursePlayer() {
                 </button>
               </div>
               {assessmentsError ? (
-                <p className="text-red-500 text-sm">{assessmentsError}</p>
+                <p className="text-red-500 dark:text-red-400 text-sm">{assessmentsError}</p>
               ) : assessments.length === 0 ? (
-                <p className="text-gray-600 text-sm">No assessments available.</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">No assessments available.</p>
               ) : (
                 <div className="space-y-4">
                   {assessments.map((assessment) => (
-                    <div key={assessment._id} className="border rounded-lg p-3 flex justify-between items-center">
+                    <div key={assessment._id} className="border dark:border-gray-700 rounded-lg p-3 flex justify-between items-center bg-white dark:bg-gray-800">
                       <div>
-                        <h3 className="text-base font-semibold">{assessment.title}</h3>
-                        <p className="text-sm text-gray-600">{assessment.description}</p>
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{assessment.title}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{assessment.description}</p>
                       </div>
                       <button
                         onClick={() => handleAttemptAssessment(assessment._id)}
-                        className="bg-green-500 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600 transition"
+                        className="bg-green-500 dark:bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600 dark:hover:bg-green-700 transition"
                       >
                         Attempt
                       </button>
@@ -378,17 +381,17 @@ export default function CoursePlayer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-xl z-50 overflow-y-auto"
+            className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white dark:bg-gray-800 shadow-xl z-50 overflow-y-auto"
           >
-            <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="text-xl sm:text-2xl font-semibold">Contact Support</h2>
+            <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">Contact Support</h2>
               <button
                 onClick={toggleHelpSidebar}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                </svg>
               </button>
             </div>
             <motion.div
@@ -399,18 +402,18 @@ export default function CoursePlayer() {
               className="p-4 sm:p-6"
             >
               {successMsg && (
-                <p className="text-green-600 text-sm sm:text-base mb-4 sm:mb-6 text-center">
+                <p className="text-green-600 dark:text-green-400 text-sm sm:text-base mb-4 sm:mb-6 text-center">
                   {successMsg}
                 </p>
               )}
               {errorMsg && (
-                <p className="text-red-600 text-sm sm:text-base mb-4 sm:mb-6 text-center">
+                <p className="text-red-600 dark:text-red-400 text-sm sm:text-base mb-4 sm:mb-6 text-center">
                   {errorMsg}
                 </p>
               )}
               <div className="space-y-4 sm:space-y-5">
                 <div>
-                  <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+                  <label className="block text-gray-900 dark:text-gray-100 mb-1 text-sm sm:text-base font-medium">
                     Name
                   </label>
                   <input
@@ -418,18 +421,18 @@ export default function CoursePlayer() {
                     name="name"
                     value={form.name}
                     disabled
-                    className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 bg-gray-100 cursor-not-allowed text-gray-600 text-sm sm:text-base focus:ring-0"
+                    className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 sm:p-3 bg-gray-100 dark:bg-gray-700 cursor-not-allowed text-gray-600 dark:text-gray-300 text-sm sm:text-base focus:ring-0"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+                  <label className="block text-gray-900 dark:text-gray-100 mb-1 text-sm sm:text-base font-medium">
                     Related Course
                   </label>
                   <select
                     name="relatedCourse"
                     value={form.relatedCourse}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 sm:p-3 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
                   >
                     <option value="">Select a course (optional)</option>
                     {contactCourses.map((course) => (
@@ -440,7 +443,7 @@ export default function CoursePlayer() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+                  <label className="block text-gray-900 dark:text-gray-100 mb-1 text-sm sm:text-base font-medium">
                     Subject
                   </label>
                   <input
@@ -448,32 +451,32 @@ export default function CoursePlayer() {
                     name="subject"
                     value={form.subject}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 sm:p-3 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+                  <label className="block text-gray-900 dark:text-gray-100 mb-1 text-sm sm:text-base font-medium">
                     Message
                   </label>
                   <textarea
                     name="message"
                     value={form.message}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                    className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 sm:p-3 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 resize-y"
                     rows={4}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-1 text-sm sm:text-base font-medium">
+                  <label className="block text-gray-900 dark:text-gray-100 mb-1 text-sm sm:text-base font-medium">
                     Category
                   </label>
                   <select
                     name="category"
                     value={form.category}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 sm:p-3 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
                     disabled
                   >
                     <option value="course">Course</option>
@@ -502,7 +505,7 @@ export default function CoursePlayer() {
           transition={{ duration: 0.5 }}
           className="lg:col-span-2 flex flex-col gap-4"
         >
-          <div className="bg-white rounded-lg overflow-hidden shadow p-3 flex flex-col">
+          <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow p-3 flex flex-col">
             {selectedVideo?.url ? (
               <video
                 src={selectedVideo.url}
@@ -511,88 +514,87 @@ export default function CoursePlayer() {
                 className="rounded-lg object-cover w-full max-h-[500px]"
               />
             ) : (
-              <div className="rounded-lg w-full bg-gray-200 h-[400px] flex items-center justify-center">
-                <p className="text-gray-600 text-sm">Select a lesson to play the video.</p>
+              <div className="rounded-lg w-full bg-gray-200 dark:bg-gray-700 h-[400px] flex items-center justify-center">
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Select a lesson to play the video.</p>
               </div>
             )}
             {selectedVideo && (
               <div className="mt-4">
-                <h2 className="text-lg font-semibold mb-1">{selectedVideo.title || 'Untitled Video'}</h2>
-                <p className="text-sm text-gray-600">{selectedVideo.description || 'No description available.'}</p>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">{selectedVideo.title || 'Untitled Video'}</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{selectedVideo.description || 'No description available.'}</p>
               </div>
             )}
           </div>
           {/* Feedback Section */}
-          <div className="bg-white rounded-lg shadow p-3 flex flex-col">
-  <div
-    className="flex justify-between items-center cursor-pointer lg:cursor-default"
-    onClick={() => {
-      if (window.innerWidth < 1024) toggleFeedback();
-    }}
-  >
-    <h2 className="text-lg font-semibold">Leave Feedback</h2>
-    <ChevronDown
-      className={`w-5 h-5 lg:hidden transform transition-transform ${
-        isFeedbackOpen ? 'rotate-180' : ''
-      }`}
-    />
-  </div>
-
-  <AnimatePresence>
-    {(isFeedbackOpen || typeof window !== 'undefined' && window.innerWidth >= 1024) && (
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: 'auto', opacity: 1 }}
-        exit={{ height: 0, opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="overflow-hidden"
-      >
-        {feedbackSuccess && (
-          <p className="text-green-600 text-sm mt-3 mb-3 text-center">{feedbackSuccess}</p>
-        )}
-        {feedbackError && (
-          <p className="text-red-600 text-sm mt-3 mb-3 text-center">{feedbackError}</p>
-        )}
-
-        <div className="flex items-center mb-3">
-          <label className="text-gray-700 text-sm font-medium mr-3">Rating:</label>
-          <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                className={`w-5 h-5 cursor-pointer ${
-                  feedback.rating >= star ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-3 flex flex-col">
+            <div
+              className="flex justify-between items-center cursor-pointer lg:cursor-default"
+              onClick={() => {
+                if (window.innerWidth < 1024) toggleFeedback();
+              }}
+            >
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Leave Feedback</h2>
+              <ChevronDown
+                className={`w-5 h-5 lg:hidden transform transition-transform ${
+                  isFeedbackOpen ? 'rotate-180' : ''
                 }`}
-                onClick={() => handleStarClick(star)}
               />
-            ))}
+            </div>
+
+            <AnimatePresence>
+              {(isFeedbackOpen || (typeof window !== 'undefined' && window.innerWidth >= 1024)) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  {feedbackSuccess && (
+                    <p className="text-green-600 dark:text-green-400 text-sm mt-3 mb-3 text-center">{feedbackSuccess}</p>
+                  )}
+                  {feedbackError && (
+                    <p className="text-red-600 dark:text-red-400 text-sm mt-3 mb-3 text-center">{feedbackError}</p>
+                  )}
+
+                  <div className="flex items-center mb-3">
+                    <label className="text-gray-700 dark:text-gray-300 text-sm font-medium mr-3">Rating:</label>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-5 h-5 cursor-pointer ${
+                            feedback.rating >= star ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-500'
+                          }`}
+                          onClick={() => handleStarClick(star)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="block text-gray-700 dark:text-gray-300 mb-1 text-sm font-medium">Comment</label>
+                    <textarea
+                      name="comment"
+                      value={feedback.comment}
+                      onChange={handleFeedbackChange}
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 resize-y"
+                      rows={3}
+                      placeholder="Share your thoughts about the course..."
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleFeedbackSubmit}
+                    disabled={feedbackLoading || feedback.rating === 0}
+                    className="bg-[#49BBBD] text-white py-2 px-4 rounded-lg hover:bg-[#3AA8AA] transition duration-200 text-sm font-medium disabled:bg-blue-300 disabled:cursor-not-allowed"
+                  >
+                    {feedbackLoading ? 'Submitting...' : 'Submit Feedback'}
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        </div>
-
-        <div className="mb-3">
-          <label className="block text-gray-700 mb-1 text-sm font-medium">Comment</label>
-          <textarea
-            name="comment"
-            value={feedback.comment}
-            onChange={handleFeedbackChange}
-            className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
-            rows={3}
-            placeholder="Share your thoughts about the course..."
-          />
-        </div>
-
-        <button
-          onClick={handleFeedbackSubmit}
-          disabled={feedbackLoading || feedback.rating === 0}
-          className="bg-[#49BBBD] text-white py-2 px-4 rounded-lg hover:bg-[#3AA8AA] transition duration-200 text-sm font-medium disabled:bg-blue-300 disabled:cursor-not-allowed"
-        >
-          {feedbackLoading ? 'Submitting...' : 'Submit Feedback'}
-        </button>
-      </motion.div>
-    )}
-  </AnimatePresence>
-</div>
-
         </motion.div>
 
         {/* Course Contents */}
@@ -602,10 +604,10 @@ export default function CoursePlayer() {
           transition={{ duration: 0.5 }}
           className="lg:col-span-1 flex flex-col"
         >
-          <div className="bg-white p-3 rounded-lg shadow h-fit flex flex-col overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow h-fit flex flex-col overflow-hidden">
             <div>
-              <h2 className="font-bold text-base">{instructorName}</h2>
-              <p className="text-xs text-green-600">{modules.length} Modules</p>
+              <h2 className="font-bold text-base text-gray-900 dark:text-gray-100">{instructorName}</h2>
+              <p className="text-xs text-green-600 dark:text-green-400">{modules.length} Modules</p>
             </div>
             <div className="flex-1 overflow-y-auto mt-3 pr-2" style={{ maxHeight: 'calc(100vh - 230px)' }}>
               {modules.map((mod, i) => (
@@ -616,9 +618,9 @@ export default function CoursePlayer() {
                   transition={{ delay: i * 0.1 }}
                   className={i !== modules.length - 1 ? 'mb-3' : ''}
                 >
-                  <div className="border rounded-lg p-2">
+                  <div className="border dark:border-gray-700 rounded-lg p-2">
                     <div
-                      className={`flex justify-between font-semibold items-center cursor-pointer ${mod.active ? 'text-black' : ''}`}
+                      className={`flex justify-between font-semibold items-center cursor-pointer text-gray-900 dark:text-gray-100 ${mod.active ? 'text-black' : ''}`}
                       onClick={() => toggleModule(i)}
                     >
                       <span className="truncate text-sm">{mod.title}</span>
@@ -633,8 +635,8 @@ export default function CoursePlayer() {
                         {mod.lessons.map((lesson, idx) => (
                           <div
                             key={idx}
-                            className={`flex justify-between items-center p-1 bg-gray-50 hover:bg-gray-100 text-[#00c8a0] cursor-pointer ${
-                              activeLecture.moduleIndex === i && activeLecture.lessonIndex === idx ? 'bg-green-50' : ''
+                            className={`flex justify-between items-center p-1 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-[#00c8a0] cursor-pointer ${
+                              activeLecture.moduleIndex === i && activeLecture.lessonIndex === idx ? 'bg-green-50 dark:bg-green-900' : ''
                             }`}
                             onClick={() => {
                               if (lesson.content?.url) {
@@ -647,8 +649,8 @@ export default function CoursePlayer() {
                               }
                             }}
                           >
-                            <span>{lesson.title || `Lesson ${idx + 1}`}</span>
-                            <span className="text-[10px]">{lesson.time || '0:00'}</span>
+                            <span className="text-gray-900 dark:text-gray-100">{lesson.title || `Lesson ${idx + 1}`}</span>
+                            <span className="text-[10px] text-gray-600 dark:text-gray-400">{lesson.time || '0:00'}</span>
                           </div>
                         ))}
                       </div>
@@ -657,22 +659,22 @@ export default function CoursePlayer() {
                 </motion.div>
               ))}
             </div>
-            <div className="p-3 rounded-lg border bg-white shadow mt-3">
-              <h2 className="font-bold text-base mb-2">Explore more</h2>
+            <div className="p-3 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-800 shadow mt-3">
+              <h2 className="font-bold text-base text-gray-900 dark:text-gray-100 mb-2">Explore more</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {courses.map((course, idx) => (
                   <Link
                     to={`/courses/${course._id}`}
                     key={idx}
-                    className="p-1 rounded-lg border bg-white shadow hover:shadow-md transition-shadow"
+                    className="p-1 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-800 shadow hover:shadow-md transition-shadow"
                   >
                     <img
                       src={course.thumbnail}
                       className="rounded-lg mb-1 h-24 object-cover w-full"
                       alt={course.title}
                     />
-                    <p className="text-xs font-semibold truncate">{course.title}</p>
-                    <p className="text-xs text-green-600">₹{course.discountPrice || course.price}</p>
+                    <p className="text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">{course.title}</p>
+                    <p className="text-xs text-green-600 dark:text-green-400">₹{course.discountPrice || course.price}</p>
                   </Link>
                 ))}
               </div>

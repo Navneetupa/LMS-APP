@@ -1,118 +1,201 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { FaPlay } from 'react-icons/fa';
+import { ThemeContext } from '../Profiledashboard/ThemeContext'; // Adjust path
+import Certificates from './Certificates'; // Adjust path to where Certificates.jsx is located
 
-export default function MyCourses() {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+const Dashboard = () => {
+  const { theme } = useContext(ThemeContext); // Access theme from context
+  const [activeTab, setActiveTab] = useState('badges');
+  const [student, setStudent] = useState(null);
+  const [showAllTargets, setShowAllTargets] = useState(false);
 
+  // Fetch student data on component mount
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+      if (!token) {
+        console.log('Authentication required. Please log in.');
+        return;
+      }
+
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(
-          'https://lms-backend-flwq.onrender.com/api/v1/students/courses',
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const validCourses = response.data.data.filter((c) => c.course !== null);
-        setCourses(validCourses);
-      } catch (error) {
-        console.error('Error fetching student courses:', error);
-      } finally {
-        setLoading(false);
+        const res = await axios.get('https://lms-backend-flwq.onrender.com/api/v1/students/profile', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setStudent(res.data.data);
+      } catch (err) {
+        console.error('Unable to retrieve profile data:', err);
       }
     };
 
-    fetchCourses();
+    fetchProfile();
   }, []);
 
-  const handlePlay = (courseId) => {
-    navigate(`/course-player/${courseId}`);
+  const recentlyEarnedBadges = [
+    {
+      name: 'Warrior',
+      description: 'Badge for completing first course',
+      date: 'Aug 24, 2024',
+      icon: '🛡️',
+    },
+    {
+      name: 'Ace',
+      description: 'Badge for completing 25 quiz resources',
+      date: 'Aug 17, 2024',
+      icon: '🎯',
+    },
+    {
+      name: 'Duelist',
+      description: 'Badge for completing first quiz resource',
+      date: 'Aug 17, 2024',
+      icon: '⚔️',
+    },
+    {
+      name: 'The Fledgling',
+      description: 'Badge for registering on Wingspan platform',
+      date: 'Aug 6, 2024',
+      icon: '🐣',
+    },
+  ];
+
+  const nextTargets = [
+    {
+      name: 'Management Jedi',
+      description: 'Badge for completing the MBA management HBP courses',
+      icon: '🏹',
+    },
+    {
+      name: 'Quizzer',
+      description: 'Badge for completing 100 quiz resources',
+      icon: '❓',
+    },
+    {
+      name: 'Champion',
+      description: 'Badge for completing 25 courses',
+      icon: '🏆',
+    },
+    {
+      name: 'Knight',
+      description: 'Badge for completing 10 courses',
+      icon: '⚔️',
+    },
+    {
+      name: 'Sensei',
+      description: 'Badge for completing 100 courses',
+      icon: '👨‍🏫',
+    },
+    {
+      name: 'Wizard',
+      description: 'Badge for completing 250 quiz resources',
+      icon: '🎩',
+    },
+    {
+      name: 'Genie',
+      description: 'Badge for completing 100 quiz resources',
+      icon: '🧞',
+    },
+  ];
+
+  const handleViewToggle = () => {
+    setShowAllTargets(!showAllTargets);
   };
 
   return (
-    <div className="min-h-screen w-full bg-sky-50 p-4 sm:px-4 mt-12 md:mt-6 md:px-4 overflow-auto">
-      <div className="flex justify-between items-start mb-4 sm:mb-6">
-        <h1 className="text-lg sm:text-xl md:text-3xl font-bold text-slate-900">My Courses</h1>
+    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
+      {/* Tabs */}
+      <div className="flex justify-center mb-4 bg-gray-800 p-2 rounded-t-lg">
+        <div className="flex space-x-4">
+          <button
+            className={`px-4 py-2 rounded-t-lg ${activeTab === 'badges' ? 'bg-blue-700 text-white' : 'bg-gray-700 text-gray-300'}`}
+            onClick={() => setActiveTab('badges')}
+          >
+            Badges
+          </button>
+          <button
+            className={`px-4 py-2 rounded-t-lg ${activeTab === 'certificates' ? 'bg-blue-700 text-white' : 'bg-gray-700 text-gray-300'}`}
+            onClick={() => setActiveTab('certificates')}
+          >
+            Certificates
+          </button>
+        </div>
       </div>
 
-      {loading ? (
-        <p className="text-gray-600 text-sm text-center">Loading courses...</p>
-      ) : courses.length === 0 ? (
-        <p className="text-gray-600 text-sm text-center">No enrolled courses found.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          {courses.map((item) => (
-            <div
-              key={item._id}
-              className="bg-white p-3 sm:p-4 rounded-xl shadow-md transition-transform transform hover:scale-105 cursor-pointer relative"
-              onClick={() => navigate(`/course-player/${item.course._id}`)}
-            >
-              {/* Thumbnail */}
-              <div className="w-full h-36 sm:h-40 bg-gray-200 rounded-md mb-4 sm:mb-6 overflow-hidden">
-                {item.course.thumbnail && (
-                  <img
-                    src={item.course.thumbnail}
-                    alt={item.course.title}
-                    className="w-full h-full object-cover rounded-md"
-                  />
-                )}
-              </div>
+      {/* Content Area */}
+      <div className="p-6">
+        {activeTab === 'badges' && (
+          <>
+            {/* Header Section */}
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold">Hi {student?.firstName || 'User'}!</h2>
+              <p className="text-lg">Congratulations for your recently earned badges</p>
+            </div>
 
-              {/* Play Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePlay(item.course._id);
-                }}
-                className="absolute top-[calc(36*0.25rem-.7rem)] sm:top-[calc(40*0.25rem-.7rem)] right-3 sm:right-4 bg-[#49BBBD] text-white p-2 sm:p-3 rounded-full shadow-lg hover:scale-110 z-50"
-                title="Play Course"
-              >
-                <FaPlay className="text-xs sm:text-sm" />
-              </button>
-
-              <h3 className="text-sm sm:text-base font-semibold text-slate-800 mb-1 truncate">
-                {item.course.title}
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-600 mb-2 line-clamp-2">
-                {item.course.description}
-              </p>
-
-              <div className="flex justify-between items-center text-xs sm:text-sm">
-                {item.course.discountPrice ? (
-                  <>
-                    <span className="font-semibold text-slate-700">
-                      ₹{item.course.price - item.course.discountPrice}
-                    </span>
-                    <span className="text-gray-500 line-through">
-                      ₹{item.course.price}
-                    </span>
-                  </>
-                ) : (
-                  <span className="font-semibold text-slate-700">
-                    ₹{item.course.price}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex justify-between items-center mt-2 sm:mt-3 text-xs sm:text-sm">
-                <span className="text-gray-700 truncate">
-                  👨‍🏫 {item.course.instructor?.firstName} {item.course.instructor?.lastName}
-                </span>
-                <span className="text-yellow-500">
-                  ⭐ {item.course.rating}
-                </span>
+            {/* Recently Earned Badges Section */}
+            <div className="mb-8">
+              <h3 className="text-lg font-medium mb-4">Recently earned badges</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                {recentlyEarnedBadges.map((badge, index) => (
+                  <div
+                    key={index}
+                    className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center text-2xl">
+                          {badge.icon}
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-sm text-gray-600 dark:text-gray-400">Awarded on {badge.date}</p>
+                          <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">
+                            {badge.name} {badge.description}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="text-purple-600 dark:text-purple-400 text-sm">✔</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
-      )}
+
+            {/* Next Target Section */}
+            <div>
+              <h3 className="text-lg font-medium mb-4">Your Next Target</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                {nextTargets.slice(0, showAllTargets ? nextTargets.length : 4).map((target, index) => (
+                  <div
+                    key={index}
+                    className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center text-2xl">
+                          {target.icon}
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{target.name}</p>
+                          <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">{target.description}</p>
+                        </div>
+                      </div>
+                      <span className="text-green-600 dark:text-green-400 text-sm">✔</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button
+                className="mt-4 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-500"
+                onClick={handleViewToggle}
+              >
+                {showAllTargets ? 'View Less' : 'View More'}
+              </button>
+            </div>
+          </>
+        )}
+
+        {activeTab === 'certificates' && <Certificates />}
+      </div>
     </div>
   );
-}
+};
+
+export default Dashboard;
