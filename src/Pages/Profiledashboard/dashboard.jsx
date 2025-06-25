@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import dashboardImage from '../../assets/dashboard.png';
-import { FaPlay, FaSignOutAlt } from 'react-icons/fa'; // Added FaSignOutAlt
-import { ThemeContext } from '../../Pages/Profiledashboard/ThemeContext'; // Adjust path
+import { FaPlay, FaSignOutAlt } from 'react-icons/fa';
+import { ThemeContext } from '../../Pages/Profiledashboard/ThemeContext';
+import CourseCards from '../Profiledashboard/Coursecard';
 
 const Notification = ({ message, type, onClose }) => {
   const { theme } = useContext(ThemeContext);
@@ -31,7 +32,6 @@ const Notification = ({ message, type, onClose }) => {
   );
 };
 
-// MyCourses Component
 const MyCourses = () => {
   const { theme } = useContext(ThemeContext);
   const [courses, setCourses] = useState([]);
@@ -92,7 +92,7 @@ const MyCourses = () => {
                 className="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-md transition-transform transform hover:scale-105 cursor-pointer relative"
                 onClick={() => navigate(`/course-player/${item.course._id}`)}
               >
-                <div className="w-full h-36 bg-gray-200 dark:bg-gray-700 rounded-md mb-4 overflow-hidden">
+                <div className="w-full h-36 bg-gray-200 dark:bg-gray-700 rounded-md mb-4 overflow-hidden relative group">
                   {item.course.thumbnail && (
                     <img
                       src={item.course.thumbnail}
@@ -100,17 +100,18 @@ const MyCourses = () => {
                       className="w-full h-full object-cover rounded-md"
                     />
                   )}
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300" />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePlay(item.course._id);
+                    }}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#49BBBD] dark:bg-[#3A9D9D] text-white p-2 rounded-full shadow-lg hover:scale-110 z-50"
+                    title="Play Course"
+                  >
+                    <FaPlay className="text-xs" />
+                  </button>
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePlay(item.course._id);
-                  }}
-                  className="absolute top-[calc(36*0.25rem-.7rem)] right-3 bg-[#49BBBD] dark:bg-[#3A9D9D] text-white p-2 rounded-full shadow-lg hover:scale-110 z-50"
-                  title="Play Course"
-                >
-                  <FaPlay className="text-xs" />
-                </button>
                 <h3 className="text-sm font-semibold text-slate-800 dark:text-gray-200 mb-1 truncate">{item.course.title}</h3>
                 <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">{item.course.description}</p>
                 <div className="flex justify-between items-center text-xs">
@@ -143,6 +144,7 @@ const MyCourses = () => {
               </button>
             </div>
           )}
+          <CourseCards courses={courses} />
 
           {isModalOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -163,7 +165,7 @@ const MyCourses = () => {
                         closeModal();
                       }}
                     >
-                      <div className="w-full h-36 bg-gray-200 dark:bg-gray-700 rounded-md mb-4 overflow-hidden">
+                      <div className="w-full h-36 bg-gray-200 dark:bg-gray-700 rounded-md mb-4 overflow-hidden relative group">
                         {item.course.thumbnail && (
                           <img
                             src={item.course.thumbnail}
@@ -171,18 +173,19 @@ const MyCourses = () => {
                             className="w-full h-full object-cover rounded-md"
                           />
                         )}
+                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300" />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePlay(item.course._id);
+                            closeModal();
+                          }}
+                          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#49BBBD] dark:bg-[#3A9D9D] text-white p-2 rounded-full shadow-lg hover:scale-110 z-50"
+                          title="Play Course"
+                        >
+                          <FaPlay className="text-xs" />
+                        </button>
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePlay(item.course._id);
-                          closeModal();
-                        }}
-                        className="absolute top-[calc(36*0.25rem-.7rem)] right-3 bg-[#49BBBD] dark:bg-[#3A9D9D] text-white p-2 rounded-full shadow-lg hover:scale-110 z-50"
-                        title="Play Course"
-                      >
-                        <FaPlay className="text-xs" />
-                      </button>
                       <h3 className="text-sm font-semibold text-slate-800 dark:text-gray-200 mb-1 truncate">{item.course.title}</h3>
                       <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">{item.course.description}</p>
                       <div className="flex justify-between items-center text-xs">
@@ -248,6 +251,7 @@ const Dashboard = () => {
     }
 
     const fetchProfile = async () => {
+     
       const token = localStorage.getItem('token');
       if (!token) {
         setNotification({ message: 'Authentication required. Please log in to access your profile.', type: 'error' });
@@ -365,14 +369,13 @@ const Dashboard = () => {
     setNotification({ message: 'Logged out successfully.', type: 'success' });
     setTimeout(() => {
       navigate('/');
-    }, 1000); // Delay navigation to show notification
+    }, 1000);
   };
 
   return (
     <div className={`bg-gradient-to-r from-[#D8C4E5] dark:from-gray-800 to-[#E8D9F0] dark:to-gray-900 p-6 rounded-lg shadow w-full ${theme === 'dark' ? 'dark' : ''}`}>
       <Notification message={notification.message} type={notification.type} onClose={() => setNotification({ message: '', type: '' })} />
 
-      {/* Welcome Section */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow flex justify-between items-center mb-8">
         <div className="max-w-[70%]">
           <h1 className="font-bold text-xl text-gray-800 dark:text-gray-200">Hey {student?.firstName || 'User'}.</h1>
@@ -385,12 +388,10 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Assigned Courses */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow mb-8">
         <MyCourses />
       </div>
 
-      {/* Profile Section */}
       {student && (
         <div className="bg-[#EDE7F2] dark:bg-gray-700 p-6 rounded-lg">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">

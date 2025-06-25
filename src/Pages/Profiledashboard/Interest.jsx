@@ -1,54 +1,63 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { ThemeContext } from '../Profiledashboard/ThemeContext'; // Adjust path as needed
+import { ThemeContext } from '../Profiledashboard/ThemeContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import defaultCourseAvatar from '../../assets/iconsss.png';
 
 const InterestPage = () => {
   const { theme } = useContext(ThemeContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [myInterests, setMyInterests] = useState(() => {
-    // Retrieve interests from localStorage on mount
     const savedInterests = localStorage.getItem('myInterests');
     return savedInterests ? JSON.parse(savedInterests) : [];
   });
   const [courses, setCourses] = useState([]);
   const [visibleCourses, setVisibleCourses] = useState(5);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const initialVisibleCount = 5;
   const navigate = useNavigate();
 
-  // Fetch courses from the API
+  // Validate image URL
+  const isValidImageUrl = (url) => {
+    return typeof url === 'string' && url.match(/\.(jpeg|jpg|png|gif|webp)$/i);
+  };
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+        setLoading(true);
         const response = await axios.get('https://lms-backend-flwq.onrender.com/api/v1/courses');
         if (response.data.success) {
+          console.log('Courses:', response.data.data); // Log for debugging
           setCourses(response.data.data);
+        } else {
+          setError('Failed to fetch courses');
         }
       } catch (error) {
         console.error('Error fetching courses:', error);
+        setError('Error fetching courses');
+      } finally {
+        setLoading(false);
       }
     };
     fetchCourses();
   }, []);
 
-  // Save interests to localStorage whenever myInterests changes
   useEffect(() => {
     localStorage.setItem('myInterests', JSON.stringify(myInterests));
   }, [myInterests]);
 
-  // Function to handle adding interest
   const handleAddInterest = (courseCategory) => {
     if (!myInterests.includes(courseCategory)) {
       setMyInterests([...myInterests, courseCategory]);
     }
   };
 
-  // Function to handle removing interest
   const handleRemoveInterest = (interest) => {
     setMyInterests(myInterests.filter((item) => item !== interest));
   };
 
-  // Function to handle view more/less
   const handleToggleView = (e) => {
     e.preventDefault();
     setVisibleCourses((prev) =>
@@ -56,25 +65,30 @@ const InterestPage = () => {
     );
   };
 
-  // Get unique categories and filter/sort based on search term
   const uniqueCategories = [
     ...new Set(courses.map((course) => course.category)),
-  ].filter((category) =>
-    category?.toLowerCase().includes(searchTerm.toLowerCase())
-  ).sort((a, b) => a.localeCompare(b));
+  ]
+    .filter((category) =>
+      category?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((category) => !myInterests.includes(category))
+    .sort((a, b) => a.localeCompare(b));
 
-  // Get all courses for my interests
   const allInterestCourses = courses.filter((course) =>
     myInterests.includes(course.category)
   );
 
-  // Function to handle course click
   const handleCourseClick = (course) => {
     navigate(`/courses/${course._id}`);
   };
 
+  const defaultInstructorAvatar = 'https://via.placeholder.com/30?text=Instructor';
+
+  if (loading) return <p className="text-gray-600 dark:text-gray-400">Loading courses...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+
   return (
-    <div className="w-full min-h-screen mx-auto p-6 bg-gray-100 dark:bg-t600 rounded-lg shadow-lg max-w-4xl flex flex-col">
+    <div className="w-full min-h-screen mx-auto p-6 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg max-w-4xl flex flex-col">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
         What are your interests?
       </h1>
@@ -82,7 +96,6 @@ const InterestPage = () => {
         Please let us know topics of interest to you, so we can help identify the content that would be most relevant to you.
       </p>
 
-      {/* Search Bar */}
       <div className="mb-6 relative">
         <input
           type="text"
@@ -98,7 +111,6 @@ const InterestPage = () => {
         )}
       </div>
 
-      {/* My Interests Section */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
           My Interests
@@ -107,7 +119,6 @@ const InterestPage = () => {
           <p className="text-gray-600 dark:text-gray-400">No Interests</p>
         ) : (
           <div className="flex flex-col gap-4 mb-4">
-            {/* Display all selected categories */}
             <div className="flex flex-wrap gap-2 mb-2">
               {myInterests.map((interest, index) => (
                 <button
@@ -119,33 +130,73 @@ const InterestPage = () => {
                 </button>
               ))}
             </div>
-            {/* Display all courses for selected categories */}
-            {allInterestCourses.length === 0 ? (
-              <p className="text-gray-600 dark:text-gray-400">No courses available</p>
-            ) : (
+            {allInterestCourses.length > 0 && (
               <div className="ml-4">
                 <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
                   Associated Courses
                 </h3>
-                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {allInterestCourses.map((course, idx) => (
-                    <li key={course._id || idx}>
+                    <div
+                      key={course._id || idx}
+                      className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 flex flex-col justify-between"
+                    >
+                      <div>
+                        <img
+                          src={isValidImageUrl(course.thumbnail) ? course.thumbnail : defaultCourseAvatar}
+                          alt={course.title || 'Course Image'}
+                          className="w-full h-40 object-cover rounded-lg mb-4"
+                          onError={(e) => {
+                            console.log(`Image failed to load for course: ${course.title}, URL: ${course.thumbnail}`);
+                            e.target.src = defaultCourseAvatar;
+                          }}
+                        />
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          {course.title || 'Untitled Course'}
+                        </h4>
+                        <p className="text-gray-600 dark:text-gray-400 mt-2">
+                          {course.category || 'No category'}
+                        </p>
+                        <p className="text-green-600 font-bold mt-2">
+                          ₹{course.discountPrice || course.price || '0'}
+                        </p>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between">
+                        <div className="flex items-center">
+                          <img
+                            src={course.instructor?.avatar || defaultInstructorAvatar}
+                            alt="Instructor"
+                            className="w-8 h-8 rounded-full mr-2"
+                            onError={(e) => (e.target.src = defaultInstructorAvatar)}
+                          />
+                          <span className="text-gray-700 dark:text-gray-300">
+                            {course.instructor
+                              ? `${course.instructor.firstName} ${course.instructor.lastName}`
+                              : 'Unknown Instructor'}
+                          </span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="text-yellow-500 mr-1">★</span>
+                          <span className="text-gray-700 dark:text-gray-300">
+                            {course.rating || '0'}
+                          </span>
+                        </div>
+                      </div>
                       <button
                         onClick={() => handleCourseClick(course)}
-                        className="text-blue-500 hover:underline"
+                        className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200"
                       >
-                        {course.title}
+                        View Course
                       </button>
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
           </div>
         )}
       </div>
 
-      {/* All Categories Section */}
       <div className="flex-1">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
           All Categories
@@ -154,7 +205,6 @@ const InterestPage = () => {
           Pick categories below you're interested in and help Infosys Springboard to know you better. The platform will use this information to improve your learning recommendations. The more often you use Infosys Springboard, the better the recommendations will be. Take the first step to your personalized learning experience!
         </p>
 
-        {/* Category Buttons */}
         <div className="flex flex-wrap gap-2 mb-4">
           {uniqueCategories.slice(0, visibleCourses).map((category, index) => (
             <button
@@ -167,7 +217,6 @@ const InterestPage = () => {
           ))}
         </div>
 
-        {/* View More/Less Link */}
         {uniqueCategories.length > initialVisibleCount && (
           <a
             href="#"
