@@ -13,6 +13,8 @@ const AssessmentScore = () => {
   const [assessmentResult, setAssessmentResult] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
   const [loading, setLoading] = useState(false);
+  const [isAssessmentPopupOpen, setIsAssessmentPopupOpen] = useState(false);
+  const [isResultPopupOpen, setIsResultPopupOpen] = useState(false);
 
   // Show notification
   const showNotification = (message, type = "error") => {
@@ -63,8 +65,11 @@ const AssessmentScore = () => {
       setAssessments([]);
       setSelectedAssessmentId("");
       setAssessmentResult(null);
+      setIsAssessmentPopupOpen(false);
+      setIsResultPopupOpen(false);
       return;
     }
+    setIsAssessmentPopupOpen(true);
 
     const fetchAssessments = async () => {
       setLoading(true);
@@ -107,8 +112,11 @@ const AssessmentScore = () => {
   useEffect(() => {
     if (!selectedCourseId || !selectedAssessmentId) {
       setAssessmentResult(null);
+      setIsResultPopupOpen(false);
       return;
     }
+    setIsAssessmentPopupOpen(false);
+    setIsResultPopupOpen(true);
 
     const fetchAssessmentResult = async () => {
       setLoading(true);
@@ -142,14 +150,44 @@ const AssessmentScore = () => {
     fetchAssessmentResult();
   }, [selectedCourseId, selectedAssessmentId]);
 
+  // Handle course selection
+  const handleCourseClick = (courseId) => {
+    setSelectedCourseId(courseId);
+  };
+
+  // Generate star rating component
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span key={i} className={i <= rating ? "text-yellow-400" : "text-gray-300"}>
+          ★
+        </span>
+      );
+    }
+    return stars;
+  };
+
+  // Close popups
+  const closePopups = () => {
+    setIsAssessmentPopupOpen(false);
+    setIsResultPopupOpen(false);
+    setSelectedAssessmentId("");
+    setAssessmentResult(null);
+  };
+
   return (
-    <div className={`sm:p-0 mt-12 md:mt-6 h-fit px-[10px] lg:py-6 lg:px-6 bg-white dark:bg-gray-900 rounded-lg space-y-6 max-w-4xl mx-auto transition-colors duration-300`}>
+    <div
+      className={`sm:p-0 mt-12 md:mt-6 h-fit px-[10px] lg:py-6 lg:px-6 bg-white dark:bg-gray-900 rounded-lg space-y-6 max-w-4xl mx-auto transition-colors duration-300`}
+    >
       <Notification
         message={notification.message}
         type={notification.type}
         onClose={() => setNotification({ message: "", type: "" })}
       />
-      <h1 className="text-[2rem] font-bold text-slate-900 dark:text-gray-100 pb-2">Assessment Scores</h1>
+      <h1 className="text-[2rem] font-bold text-slate-900 dark:text-gray-100 pb-2">
+        Assessment Scores
+      </h1>
       <div className="space-y-5">
         {/* Loading Indicator */}
         {loading && (
@@ -178,102 +216,162 @@ const AssessmentScore = () => {
           </div>
         )}
 
-        {/* Course Selection */}
-        <div className="space-y-1">
-          <label htmlFor="course" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Select Course
-          </label>
-          <select
-            id="course"
-            value={selectedCourseId}
-            onChange={(e) => setSelectedCourseId(e.target.value)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-md p-3 text-base focus:ring-2 focus:ring-[#49BBBD] focus:border-transparent transition bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-            disabled={loading}
-          >
-            <option value="">Select a course</option>
-            {courses.map((course) =>
-              course.course ? (
-                <option key={course.course._id} value={course.course._id}>
-                  {course.course.title}
-                </option>
-              ) : null
-            )}
-          </select>
-          {!loading && courses.length === 0 && (
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">No courses available.</p>
+        {/* Course List */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-medium text-gray-700 dark:text-gray-300">
+            Available Courses
+          </h2>
+          {courses.length === 0 && !loading ? (
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              No courses available.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {courses.map((course) =>
+                course.course ? (
+                  <div
+                    key={course.course._id}
+                    onClick={() => handleCourseClick(course.course._id)}
+                    className={`p-4 rounded-lg shadow-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 cursor-pointer transition ${
+                      selectedCourseId === course.course._id
+                        ? "border-[#49BBBD] bg-opacity-10"
+                        : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                    }`}
+                  >
+                    {/* Dynamic Course Thumbnail */}
+                    <div className="w-full h-24 rounded-md mb-2 flex items-center justify-center overflow-hidden">
+                      {course.course.thumbnail ? (
+                        <img
+                          src={course.course.thumbnail}
+                          alt={course.course.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-gray-500 dark:text-gray-400">
+                          {course.course.title.substring(0, 2).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    {/* Course Title */}
+                    <h3 className="text-md font-semibold text-gray-900 dark:text-gray-100">
+                      {course.course.title}
+                    </h3>
+                    {/* Course Description or Subtitle */}
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      {course.course.description || "No description available"}
+                    </p>
+                    {/* Price */}
+                    <p className="text-sm text-green-600 dark:text-green-400 mt-2">
+                      ₹{course.course.price || "Free"}
+                    </p>
+                    {/* Instructor and Rating */}
+                    <div className="flex items-center mt-2">
+                      <img
+                        src={course.course.instructor?.avatar || "https://via.placeholder.com/24"}
+                        alt={course.course.instructor?.firstName || "Instructor"}
+                        className="w-6 h-6 rounded-full mr-2"
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300 mr-2">
+                        {course.course.instructor?.firstName || "Unknown"}{" "}
+                        {course.course.instructor?.lastName || ""}
+                      </span>
+                      <span className="text-yellow-400">
+                        {renderStars(course.course.rating || 0)}
+                      </span>
+                    </div>
+                  </div>
+                ) : null
+              )}
+            </div>
           )}
         </div>
 
-        {/* Assessment Selection */}
-        {selectedCourseId && (
-          <div className="space-y-1">
-            <label htmlFor="assessment" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Select Assessment
-            </label>
-            <select
-              id="assessment"
-              value={selectedAssessmentId}
-              onChange={(e) => setSelectedAssessmentId(e.target.value)}
-              className="w-full border border-gray-300 dark:border-gray-600 rounded-md p-3 text-base focus:ring-2 focus:ring-[#49BBBD] focus:border-transparent transition bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-              disabled={loading || assessments.length === 0}
-            >
-              <option value="">Select an assessment</option>
-              {assessments.map((assessment) => (
-                <option key={assessment._id} value={assessment._id}>
-                  {assessment.title}
-                </option>
-              ))}
-            </select>
-            {!loading && assessments.length === 0 && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">No assessments available for this course.</p>
-            )}
+        {/* Assessment Selection Popup */}
+        {isAssessmentPopupOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                Select Assessment
+              </h2>
+              <select
+                value={selectedAssessmentId}
+                onChange={(e) => setSelectedAssessmentId(e.target.value)}
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-md p-3 text-base focus:ring-2 focus:ring-[#49BBBD] focus:border-transparent transition bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                disabled={loading || assessments.length === 0}
+              >
+                <option value="">Select an assessment</option>
+                {assessments.map((assessment) => (
+                  <option key={assessment._id} value={assessment._id}>
+                    {assessment.title}
+                  </option>
+                ))}
+              </select>
+              {!loading && assessments.length === 0 && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                  No assessments available for this course.
+                </p>
+              )}
+              <button
+                onClick={closePopups}
+                className="mt-4 w-full bg-[#49BBBD] text-white p-2 rounded-md hover:bg-[#3da4a6] transition"
+              >
+                Close
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Assessment Result */}
-        {assessmentResult && !loading && (
-          <div className="space-y-4 p-4 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-              {assessmentResult.assessment.title}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Type:</p>
-                <p className="text-base text-gray-900 dark:text-gray-100 capitalize">
-                  {assessmentResult.assessment.type}
-                </p>
+        {/* Assessment Result Popup */}
+        {isResultPopupOpen && assessmentResult && !loading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                {assessmentResult.assessment.title}
+              </h2>
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Type:</p>
+                  <p className="text-base text-gray-900 dark:text-gray-100 capitalize">
+                    {assessmentResult.assessment.type}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Status:</p>
+                  <p className="text-base text-gray-900 dark:text-gray-100 capitalize">
+                    {assessmentResult.status}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Score:</p>
+                  <p className="text-base text-gray-900 dark:text-gray-100">
+                    {assessmentResult.score}/{assessmentResult.totalPoints || "100 (based on questions)"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Passing Score:</p>
+                  <p className="text-base text-gray-900 dark:text-gray-100">
+                    {assessmentResult.assessment.passingScore}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Due Date:</p>
+                  <p className="text-base text-gray-900 dark:text-gray-100">
+                    {new Date(assessmentResult.assessment.dueDate).toLocaleDateString()}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Submission Date:</p>
+                  <p className="text-base text-gray-900 dark:text-gray-100">
+                    {new Date(assessmentResult.submissionDate).toLocaleString()}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Status:</p>
-                <p className="text-base text-gray-900 dark:text-gray-100 capitalize">
-                  {assessmentResult.status}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Score:</p>
-                <p className="text-base text-gray-900 dark:text-gray-100">
-                  {assessmentResult.score}/
-                  {assessmentResult.totalPoints || "100 (based on questions)"}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Passing Score:</p>
-                <p className="text-base text-gray-900 dark:text-gray-100">
-                  {assessmentResult.assessment.passingScore}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Due Date:</p>
-                <p className="text-base text-gray-900 dark:text-gray-100">
-                  {new Date(assessmentResult.assessment.dueDate).toLocaleDateString()}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Submission Date:</p>
-                <p className="text-base text-gray-900 dark:text-gray-100">
-                  {new Date(assessmentResult.submissionDate).toLocaleString()}
-                </p>
-              </div>
+              <button
+                onClick={closePopups}
+                className="mt-4 w-full bg-[#49BBBD] text-white p-2 rounded-md hover:bg-[#3da4a6] transition"
+              >
+                Close
+              </button>
             </div>
           </div>
         )}
