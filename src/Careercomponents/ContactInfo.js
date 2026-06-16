@@ -32,9 +32,9 @@ const ContactInfo = () => (
     {/* Content container with higher z-index so it is above the bg image */}
     <div style={{ position: 'relative', zIndex: 1 }}>
       <h2 className="text-4xl font-bold mb-6">Let's Connect</h2>
-      <p className="text-lg"><strong>Phone:</strong> +1012 3456 789</p>
-      <p className="text-lg"><strong>Email:</strong> demo@gmail.com</p>
-      <p className="text-lg"><strong>Address:</strong> 132 Dartmouth Street, Boston, MA 02156</p>
+      <p className="text-lg"><strong>Phone:</strong> 6395114433</p>
+      <p className="text-lg"><strong>Email:</strong> Navneetupa.1000@gmail.com</p>
+      <p className="text-lg"><strong>Address:</strong> Ducat,sector-63,Noida</p>
       <div className="flex space-x-6 pt-4 text-2xl">
         <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition transform hover:scale-110">
           <i className="fab fa-twitter" />
